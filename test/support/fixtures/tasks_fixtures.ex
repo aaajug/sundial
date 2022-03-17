@@ -11,7 +11,7 @@ defmodule Sundial.TasksFixtures do
     {:ok, task} =
       attrs
       |> Enum.into(%{
-        completed_at: ~N[2022-03-16 03:09:00],
+        completed_on: ~N[2022-03-16 03:09:00],
         deadline: ~N[2022-03-16 03:09:00],
         description: "some description",
         details: "some details",

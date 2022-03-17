@@ -3,9 +3,9 @@ defmodule SundialWeb.TaskControllerTest do
 
   import Sundial.TasksFixtures
 
-  @create_attrs %{completed_at: ~N[2022-03-16 03:09:00], deadline: ~N[2022-03-16 03:09:00], description: "some description", details: "some details", pane_id: 42}
-  @update_attrs %{completed_at: ~N[2022-03-17 03:09:00], deadline: ~N[2022-03-17 03:09:00], description: "some updated description", details: "some updated details", pane_id: 43}
-  @invalid_attrs %{completed_at: nil, deadline: nil, description: nil, details: nil, pane_id: nil}
+  @create_attrs %{completed_on: ~N[2022-03-16 03:09:00], deadline: ~N[2022-03-16 03:09:00], description: "some description", details: "some details", pane_id: 42}
+  @update_attrs %{completed_on: ~N[2022-03-17 03:09:00], deadline: ~N[2022-03-17 03:09:00], description: "some updated description", details: "some updated details", pane_id: 43}
+  @invalid_attrs %{completed_on: nil, deadline: nil, description: nil, details: nil, pane_id: nil}
 
   describe "index" do
     test "lists all tasks", %{conn: conn} do

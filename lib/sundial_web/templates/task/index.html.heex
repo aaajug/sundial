@@ -3,7 +3,7 @@
 <table>
   <thead>
     <tr>
-      <th>Completed at</th>
+      <th>Completed on</th>
       <th>Deadline</th>
       <th>Description</th>
       <th>Details</th>
@@ -15,7 +15,7 @@
   <tbody>
 <%= for task <- @tasks do %>
     <tr>
-      <td><%= task.completed_at %></td>
+      <td><%= task.completed_on %></td>
       <td><%= task.deadline %></td>
       <td><%= task.description %></td>
       <td><%= task.details %></td>

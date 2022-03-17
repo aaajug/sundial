@@ -8,7 +8,7 @@ defmodule Sundial.TasksTest do
 
     import Sundial.TasksFixtures
 
-    @invalid_attrs %{completed_at: nil, deadline: nil, description: nil, details: nil, pane_id: nil}
+    @invalid_attrs %{completed_on: nil, deadline: nil, description: nil, details: nil, pane_id: nil}
 
     test "list_tasks/0 returns all tasks" do
       task = task_fixture()
@@ -21,10 +21,10 @@ defmodule Sundial.TasksTest do
     end
 
     test "create_task/1 with valid data creates a task" do
-      valid_attrs = %{completed_at: ~N[2022-03-16 03:09:00], deadline: ~N[2022-03-16 03:09:00], description: "some description", details: "some details", pane_id: 42}
+      valid_attrs = %{completed_on: ~N[2022-03-16 03:09:00], deadline: ~N[2022-03-16 03:09:00], description: "some description", details: "some details", pane_id: 42}
 
       assert {:ok, %Task{} = task} = Tasks.create_task(valid_attrs)
-      assert task.completed_at == ~N[2022-03-16 03:09:00]
+      assert task.completed_on == ~N[2022-03-16 03:09:00]
       assert task.deadline == ~N[2022-03-16 03:09:00]
       assert task.description == "some description"
       assert task.details == "some details"
@@ -37,10 +37,10 @@ defmodule Sundial.TasksTest do
 
     test "update_task/2 with valid data updates the task" do
       task = task_fixture()
-      update_attrs = %{completed_at: ~N[2022-03-17 03:09:00], deadline: ~N[2022-03-17 03:09:00], description: "some updated description", details: "some updated details", pane_id: 43}
+      update_attrs = %{completed_on: ~N[2022-03-17 03:09:00], deadline: ~N[2022-03-17 03:09:00], description: "some updated description", details: "some updated details", pane_id: 43}
 
       assert {:ok, %Task{} = task} = Tasks.update_task(task, update_attrs)
-      assert task.completed_at == ~N[2022-03-17 03:09:00]
+      assert task.completed_on == ~N[2022-03-17 03:09:00]
       assert task.deadline == ~N[2022-03-17 03:09:00]
       assert task.description == "some updated description"
       assert task.details == "some updated details"
