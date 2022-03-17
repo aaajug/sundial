@@ -3,7 +3,7 @@ defmodule Sundial.Repo.Migrations.CreatePanes do
 
   def change do
     create table(:panes) do
-      add :header, :string
+      add :header, :string, null: false, default: "Untitled"
       add :description, :text
 
       timestamps()

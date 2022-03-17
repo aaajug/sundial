@@ -17,6 +17,6 @@ defmodule Sundial.Task do
   def changeset(task, attrs) do
     task
     |> cast(attrs, [:deadline, :details, :description, :completed_at, :pane_id, :board_id])
-    |> validate_required([:deadline, :details, :description, :completed_at, :pane_id, :board_id])
+    |> validate_required([:description])
   end
 end

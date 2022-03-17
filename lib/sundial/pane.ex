@@ -13,6 +13,6 @@ defmodule Sundial.Pane do
   def changeset(pane, attrs) do
     pane
     |> cast(attrs, [:header, :description])
-    |> validate_required([:header, :description])
+    |> validate_required([:header])
   end
 end
