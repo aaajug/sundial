@@ -19,23 +19,23 @@ defmodule SundialWeb.Router do
 
     get "/", PageController, :index
 
-    resources "/users", UsersController, only: [:create, :update, :delete]
-    scope path: "/account" do
-      get "/login", UsersController, :index
-      get "/register", UsersController, :new
-      get "/edit", UsersController, :edit
-      get "/logout", UsersController, :logout
-    end
+    # resources "/users", UsersController, only: [:create, :update, :delete]
+    # scope path: "/account" do
+    #   get "/login", UsersController, :index
+    #   get "/register", UsersController, :new
+    #   get "/edit", UsersController, :edit
+    #   get "/logout", UsersController, :logout
+    # end
 
-    resources "/labels", LabelsController
+    # resources "/labels", LabelsController
 
-    resources "/tasks", TasksController
+    # resources "/tasks", TaskController
 
-    resources "/panes", PanesController
+    # resources "/panes", PanesController
 
-    resources "/boards", BoardsController
+    # resources "/boards", BoardsController
 
-    get "/attachments", AttachmentsController, :index
+    # get "/attachments", AttachmentsController, :index
   end
 
   # Other scopes may use custom stacks.
