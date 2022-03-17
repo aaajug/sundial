@@ -5,14 +5,6 @@
     </div>
   <% end %>
 
-  <%= label f, :completed_at %>
-  <%= datetime_select f, :completed_at %>
-  <%= error_tag f, :completed_at %>
-
-  <%= label f, :deadline %>
-  <%= datetime_select f, :deadline %>
-  <%= error_tag f, :deadline %>
-
   <%= label f, :description %>
   <%= text_input f, :description %>
   <%= error_tag f, :description %>
@@ -20,7 +12,11 @@
   <%= label f, :details %>
   <%= textarea f, :details %>
   <%= error_tag f, :details %>
-
+  
+  <%= label f, :deadline %>
+  <%= datetime_select f, :deadline %>
+  <%= error_tag f, :deadline %>
+  
   <%= label f, :pane_id %>
   <%= number_input f, :pane_id %>
   <%= error_tag f, :pane_id %>
