@@ -1,34 +1,9 @@
-<h1>Listing Tasks</h1>
+<div class="columns">
+  <div class="content column is-4">
+    <%= for task <- @tasks do %>
+        <%= render "show.html", task: task, conn: @conn %>
+    <% end %>
 
-<table>
-  <thead>
-    <tr>
-      <th>Completed on</th>
-      <th>Deadline</th>
-      <th>Description</th>
-      <th>Details</th>
-      <th>Pane</th>
-
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
-<%= for task <- @tasks do %>
-    <tr>
-      <td><%= task.completed_on %></td>
-      <td><%= task.deadline %></td>
-      <td><%= task.description %></td>
-      <td><%= task.details %></td>
-      <td><%= task.pane_id %></td>
-
-      <td>
-        <span><%= link "Show", to: Routes.task_path(@conn, :show, task) %></span>
-        <span><%= link "Edit", to: Routes.task_path(@conn, :edit, task) %></span>
-        <span><%= link "Delete", to: Routes.task_path(@conn, :delete, task), method: :delete, data: [confirm: "Are you sure?"] %></span>
-      </td>
-    </tr>
-<% end %>
-  </tbody>
-</table>
-
-<span><%= link "New Task", to: Routes.task_path(@conn, :new) %></span>
+    <span><%= link "New Task", to: Routes.task_path(@conn, :new) %></span>
+  </div>
+</div>
