@@ -31,6 +31,8 @@ defmodule SundialWeb.Router do
 
     resources "/tasks", TasksController
 
+    resources "/panes", PanesController
+
     resources "/boards", BoardsController
 
     get "/attachments", AttachmentsController, :index
