@@ -6,7 +6,7 @@ defmodule Sundial.Tasks.Task do
     field :completed_at, :naive_datetime, default: nil
     field :deadline, :naive_datetime, default: nil
     field :description, :string, null: false, default: "New task"
-    field :details, :text
+    field :details, :string
     field :pane_id, :integer, null: false, default: 0
 
     timestamps()

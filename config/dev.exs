@@ -25,7 +25,12 @@ config :sundial, SundialWeb.Endpoint,
   secret_key_base: "fDLuwAenSrMOpDbfSFfFhqOZ+qOA9Kqg/tjLTt5WbPnMz4eT9lA0YVO8xwqyHRk0",
   watchers: [
     # Start the esbuild watcher by calling Esbuild.install_and_run(:default, args)
-    esbuild: {Esbuild, :install_and_run, [:default, ~w(--sourcemap=inline --watch)]}
+    esbuild: {Esbuild, :install_and_run, [:default, ~w(--sourcemap=inline --watch)]},
+    sass: {
+      DartSass,
+      :install_and_run,
+      [:default, ~w(--embed-source-map --source-map-urls=absolute --watch)]
+    }
   ]
 
 # ## SSL Support
