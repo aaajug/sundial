@@ -1,15 +1,22 @@
-<div class="card my-5">
+<div class="task-card card my-5">
   <header class="card-header mb-0">
-    <p class="card-header-title">
-      <input type="checkbox" class="mr-3">
-      <%= @task.description %>
-    </p>
+    <div class="card-header-title columns">
+      <div class="column is-1">
+        <ion-icon name="ellipse-outline" class="icon is-large"></ion-icon>
+      </div>
+      <div class="column">
+        <p class="is-size-5 has-text-weight-semibold ml-3"> 
+          <%= @task.description %>
+        </p>
+      </div>
+      <div class="edit column is-1">
+        <ion-icon name="pencil-outline"></ion-icon>
+      </div>
+    </div>
   </header>
   <div class="card-content">
     <div class="content">
       <%= @task.details %>
-      <%= @task.deadline %>
-      <%= @task.completed_on %>
     </div>
   </div>
   <footer class="card-footer">
