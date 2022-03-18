@@ -31,6 +31,8 @@ defmodule SundialWeb.Router do
 
     resources "/tasks", TaskController
 
+    resources "/labels", LabelController
+
     # resources "/panes", PanesController
 
     # resources "/boards", BoardsController

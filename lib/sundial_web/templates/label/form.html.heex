@@ -5,13 +5,23 @@
     </div>
   <% end %>
 
+  <span class="tag is-medium is-warning">
+    Tag label
+  </span>
+
+  <div class="field is-horizontal">
+  </div>
+
   <%= label f, :name %>
   <%= text_input f, :name %>
   <%= error_tag f, :name %>
 
-  <%= label f, :color_class %>
-  <%= text_input f, :color_class %>
-  <%= error_tag f, :color_class %>
+
+  <div class= "select is-rounded">
+    <select>
+      <%= options_for_select(["Buff Yellow": "buff-yellow", "Rose": "rose"], "buff-yellow") %>
+    </select>
+  </div>
 
   <div>
     <%= submit "Save" %>
