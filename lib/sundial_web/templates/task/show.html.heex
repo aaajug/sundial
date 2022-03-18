@@ -1,25 +1,13 @@
-<div class="task-card card my-5">
-  <header class="card-header mb-0">
-    <div class="card-header-title columns">
-      <div class="column is-1">
-        <ion-icon name="ellipse-outline" class="icon is-large"></ion-icon>
-      </div>
-      <div class="column">
-        <p class="is-size-5 has-text-weight-semibold ml-3"> 
-          <%= @task.description %>
-        </p>
-      </div>
-      <div class="edit column is-1">
-        <ion-icon name="pencil-outline"></ion-icon>
-      </div>
-    </div>
-  </header>
-  <div class="card-content">
-    <div class="content">
-      <%= @task.details %>
-    </div>
-  </div>
-  <footer class="card-footer">
-    <%# put labels here %>
-  </footer>
+<%# 
+Required: @task [status description]
+Optional: @task [details labels timestamps[deadline completed_on]]
+%>
+
+<div class="task-card card is-clipped my-5">
+  <%= render "timestamps.html", assigns: assigns, timestamps: %{deadline: @task.deadline, completed_on: @task.completed_on} %>
+  <%= render "header.html", assigns: assigns, task: @task %>
+
+  <%= if @task.details do %>
+    <%= render "content.html", assigns: assigns, details: @task.details %>
+  <% end %>
 </div>
