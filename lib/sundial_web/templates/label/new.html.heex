@@ -1,5 +1,15 @@
-<h1>New Label</h1>
+<ion-icon name="return-up-back-outline" class="icon"></ion-icon>
+<span class="is-size-4 ml-2">
+  <%= link "Back", to: Routes.task_path(@conn, :index) %>
+</span>
 
-<%= render "form.html", Map.put(assigns, :action, Routes.label_path(@conn, :create)) %>
+<div class="container columns mt-6">
+  <div class="column is-6">
+    <p class="is-size-2 mb-3 has-text-weight-medium">Add a new label</p>
+    <%= render "form.html", Map.put(assigns, :action, Routes.label_path(@conn, :create)) %>
+  </div>
 
-<span><%= link "Back", to: Routes.label_path(@conn, :index) %></span>
+  <div class="column is-5 pl-6 ml-6">
+    <%= render "list.html", labels: @labels %>
+  </div>
+</div>

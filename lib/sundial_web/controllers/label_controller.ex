@@ -10,8 +10,10 @@ defmodule SundialWeb.LabelController do
   end
 
   def new(conn, _params) do
+    labels = Labels.list_labels()
     changeset = Labels.change_label(%Label{})
-    render(conn, "new.html", changeset: changeset)
+
+    render(conn, "new.html", changeset: changeset, labels: labels)
   end
 
   def create(conn, %{"label" => label_params}) do

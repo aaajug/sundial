@@ -5,23 +5,28 @@
     </div>
   <% end %>
 
-  <span class="tag is-medium is-warning">
-    Tag label
-  </span>
-
   <div class="field is-horizontal">
+    <div class="field-body">
+      <div class="field">
+        <label class="label">Color</label>
+        <%= text_input f, :color_class, class: "color-selector", type: "color", list: "presets", value: "#FFD32D" %>
+        <datalist id="presets">
+          <option value="#FFD32D">Yellow</option>
+          <option value="#ffffff">White</option>
+          <option value="#6699cc">Blue</option>
+        </datalist>
+      </div>
+      
+      <div class="field">
+        <label class="label">Give your new label a name</label>
+        <div class="control">
+          <%= text_input f, :name %>
+        </div>
+      </div>
+    </div>
   </div>
 
-  <%= label f, :name %>
-  <%= text_input f, :name %>
   <%= error_tag f, :name %>
-
-
-  <div class= "select is-rounded">
-    <select>
-      <%= options_for_select(["Buff Yellow": "buff-yellow", "Rose": "rose"], "buff-yellow") %>
-    </select>
-  </div>
 
   <div>
     <%= submit "Save" %>
