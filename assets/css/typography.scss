@@ -1,0 +1,12 @@
+// Source: https://fonts.googleapis.com/css?family=Roboto:600,700,800
+
+html, header, body {
+    font-family: "Roboto", $family-sans-serif;
+    letter-spacing: 2px;
+}
+
+header {
+    .navbar-item {
+        color: $white !important;
+    }
+}

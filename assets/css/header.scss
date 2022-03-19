@@ -1,0 +1,16 @@
+header {
+    section :last-child {
+        order: 2;
+    }
+
+    nav.navbar-menu {
+        background-color: none !important;
+
+        .navbar-item {
+            ion-icon {
+                order: 0;
+                padding-right: 8px;
+            }
+        }
+    }
+}
