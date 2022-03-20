@@ -1,3 +1,15 @@
+.inline-block {
+    display: inline-block;
+}
+
+.flex {
+    display: flex;
+}
+
+.place-flex-end {
+    place-self: flex-end
+}
+
 .relative {
     position: relative;
 }

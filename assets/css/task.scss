@@ -1,6 +1,43 @@
 .task-card {
   border-radius: 20px;
   padding: 32px;
+  
+  /* Status Class Selectors */
+  &.initiated {
+    border-left: solid;
+    border-left-color: $initiated;
+    border-left-width: 20px;
+  }
+
+  &.started {
+    border-left: solid;
+    border-left-color: $started;
+    border-left-width: 20px;
+  }
+
+  &.completed {
+    border-left: solid;
+    border-left-color: $completed;
+    border-left-width: 20px;
+  }
+
+  &.on-hold {
+    border-left: solid;
+    border-left-color: $on_hold;
+    border-left-width: 20px;
+  }
+
+  &.overdue {
+    border-left: solid;
+    border-left-color: $overdue;
+    border-left-width: 20px;
+  }
+
+  hr {
+    background-color: $gray;
+    height: 1px;;
+  }
+
   // .card-header {
   //   .card-header-title {
   //     margin: 24px;
@@ -9,6 +46,14 @@
   //     // }
   //   }
   // }
+}
+
+.action-button {
+  width: 1.2em;
+  height: 1.2em;
+  padding-top: 4px;
+  color: $white;
+  opacity: 50%;
 }
 
 
@@ -54,3 +99,5 @@
   .round input[type="checkbox"]:checked + label:after {
     opacity: 1;
   }
+
+

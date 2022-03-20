@@ -16,10 +16,10 @@ defmodule SundialWeb.TaskController do
 
   def create(conn, %{"task" => task_params}) do
     case Tasks.create_task(task_params) do
-      {:ok, task} ->
+      {:ok, _task} ->
         conn
         |> put_flash(:info, "Task created successfully.")
-        |> redirect(to: Routes.task_path(conn, :show, task))
+        |> redirect(to: Routes.task_path(conn, :index))
 
       {:error, %Ecto.Changeset{} = changeset} ->
         render(conn, "new.html", changeset: changeset)

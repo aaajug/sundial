@@ -1,0 +1,10 @@
+<div class="">
+    <%= link to: Routes.task_path(@conn, :edit, @task) do %>
+        <ion-icon name="pencil-outline" class="is-clickable action-button"></ion-icon>
+    <% end %>
+    <%= link to: Routes.task_path(@conn, :delete, @task), 
+                 method: :delete, 
+                 data: [confirm: "This task will be deleted. Are you sure?"] do %>
+        <ion-icon name="trash-outline" class="is-clickable action-button"></ion-icon>
+    <% end %>
+</div>
