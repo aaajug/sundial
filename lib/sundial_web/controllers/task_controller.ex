@@ -6,6 +6,7 @@ defmodule SundialWeb.TaskController do
 
   def index(conn, _params) do
     tasks = Tasks.list_tasks()
+    IO.inspect tasks
     render(conn, "index.html", tasks: tasks)
   end
 

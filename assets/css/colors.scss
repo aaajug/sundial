@@ -6,6 +6,11 @@ $completed: #059C1D;
 $on_hold: #000000;
 
 /* Theme colors */
+$blue_whale: #053344;
 $black: #000000;
 $gray: #DBDBDB;
 $white: #FFFFFF;
+
+.is-text-blue-whale {
+    color: $blue_whale;
+}

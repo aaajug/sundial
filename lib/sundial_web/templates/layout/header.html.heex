@@ -1,13 +1,14 @@
 <section class="container is-fluid px-6">
         <nav class="relative navbar-menu p-6">
             <div class="navbar-start absolute left-attached pl-5">
-              <a class="is-size-1 has-text-weight-semibold has-text-white">
+              <%= link to: Routes.task_path(@conn, :index), 
+                           class: "is-size-1 has-text-weight-semibold has-text-white" do %>
                 My tasks
-              </a>
+              <% end %>
             </div>
 
             <div class="navbar-end absolute right-attached pr-5">
-              <%= render "header_right_menu.html" %>
+              <%= render "header_right_menu.html", conn: @conn %>
             </div>
         </nav>
       </section>

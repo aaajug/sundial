@@ -11,7 +11,7 @@
 @import "./label.scss";
 
 html, header {
-  background-color: #053344;
+  background-color: $blue_whale;
 }
 
 /* Alerts and form errors used by phx.new */
@@ -130,4 +130,10 @@ html, header {
 @keyframes fade-out-keys{
   0% { opacity: 1; }
   100% { opacity: 0; }
+}
+
+/* Custom styles */
+a.navbar-item:hover {
+  text-decoration: none;
+  background-color: transparent;
 }
