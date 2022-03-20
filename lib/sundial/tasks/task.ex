@@ -3,10 +3,11 @@ defmodule Sundial.Tasks.Task do
   import Ecto.Changeset
 
   schema "tasks" do
-    field :completed_on, :naive_datetime, default: nil
-    field :deadline, :naive_datetime, default: nil
     field :description, :string, null: false, default: "New task"
     field :details, :string
+    field :deadline, :naive_datetime, default: nil
+    field :status, :integer
+    field :completed_on, :naive_datetime, default: nil
     field :pane_id, :integer, null: false, default: 0
 
     timestamps()
@@ -15,7 +16,7 @@ defmodule Sundial.Tasks.Task do
   @doc false
   def changeset(task, attrs) do
     task
-    |> cast(attrs, [:completed_on, :deadline, :description, :details, :pane_id])
+    |> cast(attrs, [:description, :details, :deadline, :status, :completed_on, :pane_id])
     |> validate_required([:description])
   end
 end

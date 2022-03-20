@@ -3,10 +3,11 @@ defmodule Sundial.Repo.Migrations.CreateTasks do
 
   def change do
     create table(:tasks) do
-      add :completed_on, :naive_datetime
-      add :deadline, :naive_datetime
       add :description, :string
       add :details, :text
+      add :deadline, :naive_datetime
+      add :status, :integer
+      add :completed_on, :naive_datetime
       add :pane_id, :integer
 
       timestamps()

@@ -33,6 +33,8 @@ defmodule SundialWeb.Router do
 
     resources "/labels", LabelController
 
+    resources "/status", StatusController
+
     # resources "/panes", PanesController
 
     # resources "/boards", BoardsController
