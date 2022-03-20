@@ -7,6 +7,7 @@ defmodule Sundial.Tasks do
   alias Sundial.Repo
 
   alias Sundial.Tasks.Task
+  alias Sundial.Tasks.SerialTask
 
   @doc """
   Returns the list of tasks.
@@ -100,5 +101,47 @@ defmodule Sundial.Tasks do
   """
   def change_task(%Task{} = task, attrs \\ %{}) do
     Task.changeset(task, attrs)
+  end
+
+  @doc """
+  Returns a SerialTask struct containing details of a task
+  task:
+    id
+    description
+    details
+    deadline
+    completed_on
+
+    status
+    status_desc
+
+    is_overdue
+  """
+  def serialize_task(%Task{} = task) do
+    status_id = if task.status == 0 || task.status == nil do
+                  1
+                else
+                  task.status
+                end
+
+    [{status_name, status_description}] = Repo.all(from s in "status", where: s.id == ^status_id, select: {s.name, s.description})
+
+    %SerialTask{
+      id: task.id,
+      description: task.description,
+      details: task.details,
+      deadline: task.deadline,
+      completed_on: task.completed_on,
+      status: status_name,
+      status_desc: status_description,
+      is_overdue: false
+    }
+  end
+
+  @doc """
+  Return a list of map objects corresponding to tasks
+  """
+  def serialize(tasks) do
+    Enum.map(tasks, fn(task) -> serialize_task(task) end)
   end
 end
