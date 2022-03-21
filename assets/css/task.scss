@@ -101,3 +101,13 @@
   }
 
 
+.task-form {
+  label {
+    font-size: 1em;
+    font-weight: 100;
+  }
+
+  input, textarea, select {
+    background-color: $off_white;
+  }
+}

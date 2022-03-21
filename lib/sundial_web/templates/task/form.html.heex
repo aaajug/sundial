@@ -5,32 +5,65 @@
     </div>
   <% end %>
 
-  <%= label f, :description %>
-  <%= text_input f, :description %>
-  <%= error_tag f, :description %>
+  <%= #label f, :deadline %>
+  <%= #datetime_select f, :deadline %>
+  <%= #error_tag f, :deadline %>
 
-  <%= label f, :details %>
-  <%= textarea f, :details %>
-  <%= error_tag f, :details %>
-  
-  <%= label f, :deadline %>
-  <%= datetime_select f, :deadline %>
-  <%= error_tag f, :deadline %>
+  <%= #label f, :completed_on %>
+  <%= #datetime_select f, :completed_on %>
+  <%= #error_tag f, :completed_on %>
 
-  <%= label f, :completed_on %>
-  <%= datetime_select f, :completed_on %>
-  <%= error_tag f, :completed_on %>
+  <div class="columns"> 
+    <div class="column"> 
+      <%= label f, :deadline %>
+      <div class="field is-horizontal">
+        <div class="field-body">
+          <div class="field">
+            <%= text_input f, :deadline, type: "date" %>
+          </div>
+          <div class="field">
+            <%= time_select f, :deadline %>
+            <%= error_tag f, :deadline %>
+          </div>
+        </div>
+      </div>
+    </div>
 
-  <%# <%= label f, :completed_on %> %>
-  <%# <%= text_input f, :completed_on, type: "date" %> %>
-  <%# <%= time_select f, :completed_on %> %>
-  <%# <%= error_tag f, :completed_on %> %>
+    <div class="column"> 
+      <%= label f, :completed_on %>
+      <div class="field is-horizontal">
+        <div class="field-body">
+          <div class="field">
+            <%= text_input f, :completed_on, type: "date" %>
+          </div>
+          <div class="field">
+            <%= time_select f, :completed_on %>
+            <%= error_tag f, :completed_on %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
-  <%= label f, :pane_id %>
-  <%= number_input f, :pane_id %>
-  <%= error_tag f, :pane_id %>
+  <div class="field pt-2">
+    <%= label f, "What's the task? *required" %>
+    <%= text_input f, :description %>
+    <%= error_tag f, :description %>
+  </div>
 
-  <div>
-    <%= submit "Save" %>
+  <div class="field pt-3">
+    <%= label f, "Want to add more details?" %>
+    <%= textarea f, :details, class: "textarea" %>
+    <%= error_tag f, :details %>
+  </div>
+    
+
+  <%= #label f, :pane_id %>
+  <%= #number_input f, :pane_id %>
+  <%= #error_tag f, :pane_id %>
+
+  <div class="field is-pulled-right pt-2">
+    <%= button "Cancel", to: Routes.task_path(@conn, :index), method: "get", class: "button is-ghost" %>
+    <%= submit "Save", class: "button is-success is-active" %>
   </div>
 </.form>
