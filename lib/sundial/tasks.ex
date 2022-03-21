@@ -19,7 +19,7 @@ defmodule Sundial.Tasks do
 
   """
   def list_tasks do
-    Repo.all(Task)
+    Repo.all(from task in Task, order_by: [asc: task.status, desc: task.updated_at])
   end
 
   @doc """
