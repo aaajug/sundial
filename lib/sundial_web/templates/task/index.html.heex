@@ -1,6 +1,6 @@
 <div class="columns">
   <div class="content column pane is-one-quarter">
-    <div style="width: 96%;">
+    <div class="task-list">
       <%= for task <- @tasks do %>
           <%= render "show.html", task: task, status: @status, conn: @conn, options: %{truncated: true} %>
       <% end %>
