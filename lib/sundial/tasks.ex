@@ -130,8 +130,8 @@ defmodule Sundial.Tasks do
       id: task.id,
       description: task.description,
       details: task.details,
-      deadline: task.deadline,
-      completed_on: task.completed_on,
+      deadline: format_datetime(task.deadline),
+      completed_on: format_datetime(task.completed_on),
       status: status_name,
       status_desc: status_description,
       is_overdue: false
@@ -143,5 +143,11 @@ defmodule Sundial.Tasks do
   """
   def serialize(tasks) do
     Enum.map(tasks, fn(task) -> serialize_task(task) end)
+  end
+
+  # private
+
+  defp format_datetime(datetime) do
+    Calendar.strftime(datetime, "%d %b %Y | %H:%M")
   end
 end
