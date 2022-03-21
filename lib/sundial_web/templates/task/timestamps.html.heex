@@ -2,9 +2,14 @@
   Required: timestamps[]
 %>
 
-<span class="tag is-danger is-light is-letter-spaced-0 mt-2">
-  Due: <%= @timestamps.deadline %>
-</span>
-<span class="tag is-success is-light is-letter-spaced-0 mt-2">
-  Completed on: <%= @timestamps.completed_on %>
-</span>
+<%= if @timestamps.deadline do %>
+  <span class="tag is-tiny-text is-danger is-light is-letter-spaced-0 mt-2">
+    Due: <%= @timestamps.deadline %>
+  </span>
+<% end %>
+
+<%= if @timestamps.deadline do %>
+  <span class="tag is-tiny-text is-success is-light is-letter-spaced-0 mt-2">
+    Completed on: <%= @timestamps.completed_on %>
+  </span>
+<% end %>
