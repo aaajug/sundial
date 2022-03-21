@@ -1,9 +1,13 @@
 <div class="columns">
-  <div class="content column is-4">
-    <%= for task <- @tasks do %>
-        <%= render "show.html", task: task, conn: @conn %>
-    <% end %>
+  <div class="content column pane is-one-quarter">
+  <%# <div class="content column pane is-one-third"> %>
+    <div style="width: 96%;">
+      <%= for task <- @tasks do %>
+          <%= render "show.html", task: task, conn: @conn, options: %{truncated: true} %>
+      <% end %>
+    </div>
 
     <span><%#= link "New Task", to: Routes.task_path(@conn, :new) %></span>
   </div>
+  <br><br><br><br><br>
 </div>

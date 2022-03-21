@@ -1,5 +1,17 @@
+<%# 
+Required: details options
+Optional: options[truncated]
+%>
+
+<% is_truncated = if Map.has_key?(@options, :truncated) do 
+                    @options.truncated 
+                  else
+                    false 
+                  end %>
+<% class = "content is-mini-text #{if is_truncated, do: "truncated"}"  %>
+
 <div class="card-content p-0 pt-2">
-  <div class="content">
+  <div class={class}>
     <%= @details %>
   </div>
 </div>

@@ -3,15 +3,16 @@ Required: @task [status description]
 Optional: @task [details labels timestamps[deadline completed_on]]
 %>
 
+<% options = if Map.has_key?(assigns, :options), do: @options %>
+
 <div class="flex">
-  <div class="task-card initiated card is-clipped mt-5">
+  <div class="fullwidth task-card initiated card is-clickable is-clipped mt-5">
     <%= render "timestamps.html", assigns: assigns, timestamps: %{deadline: @task.deadline, completed_on: @task.completed_on} %>
     <%= render "header.html", assigns: assigns, task: @task %>
 
-    <hr class="my-3">
-
     <%= if @task.details do %>
-      <%= render "content.html", assigns: assigns, details: @task.details %>
+      <hr class="my-3">
+      <%= render "content.html", details: @task.details, options: options %>
     <% end %>
   </div>
 
