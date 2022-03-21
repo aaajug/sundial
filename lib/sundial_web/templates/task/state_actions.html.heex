@@ -1,0 +1,13 @@
+<% task_status = @task.status %>
+
+<div class="state-actions-container absolute">
+  <%= for status <- @status do %>
+    <%= unless status.name == task_status do %>
+      <form action="/tasks" method="post">
+        <button class={"action-state-link " <> status.name} type="submit">
+          <ion-icon name="ellipse" class={status.name}></ion-icon> <br>
+        </button>
+      </form>
+    <% end %>
+  <% end %>
+</div>

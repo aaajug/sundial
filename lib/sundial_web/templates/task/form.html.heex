@@ -58,10 +58,20 @@
     </div>
   </div>
 
-  <div class="field pt-2">
-    <%= label f, "What's the task? *required" %>
-    <%= text_input f, :description %>
-    <%= error_tag f, :description %>
+  <div class="columns">
+    <div class="column">
+      <%= label f, "What's the task? *required" %>
+      <div class="field is-horizontal">
+        <%= text_input f, :description %>
+        <%= error_tag f, :description %>
+      </div>
+    </div>
+    <div class="column is-one-fifth">
+      <%= label f, "Status" %>
+      <div class="field is-horizontal">
+        <%= select f, :status, @status %>
+      </div>
+    </div>
   </div>
 
   <div class="field pt-3">

@@ -1,13 +1,13 @@
 <div class="mt-6 pt-4 columns">
-    <div class="column is-half">
-        <ion-icon name="return-up-back-outline" class="icon"></ion-icon>
-        <span class="is-size-4 ml-2">
-            <%= link "Back", to: Routes.task_path(@conn, :index) %>
-        </span>
+  <div class="column is-half">
+    <ion-icon name="return-up-back-outline" class="icon"></ion-icon>
+    <span class="is-size-4 ml-2">
+      <%= link "Back", to: Routes.task_path(@conn, :index) %>
+    </span>
 
-        <div class="mt-6 task-form">
-            <p class="is-size-3 mb-3 has-text-weight-bold"> Add a new task </p>
-            <%= render "form.html", Map.put(assigns, :action, Routes.task_path(@conn, :create)) %>
-        </div>
+    <div class="mt-6 task-form">
+      <p class="is-size-3 mb-3 has-text-weight-bold"> Add a new task </p>
+      <%= render "form.html", Map.put(assigns, :action, Routes.task_path(@conn, :create)) %>
     </div>
+  </div>
 </div>

@@ -21,6 +21,11 @@ defmodule Sundial.Progress do
     Repo.all(Status)
   end
 
+  @spec list_status_options :: list
+  def list_status_options do
+    Enum.map(list_status(), fn(s) -> {s.name, s.id} end)
+  end
+
   @doc """
   Gets a single status.
 

@@ -1,19 +1,22 @@
 defmodule SundialWeb.TaskController do
   use SundialWeb, :controller
 
+  alias Sundial.Progress
   alias Sundial.Tasks
   alias Sundial.Tasks.Task
 
   def index(conn, _params) do
     tasks = Tasks.list_tasks()
-    ser_tasks = Tasks.serialize(tasks)
+    tasks = Tasks.serialize(tasks)
+    status = Progress.list_status()
 
-    render(conn, "index.html", tasks: ser_tasks)
+    render(conn, "index.html", tasks: tasks, status: status)
   end
 
   def new(conn, _params) do
+    status = Progress.list_status_options()
     changeset = Tasks.change_task(%Task{})
-    render(conn, "new.html", changeset: changeset)
+    render(conn, "new.html", status: status, changeset: changeset)
   end
 
   def create(conn, %{"task" => task_params}) do
@@ -34,19 +37,20 @@ defmodule SundialWeb.TaskController do
   end
 
   def edit(conn, %{"id" => id}) do
+    status = Progress.list_status_options()
     task = Tasks.get_task!(id)
     changeset = Tasks.change_task(task)
-    render(conn, "edit.html", task: task, changeset: changeset)
+    render(conn, "edit.html", status: status, task: task, changeset: changeset)
   end
 
   def update(conn, %{"id" => id, "task" => task_params}) do
     task = Tasks.get_task!(id)
 
     case Tasks.update_task(task, task_params) do
-      {:ok, task} ->
+      {:ok, _task} ->
         conn
         |> put_flash(:info, "Task updated successfully.")
-        |> redirect(to: Routes.task_path(conn, :show, task))
+        |> redirect(to: Routes.task_path(conn, :index))
 
       {:error, %Ecto.Changeset{} = changeset} ->
         render(conn, "edit.html", task: task, changeset: changeset)
