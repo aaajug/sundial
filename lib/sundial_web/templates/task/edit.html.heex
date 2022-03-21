@@ -1,5 +1,13 @@
-<h1>Edit Task</h1>
+<div class="mt-6 pt-4 columns">
+    <div class="column is-half">
+        <ion-icon name="return-up-back-outline" class="icon"></ion-icon>
+        <span class="is-size-4 ml-2">
+            <%= link "Back", to: Routes.task_path(@conn, :index) %>
+        </span>
 
-<%= render "form.html", Map.put(assigns, :action, Routes.task_path(@conn, :update, @task)) %>
-
-<span><%= link "Back", to: Routes.task_path(@conn, :index) %></span>
+        <div class="mt-6 task-form">
+            <p class="is-size-3 mb-3 has-text-weight-bold"> Edit task </p>
+            <%= render "form.html", Map.put(assigns, :action, Routes.task_path(@conn, :update, @task)) %>
+        </div>
+    </div>
+</div>
