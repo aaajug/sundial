@@ -2,10 +2,11 @@
 @import "./phoenix.css";
 @import "bulma";
 
+@import "./colors.scss";
+@import "./scrollbar.scss";
 @import "./header.scss";
 @import "./typography.scss";
 @import "./positions.scss";
-@import "./colors.scss";
 
 @import "./task.scss";
 @import "./label.scss";
@@ -133,6 +134,22 @@ html, header {
 }
 
 /* Custom styles */
+html, header, body {
+  font-family: "Roboto", $family-sans-serif;
+  letter-spacing: 1px;
+  color: $white;
+}
+
+html {
+  overflow-y: hidden;
+}
+
+header {
+  .navbar-item {
+      color: $white !important;
+  }
+}
+
 a.navbar-item:hover {
   text-decoration: none;
   background-color: transparent;
