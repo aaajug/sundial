@@ -110,5 +110,9 @@
   input, textarea, select {
     background-color: $off_white;
     color: $black;
+
+    &:disabled {
+      opacity: 0.3;
+    }
   }
 }

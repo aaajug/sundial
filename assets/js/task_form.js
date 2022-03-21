@@ -1,3 +1,30 @@
+$(document).ready(function() {
+    $("#task_deadline_hour").prop("disabled", true);
+    $("#task_deadline_minute").prop("disabled", true);
+    $("#task_completed_on_hour").prop("disabled", true);
+    $("#task_completed_on_minute").prop("disabled", true);
+});
+
+$(".disable-timestamp").change(function() {
+    var target = "#" + $(this).data("target");
+
+    if(this.checked) {
+        $(target).prop("disabled", false);
+        $(target + "_hour").prop("disabled", false);
+        $(target + "_minute").prop("disabled", false);        
+    } else {
+        $(target).prop("disabled", true);  
+        $(target + "_hour").prop("disabled", true);
+        $(target + "_minute").prop("disabled", true);
+
+        $(target + "_year").val("");        
+        $(target + "_month").val("");        
+        $(target + "_day").val("");        
+        $(target + "_hour_field").val("");        
+        $(target + "_minute_field").val("");
+    }
+});
+
 $("#task_deadline").change(function() {
     var deadline_str = $(this).val();
     var deadline_date = new Date(deadline_str);
@@ -30,4 +57,8 @@ $("#task_completed_on_hour").change(function() {
 
 $("#task_completed_on_minute").change(function() {
     $("#task_completed_on_minute_field").val($(this).val());
+});
+
+$(".disable-timestamp").click(function() {
+
 });
