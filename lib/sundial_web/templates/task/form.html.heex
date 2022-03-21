@@ -5,13 +5,17 @@
     </div>
   <% end %>
 
-  <%= #label f, :deadline %>
-  <%= #datetime_select f, :deadline %>
-  <%= #error_tag f, :deadline %>
+  <%= text_input f, :deadline, name: "deadline[year]", id: "task_deadline_year", hidden: true %>
+  <%= text_input f, :deadline, name: "deadline[month]", id: "task_deadline_month", hidden: true %>
+  <%= text_input f, :deadline, name: "deadline[day]", id: "task_deadline_day", hidden: true %>
+  <%= text_input f, :deadline, name: "deadline[hour]", id: "task_deadline_hour_field", hidden: true %>
+  <%= text_input f, :deadline, name: "deadline[minute]", id: "task_deadline_minute_field", hidden: true %>
 
-  <%= #label f, :completed_on %>
-  <%= #datetime_select f, :completed_on %>
-  <%= #error_tag f, :completed_on %>
+  <%= text_input f, :completed_on, name: "completed_on[year]", id: "task_completed_on_year", hidden: true %>
+  <%= text_input f, :completed_on, name: "completed_on[month]", id: "task_completed_on_month", hidden: true %>
+  <%= text_input f, :completed_on, name: "completed_on[day]", id: "task_completed_on_day", hidden: true %>
+  <%= text_input f, :completed_on, name: "completed_on[hour]", id: "task_completed_on_hour_field", hidden: true %>
+  <%= text_input f, :completed_on, name: "completed_on[minute]", id: "task_completed_on_minute_field", hidden: true %>
 
   <div class="columns"> 
     <div class="column"> 
@@ -19,10 +23,10 @@
       <div class="field is-horizontal">
         <div class="field-body">
           <div class="field">
-            <%= text_input f, :deadline, type: "date" %>
+            <%= date_input f, :deadline, name: "" %>
           </div>
           <div class="field">
-            <%= time_select f, :deadline %>
+            <%= time_select f, :deadline, name: "" %>
             <%= error_tag f, :deadline %>
           </div>
         </div>
@@ -34,10 +38,10 @@
       <div class="field is-horizontal">
         <div class="field-body">
           <div class="field">
-            <%= text_input f, :completed_on, type: "date" %>
+            <%= date_input f, :completed_on, name: "" %>
           </div>
           <div class="field">
-            <%= time_select f, :completed_on %>
+            <%= time_select f, :completed_on, name: "" %>
             <%= error_tag f, :completed_on %>
           </div>
         </div>
@@ -53,16 +57,11 @@
 
   <div class="field pt-3">
     <%= label f, "Want to add more details?" %>
-    <%= textarea f, :details, class: "textarea" %>
+    <%= textarea f, :details, class: "textarea", rows: 5 %>
     <%= error_tag f, :details %>
   </div>
-    
 
-  <%= #label f, :pane_id %>
-  <%= #number_input f, :pane_id %>
-  <%= #error_tag f, :pane_id %>
-
-  <div class="field is-pulled-right pt-2">
+  <div class="field is-pulled-right pt-4">
     <%= button "Cancel", to: Routes.task_path(@conn, :index), method: "get", class: "button is-ghost" %>
     <%= submit "Save", class: "button is-success is-active" %>
   </div>

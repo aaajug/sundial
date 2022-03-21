@@ -147,6 +147,7 @@ defmodule Sundial.Tasks do
 
   # private
 
+  defp format_datetime(nil), do: nil
   defp format_datetime(datetime) do
     Calendar.strftime(datetime, "%d %b %Y | %H:%M")
   end
