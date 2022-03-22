@@ -2,10 +2,10 @@
   <p class="is-size-6 has-text-weight-semibold mb-0"> 
     <%= @task.description %>
   </p>
-  <p class="is-italic is-size-7 is-letter-spaced-0">
-    <%= @task.status_desc %> 
+  <p class="is-size-7 is-letter-spaced-0">
+    <span class="is-italic"><%= @task.status_desc %></span>
     <%= if @status == "overdue" do %>
-      &bull OVERDUE
+      <span class="has-text-weight-bold">&nbsp;&bull; OVERDUE</span>
     <% end %>
   </p>
 </div>
