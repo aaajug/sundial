@@ -18,24 +18,40 @@
     border-left: solid;
     border-left-color: $started;
     border-left-width: 25px;
+
+    .header p {
+      color: $started;
+    }
   }
 
   &.completed {
     border-left: solid;
     border-left-color: $completed;
-    border-left-width: 25px;
+    border-left-width: 25px; 
+
+    .header p {
+      color: $completed;
+    }
   }
 
   &.paused {
     border-left: solid;
     border-left-color: $on_hold;
     border-left-width: 25px;
+
+    .header p {
+      color: $on_hold;
+    }
   }
 
   &.overdue {
     border-left: solid;
     border-left-color: $overdue;
     border-left-width: 25px;
+
+    .header p {
+      color: $overdue;
+    }
   }
 
   hr {
