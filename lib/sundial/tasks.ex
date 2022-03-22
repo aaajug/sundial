@@ -132,12 +132,16 @@ defmodule Sundial.Tasks do
                    false
                  end
 
+    completed_on = if task.status == 4 do
+                     format_datetime(task.completed_on)
+                   end
+
     %SerialTask{
       id: task.id,
       description: task.description,
       details: task.details,
       deadline: format_datetime(task.deadline),
-      completed_on: format_datetime(task.completed_on),
+      completed_on: completed_on,
       status: status_name,
       status_desc: status_description,
       is_overdue: is_overdue
