@@ -46,6 +46,12 @@ defmodule SundialWeb.TaskController do
   def update(conn, %{"id" => id, "task" => task_params}) do
     task = Tasks.get_task!(id)
 
+    m = if task_params["status"] == 4 || task_params["status"] == "4" do
+      Map.put(task_params, "completed_on", NaiveDateTime.local_now)
+    end
+
+    task_params = m || task_params
+
     case Tasks.update_task(task, task_params) do
       {:ok, _task} ->
         conn
