@@ -126,6 +126,12 @@ defmodule Sundial.Tasks do
 
     [{status_name, status_description}] = Repo.all(from s in "status", where: s.id == ^status_id, select: {s.name, s.description})
 
+    is_overdue = if task.deadline && task.completed_on == nil && task.status != 3 do
+                   NaiveDateTime.compare(NaiveDateTime.local_now, task.deadline) == :gt
+                 else
+                   false
+                 end
+
     %SerialTask{
       id: task.id,
       description: task.description,
@@ -134,7 +140,7 @@ defmodule Sundial.Tasks do
       completed_on: format_datetime(task.completed_on),
       status: status_name,
       status_desc: status_description,
-      is_overdue: false
+      is_overdue: is_overdue
     }
   end
 

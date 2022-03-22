@@ -3,6 +3,9 @@
     <%= @task.description %>
   </p>
   <p class="is-italic is-size-7 is-letter-spaced-0">
-    <%= @task.status_desc %>
+    <%= @task.status_desc %> 
+    <%= if @status == "overdue" do %>
+      &bull OVERDUE
+    <% end %>
   </p>
 </div>

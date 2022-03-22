@@ -4,11 +4,16 @@ Optional: @task [details labels timestamps[deadline completed_on]]
 %>
 
 <% options = if Map.has_key?(assigns, :options), do: @options %>
+<% status = if @task.is_overdue do 
+              "overdue"
+            else 
+              @task.status
+            end %>
 
 <div class="flex relative">
-  <div class={"fullwidth task-card card is-clipped mt-5 " <> @task.status}>
+  <div class={"fullwidth task-card card is-clipped mt-5 " <> status}>
     <%= render "timestamps.html", assigns: assigns, timestamps: %{deadline: @task.deadline, completed_on: @task.completed_on} %>
-    <%= render "header.html", assigns: assigns, task: @task %>
+    <%= render "header.html", assigns: assigns, task: @task, status: status %>
 
     <%= if @task.details do %>
       <hr class="my-3">
