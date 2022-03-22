@@ -26,6 +26,10 @@ $(".disable-timestamp").change(function() {
         $(target).change();
         $(target + "_hour").change();
         $(target + "_minute").change();
+
+        if(target == "#task_completed_on") {
+            $("#task_status").val(4);
+        }
     } else {
         $(target).prop("disabled", true);  
         $(target + "_hour").prop("disabled", true);
@@ -36,6 +40,18 @@ $(".disable-timestamp").change(function() {
         $(target + "_day").val("");        
         $(target + "_hour_field").val("");        
         $(target + "_minute_field").val("");
+
+        if(target == "#task_completed_on") {
+            $("#task_status").val(1);
+        }
+    }
+});
+
+$("#task_status").change(function() {
+    if($(this).val() == 4) {
+        $("#completed_on_checkbox").prop("checked", true).triggerHandler("change");
+    } else {
+        $("#completed_on_checkbox").prop("checked", false).triggerHandler("change");
     }
 });
 
