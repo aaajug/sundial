@@ -12,9 +12,20 @@ $(".disable-timestamp").change(function() {
     var target = "#" + $(this).data("target");
 
     if(this.checked) {
+        var current_datetime = new Date();
+
         $(target).prop("disabled", false);
+        $(target).val(current_datetime.getFullYear() + "-" + ('0' + (current_datetime.getMonth()+1)).slice(-2) + "-" + ('0' + (current_datetime.getDate())).slice(-2));
+
         $(target + "_hour").prop("disabled", false);
+        $(target + "_hour").val(current_datetime.getHours())
+
         $(target + "_minute").prop("disabled", false);        
+        $(target + "_minute").val(current_datetime.getMinutes())
+
+        $("#task_deadline").change();
+        $("#task_deadline_hour").change();
+        $("#task_deadline_minute").change();
     } else {
         $(target).prop("disabled", true);  
         $(target + "_hour").prop("disabled", true);
@@ -60,8 +71,4 @@ $("#task_completed_on_hour").change(function() {
 
 $("#task_completed_on_minute").change(function() {
     $("#task_completed_on_minute_field").val($(this).val());
-});
-
-$(".disable-timestamp").click(function() {
-
 });

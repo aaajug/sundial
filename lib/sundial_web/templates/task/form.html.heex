@@ -10,17 +10,17 @@
     </div>
   <% end %>
 
-  <%= text_input f, :deadline, name: "deadline[year]", id: "task_deadline_year", hidden: true %>
-  <%= text_input f, :deadline, name: "deadline[month]", id: "task_deadline_month", hidden: true %>
-  <%= text_input f, :deadline, name: "deadline[day]", id: "task_deadline_day", hidden: true %>
-  <%= text_input f, :deadline, name: "deadline[hour]", id: "task_deadline_hour_field", hidden: true %>
-  <%= text_input f, :deadline, name: "deadline[minute]", id: "task_deadline_minute_field", hidden: true %>
+  <%= text_input f, :deadline, name: "task[deadline][year]", id: "task_deadline_year", hidden: true %>
+  <%= text_input f, :deadline, name: "task[deadline][month]", id: "task_deadline_month", hidden: true %>
+  <%= text_input f, :deadline, name: "task[deadline][day]", id: "task_deadline_day", hidden: true %>
+  <%= text_input f, :deadline, name: "task[deadline][hour]", id: "task_deadline_hour_field", hidden: true %>
+  <%= text_input f, :deadline, name: "task[deadline][minute]", id: "task_deadline_minute_field", hidden: true %>
 
-  <%= text_input f, :completed_on, name: "completed_on[year]", id: "task_completed_on_year", hidden: true %>
-  <%= text_input f, :completed_on, name: "completed_on[month]", id: "task_completed_on_month", hidden: true %>
-  <%= text_input f, :completed_on, name: "completed_on[day]", id: "task_completed_on_day", hidden: true %>
-  <%= text_input f, :completed_on, name: "completed_on[hour]", id: "task_completed_on_hour_field", hidden: true %>
-  <%= text_input f, :completed_on, name: "completed_on[minute]", id: "task_completed_on_minute_field", hidden: true %>
+  <%= text_input f, :completed_on, name: "task[completed_on][year]", id: "task_completed_on_year", hidden: true %>
+  <%= text_input f, :completed_on, name: "task[completed_on][month]", id: "task_completed_on_month", hidden: true %>
+  <%= text_input f, :completed_on, name: "task[completed_on][day]", id: "task_completed_on_day", hidden: true %>
+  <%= text_input f, :completed_on, name: "task[completed_on][hour]", id: "task_completed_on_hour_field", hidden: true %>
+  <%= text_input f, :completed_on, name: "task[completed_on][minute]", id: "task_completed_on_minute_field", hidden: true %>
 
   <div class="columns"> 
     <div class="column"> 
@@ -34,11 +34,14 @@
             <%= time_select f, :deadline, name: "", value: @task.deadline_parsed.time %>
             <%= error_tag f, :deadline %>
           </div>
+          <div class="field">
+             <%= #datetime_select f, :deadline %>
+          </div>
         </div>
       </div>
 
       <label class="checkbox">
-        <input type="checkbox" class= "disable-timestamp" data-target="task_deadline">
+        <input type="checkbox" class= "disable-timestamp" data-target="task_deadline" checked={!is_deadline_disabled}>
         <span class="is-tiny-text has-text-white">Task has a deadline</span>
       </label>
     </div>
