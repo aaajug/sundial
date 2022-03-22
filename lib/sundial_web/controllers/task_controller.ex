@@ -51,7 +51,7 @@ defmodule SundialWeb.TaskController do
     task = Tasks.get_task!(id)
 
     # only do this when prompted from the tasks/index
-    m = if task_params["status"] == 4 || task_params["status"] == "4" do
+    m = if (task_params["status"] == 4 || task_params["status"] == "4") && !Map.has_key?(task_params, "completed_on") do
       Map.put(task_params, "completed_on", NaiveDateTime.local_now)
     end
 

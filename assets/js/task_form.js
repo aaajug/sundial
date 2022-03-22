@@ -23,9 +23,9 @@ $(".disable-timestamp").change(function() {
         $(target + "_minute").prop("disabled", false);        
         $(target + "_minute").val(current_datetime.getMinutes())
 
-        $("#task_deadline").change();
-        $("#task_deadline_hour").change();
-        $("#task_deadline_minute").change();
+        $(target).change();
+        $(target + "_hour").change();
+        $(target + "_minute").change();
     } else {
         $(target).prop("disabled", true);  
         $(target + "_hour").prop("disabled", true);
