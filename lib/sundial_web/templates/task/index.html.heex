@@ -1,9 +1,19 @@
-<div class="columns">
-  <div class="content column pane is-one-quarter">
-    <div class="task-list">
-      <%= for task <- @tasks do %>
-          <%= render "show.html", task: task, status: @status, conn: @conn, options: %{truncated: true} %>
-      <% end %>
+<% 
+  grouped_tasks = Enum.chunk_by(@tasks, fn(task) -> task.status end)
+%>
+
+<div class="columns pt-4">
+  <%= for group <- grouped_tasks do %>
+    <div class="content column pane is-one-fourth mr-6 relative">
+      <div class="is-size-6 has-text-weight-very-light pb-1">
+        <%= List.first(group).status_desc %> (<%= Enum.count(group) %>)
+      </div>
+
+      <div class="task-list">
+        <%= for task <- group do %>
+            <%= render "show.html", task: task, status: @status, conn: @conn, options: %{truncated: true} %>
+        <% end %>
+      </div>
     </div>
-  </div>
+  <% end %>
 </div>
