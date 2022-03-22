@@ -1,3 +1,8 @@
+<% 
+  is_deadline_disabled = if @task.deadline, do: false, else: true
+  is_completed_on_disabled = if @task.completed_on, do: false, else: true
+%>
+
 <.form let={f} for={@changeset} action={@action}>
   <%= if @changeset.action do %>
     <div class="alert alert-danger">
@@ -23,10 +28,10 @@
       <div class="field is-horizontal">
         <div class="field-body">
           <div class="field">
-            <%= date_input f, :deadline, name: "", class: "date-selector", disabled: true %>
+            <%= date_input f, :deadline, name: "", class: "date-selector", disabled: is_deadline_disabled, value: @task.deadline_parsed.date %>
           </div>
           <div class="field">
-            <%= time_select f, :deadline, name: "" %>
+            <%= time_select f, :deadline, name: "", value: @task.deadline_parsed.time %>
             <%= error_tag f, :deadline %>
           </div>
         </div>
@@ -43,10 +48,10 @@
       <div class="field is-horizontal">
         <div class="field-body">
           <div class="field">
-            <%= date_input f, :completed_on, name: "", class: "date-selector", disabled: true %>
+            <%= date_input f, :completed_on, name: "", class: "date-selector", disabled: is_completed_on_disabled, value: @task.completed_on_parsed.date %>
           </div>
           <div class="field">
-            <%= time_select f, :completed_on, name: "" %>
+            <%= time_select f, :completed_on, name: "", value: @task.completed_on_parsed.time %>
             <%= error_tag f, :completed_on %>
           </div>
         </div>

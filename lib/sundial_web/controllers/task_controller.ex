@@ -40,6 +40,7 @@ defmodule SundialWeb.TaskController do
     status = Progress.list_status_options()
     task = Tasks.get_task!(id)
     changeset = Tasks.change_task(task)
+    task = Tasks.serialize(task)
     render(conn, "edit.html", status: status, task: task, changeset: changeset)
   end
 

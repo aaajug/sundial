@@ -132,22 +132,36 @@ defmodule Sundial.Tasks do
                    false
                  end
 
-    completed_on = if task.status == 4 do
-                     format_datetime(task.completed_on)
-                   end
+    [completed_on,
+    [completed_on_date,
+    completed_on_time,
+    completed_on_time_hour,
+    completed_on_time_minute]] = if task.status == 4 do
+                                   [format_datetime(task.completed_on), parse_date(task.completed_on)]
+                                 else
+                                   [nil, [nil, nil , nil, nil]]
+                                 end
+
+    deadline = format_datetime(task.deadline)
+    [deadline_date, deadline_time, deadline_time_hour, deadline_time_minute] = parse_date(task.deadline)
 
     %SerialTask{
       id: task.id,
       description: task.description,
       details: task.details,
-      deadline: format_datetime(task.deadline),
+      deadline: deadline,
       completed_on: completed_on,
       status: status_name,
       status_desc: status_description,
-      is_overdue: is_overdue
+      is_overdue: is_overdue,
+      deadline_parsed: %{date: deadline_date, time: deadline_time, hour: deadline_time_hour, minute: deadline_time_minute},
+      completed_on_parsed: %{date: completed_on_date, time: completed_on_time, hour: completed_on_time_hour, minute: completed_on_time_minute}
     }
   end
 
+  def serialize(%Task{} = task) do
+    serialize_task(task)
+  end
   @doc """
   Return a list of map objects corresponding to tasks
   """
@@ -160,5 +174,11 @@ defmodule Sundial.Tasks do
   defp format_datetime(nil), do: nil
   defp format_datetime(datetime) do
     Calendar.strftime(datetime, "%d %b %Y | %H:%M")
+  end
+
+  defp parse_date(nil), do: [nil, nil, nil, nil]
+  defp parse_date(datetime) do
+    time = datetime |> NaiveDateTime.to_time
+    [datetime |> NaiveDateTime.to_date, time, time.hour, time.minute]
   end
 end

@@ -1,8 +1,11 @@
 $(document).ready(function() {
-    $("#task_deadline_hour").prop("disabled", true);
-    $("#task_deadline_minute").prop("disabled", true);
-    $("#task_completed_on_hour").prop("disabled", true);
-    $("#task_completed_on_minute").prop("disabled", true);
+    deadline_disabled = $("#task_deadline").prop("disabled")
+    completed_on_disabled = $("#task_completed_on").prop("disabled")
+    
+    $("#task_deadline_hour").prop("disabled", deadline_disabled);
+    $("#task_deadline_minute").prop("disabled", deadline_disabled);
+    $("#task_completed_on_hour").prop("disabled", completed_on_disabled);
+    $("#task_completed_on_minute").prop("disabled", completed_on_disabled);
 });
 
 $(".disable-timestamp").change(function() {
