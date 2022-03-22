@@ -8,9 +8,9 @@
   padding: 20px;
   
   /* Status Class Selectors */
-  &.initiated {
+  &.initial {
     border-left: solid;
-    border-left-color: $initiated;
+    border-left-color: $initial;
     border-left-width: 25px;
   }
 
@@ -69,8 +69,8 @@
 ion-icon { 
   cursor: pointer;
 
-  &.initiated { 
-    color: $initiated;
+  &.initial { 
+    color: $initial;
   }
   &.started { 
     color: $started;
