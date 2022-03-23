@@ -4,7 +4,7 @@
 
 <div class="columns pt-4">
   <%= for group <- grouped_tasks do %>
-    <div class="content column pane is-one-fourth mr-6 relative">
+    <div class="content column pane is-one-fourth mr-3 relative">
       <div class="is-size-6 has-text-weight-very-light pb-1">
         <%= List.first(group).status_desc %> (<%= Enum.count(group) %>)
       </div>
