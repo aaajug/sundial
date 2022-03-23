@@ -12,14 +12,14 @@ Optional: @task [details labels timestamps[deadline completed_on]]
 
 <div class="flex relative">
   <div class={"fullwidth task-card card is-clipped mt-3 " <> status}>
-    <%= unless @task.status != "paused" do %>
-      <div class="overlay"></div>
-    <% end %>
-
+    <%= #unless @task.status != "paused" do %>
+      <%# <div class="overlay"></div> %>
+    <% #end %>
+    
     <%= render "timestamps.html", assigns: assigns, timestamps: %{deadline: @task.deadline, completed_on: @task.completed_on} %>
     <%= render "header.html", assigns: assigns, task: @task, status: status %>
 
-    <%= if @task.details do %>
+    <%= if @task.details && String.trim(@task.details) != "<p><br></p>" do %>
       <hr class="my-3">
       <%= render "content.html", details: @task.details, options: options %>
     <% end %>

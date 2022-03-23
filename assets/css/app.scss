@@ -18,12 +18,30 @@ html, header {
 }
 
 /* Alerts and form errors used by phx.new */
+@keyframes cssAnimation {
+  0%   {opacity: 1;}
+  90%  {opacity: 1;}
+  100% {opacity: 0;}
+}
+@-webkit-keyframes cssAnimation {
+  0%   {opacity: 1;}
+  90%  {opacity: 1;}
+  100% {opacity: 0;}
+}
+
 .alert {
   padding: 15px;
   margin-bottom: 20px;
   border: 1px solid transparent;
   border-radius: 4px;
+  width: 40%;
+  position: fixed;
+  top: 50px;
+  left: 30%;
+  -webkit-animation: cssAnimation 3s forwards; 
+  animation: cssAnimation 3s forwards;
 }
+
 .alert-info {
   color: #31708f;
   background-color: #d9edf7;
