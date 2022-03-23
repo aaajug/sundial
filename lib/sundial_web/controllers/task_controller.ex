@@ -45,9 +45,6 @@ defmodule SundialWeb.TaskController do
   end
 
   def update(conn, %{"id" => id, "task" => task_params}) do
-    IO.inspect "Debug taskparams initial"
-    IO.inspect task_params
-
     task = Tasks.get_task!(id)
 
     # only do this when prompted from the tasks/index
@@ -56,9 +53,6 @@ defmodule SundialWeb.TaskController do
     end
 
     task_params = m || task_params
-
-    IO.inspect "Debug taskparams"
-    IO.inspect task_params
 
     case Tasks.update_task(task, task_params) do
       {:ok, _task} ->
