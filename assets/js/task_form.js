@@ -51,7 +51,12 @@ $("#task_status").change(function() {
     if($(this).val() == 4) {
         $("#completed_on_checkbox").prop("checked", true).triggerHandler("change");
     } else {
-        $("#completed_on_checkbox").prop("checked", false).triggerHandler("change");
+        if($("#completed_on_checkbox").is(":checked")) {
+            var selected = $(this).val();
+            $("#completed_on_checkbox").prop("checked", false).triggerHandler("change");
+            $(this).val(selected);
+        }
+        
     }
 });
 
