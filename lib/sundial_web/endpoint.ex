@@ -7,7 +7,7 @@ defmodule SundialWeb.Endpoint do
   @session_options [
     store: :cookie,
     key: "_sundial_key",
-    signing_salt: "dW5Grbmk"
+    signing_salt: "H8RjnTid3P7hL492ELQ36YNZaWESHTTo"
   ]
 
   socket "/live", Phoenix.LiveView.Socket, websocket: [connect_info: [session: @session_options]]

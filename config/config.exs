@@ -15,7 +15,7 @@ config :sundial, SundialWeb.Endpoint,
   url: [host: "localhost"],
   render_errors: [view: SundialWeb.ErrorView, accepts: ~w(html json), layout: false],
   pubsub_server: Sundial.PubSub,
-  live_view: [signing_salt: "Yzf/td/r"]
+  live_view: [signing_salt: "y1BYNNTp9J/H02qkKGGboyjKnUV6uFQ"]
 
 # Configures the mailer
 #
