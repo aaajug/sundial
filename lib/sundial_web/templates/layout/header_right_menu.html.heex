@@ -1,17 +1,17 @@
-<a class="navbar-item" href="">
+<%= link to: Routes.label_path(@conn, :new), class: "navbar-item disabled" do %>
   <ion-icon name="color-palette-outline" class="icon is-medium"></ion-icon>
-</a>
+<% end %>
+
+<%= link to: Routes.task_path(@conn, :new), class: "navbar-item" do %>
+  <ion-icon name="add-outline"></ion-icon> 
+  Add task
+<% end %>
 
 <%= link to: Routes.task_path(@conn, :new), class: "navbar-item disabled" do %>
   <ion-icon name="add-outline"></ion-icon> 
   Add pane
 <% end %>
 
-
-<%= link to: Routes.task_path(@conn, :new), class: "navbar-item" do %>
-  <ion-icon name="add-outline"></ion-icon> 
-  Add task
-<% end %>
 
 <button class="button is-warning is-rounded ml-5 mt-3">
   <%= link to: Routes.task_path(@conn, :index), class: "navbar-item" do %>

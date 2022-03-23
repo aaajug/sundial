@@ -17,7 +17,7 @@ defmodule SundialWeb.Router do
   scope "/", SundialWeb do
     pipe_through :browser
 
-    get "/", PageController, :index
+    get "/", TaskController, :index
 
     # resources "/users", UsersController, only: [:create, :update, :delete]
     # scope path: "/account" do
