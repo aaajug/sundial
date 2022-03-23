@@ -7,6 +7,13 @@
       <%= form_tag(Routes.task_path(@conn, :show, @task), method: "post", remote: true) %>
         <input name="_method" value="put" hidden>
         <input name="task[status]" value={status.id} hidden>
+        <%= if status.id != 4 do %>
+          <input name="task[completed_on][year]" value="" hidden>
+          <input name="task[completed_on][month]" value="" hidden>
+          <input name="task[completed_on][day]" value="" hidden>
+          <input name="task[completed_on][hour]" value="" hidden>
+          <input name="task[completed_on][minute]" value="" hidden>
+        <% end %>
         <button class={"has-tooltip-arrow has-tooltip-right action-state-link " <> status.name} data-tooltip={"Set " <> status.name} type="submit">
           <ion-icon name="ellipse" class={status.name}></ion-icon> <br>
         </button>
