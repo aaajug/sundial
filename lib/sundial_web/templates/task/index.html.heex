@@ -22,7 +22,9 @@
         <%= for task <- group do %>
             <%= #render "show.html", task: task, status: @status, options: %{truncated: true} %>
             <%# <.live_component module={SundialWeb.Live.Task.TaskComponent} task={task} id={task.id} position={task.position} /> %>
-            <.live_component module={SundialWeb.Live.Task.TaskComponent} id={task.id} />
+            <div class="task-card-component">
+              <.live_component module={SundialWeb.Live.Task.TaskComponent} id={task.id} />
+            </div>
         <% end %>
       </div>
     </div>

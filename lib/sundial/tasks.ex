@@ -64,7 +64,6 @@ defmodule Sundial.Tasks do
                     |> Repo.all()
 
 
-
      {{task_id, current_index}, list_index} =
       indices
         |> Enum.with_index
@@ -135,6 +134,21 @@ defmodule Sundial.Tasks do
                         #  {:error, "Can't execute action."}
       true -> {:ok, "Retain original position"} # task card already at the end of the list, no need to update
     end
+  end
+
+  # Updates positions of tasks in order of the given list of IDs
+  def update_positions(list) do
+    list
+      |> Enum.with_index(
+          fn id, new_position ->
+            task = get_task!(id)
+
+            # TODO: use case to check if update is successful, do rollback if not, return {:error, _}
+            update_position(task, new_position * 1000)
+          end
+        )
+
+    {:ok, "Tasks reordered"}
   end
 
   def is_all_position_nil? do # need to check if all tasks have no position, if so, initialize positions

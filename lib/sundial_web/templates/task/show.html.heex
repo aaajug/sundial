@@ -3,7 +3,7 @@ Required: @task [status description]
 Optional: @task [details labels timestamps[deadline completed_on]]
 %>
 
-<div phx-change="search_form_change">
+<div class={@task.status <> "-column-task-card"} phx-change="search_form_change" phx-hook="Drag" data-task_id={@task.id} data-task_status={@task.status}>
   <% #options = if Map.has_key?(assigns, :options), do: @options %>
   <% options = %{truncated: true} %>
   <% status = if @task.is_overdue do 
@@ -13,12 +13,12 @@ Optional: @task [details labels timestamps[deadline completed_on]]
               end %>
 
   <div class="flex relative">
-    <div class={"fullwidth task-card card is-clipped mt-3 " <> status} draggable="true">
+    <div class={"fullwidth task-card card is-clipped mt-3 " <> status} draggable="true" data-task_id={@task.id}>
       <%= #unless @task.status != "paused" do %>
         <%# <div class="overlay"></div> %>
       <% #end %>
       <%= #unless @task.position, do: "nil" # success: prints nil for all tasks with uninitialized positions %> 
-      <%= @task.position#, do: "nil" # success: prints position of task %> 
+      <%= #@task.id %> <%= #@task.position#, do: "nil" # success: prints position of task %> 
 
       <%= render "timestamps.html", assigns: assigns, timestamps: %{deadline: @task.deadline, completed_on: @task.completed_on} %>
       <%= render "header.html", assigns: assigns, task: @task, status: status %>
@@ -30,14 +30,14 @@ Optional: @task [details labels timestamps[deadline completed_on]]
     </div>
 
     <div class = "pl-3 place-flex-end">
-      <a phx-click="update_position" phx-target={@myself} phx-value-index={@task.index} phx-value-up={1}>
+      <%# <a phx-click="update_position" phx-target={@myself} phx-value-index={@task.index} phx-value-up={1}>
       <ion-icon name="caret-up-outline"></ion-icon> 
       </a>
       <br>
       <a phx-click="update_position" phx-target={@myself} phx-value-index={@task.index} phx-value-down={1}>
       <ion-icon name="caret-down-outline"></ion-icon>
       </a>
-      <br>
+      <br> %>
       <%= render "actions.html", task: @task %>
     </div>
 
