@@ -1,4 +1,6 @@
 $(document).ready(function() {
+    console.log("document on ready function");
+
     deadline_disabled = $("#task_deadline").prop("disabled")
     completed_on_disabled = $("#task_completed_on").prop("disabled")
     
@@ -25,7 +27,7 @@ $(document).ready(function() {
         $("#task_completed_on_minute_field").val(minute.val());
     }
 
-    if($("#deadline_checkbox_checkbox").is(":checked")) {
+    if($("#deadline_checkbox").is(":checked")) {
         // $("#task_deadline").triggerHandler("change");
         var deadline_str = $("#task_deadline").val();
         var deadline_date = new Date(deadline_str);

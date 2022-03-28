@@ -1,7 +1,8 @@
 <section class="container is-fluid px-6">
         <nav class="relative navbar-menu p-6">
             <div class="navbar-start absolute left-attached pl-5">
-              <%= link to: Routes.task_path(@conn, :index), 
+              <%= #link to: Routes.task_path(@conn, :index), 
+                  live_patch to: "/",
                            class: "is-size-1 has-text-weight-semibold has-text-white" do %>
                 My tasks 
               <% end %>

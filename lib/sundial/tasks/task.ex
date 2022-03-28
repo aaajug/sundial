@@ -9,6 +9,7 @@ defmodule Sundial.Tasks.Task do
     field :status, :integer, default: 1
     field :completed_on, :naive_datetime, default: nil
     field :pane_id, :integer, null: false, default: 0
+    field :position, :integer
 
     timestamps()
   end
@@ -16,7 +17,7 @@ defmodule Sundial.Tasks.Task do
   @doc false
   def changeset(task, attrs) do
     task
-    |> cast(attrs, [:description, :details, :deadline, :status, :completed_on, :pane_id])
+    |> cast(attrs, [:description, :details, :deadline, :status, :completed_on, :pane_id, :position])
     |> validate_required([:description])
   end
 end

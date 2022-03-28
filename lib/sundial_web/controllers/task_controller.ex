@@ -4,13 +4,29 @@ defmodule SundialWeb.TaskController do
   alias Sundial.Progress
   alias Sundial.Tasks
   alias Sundial.Tasks.Task
+  alias Phoenix.LiveView
+
 
   def index(conn, _params) do
-    tasks = Tasks.list_tasks()
+    # update task positions if needed, initially all tasks will have nil position, update them accordingly based on the default sorting
+    if Tasks.is_all_position_nil?(), do: Tasks.initialize_positions # will only be executed once.
+    # Handle: at least one task HAS a value position, other(s) are nil OR add position column on create by using row_num() see: https://elixirforum.com/t/how-to-get-a-row-by-id-with-row-number-in-ecto/24739/3    (adding position value on create preferred over handling it here)
+
+    tasks = Tasks.list_tasks() # list_tasks (defualt sorting) if params[:sorting] == default (should be explicit), otherwise:
+    # tasks = Tasks.list_tasks_by_position    # even if the user hasn't custom reordered their tasks, the tasks should be ordered by the default sorting since the initial positions are based on the default sorting. On the other hand, if the user already did custom reorder, the position column will be followed. The user can still view their tasks using the default sortiing but they won't be able to reorder through this view (set error message on move).
+
+    # TODO: create flowchart for this sorting algo
+
+    # IO.inspect "inspectdb: task pos"
+    # tasks = Tasks.update_positions(tasks)
     tasks = Tasks.serialize(tasks)
     status = Progress.list_status()
+    IO.inspect "in taskcontroller index"
 
-    render(conn, "index.html", tasks: tasks, status: status)
+    # render(conn, "index.html", tasks: tasks, status: status)
+    # passing conn raises the error (ArgumentError) cannot deserialize #Function<0.16477574/1 in Plug.CSRFProtection.call
+    # LiveView.Controller.live_render(conn, SundialWeb.TaskLiveView, session: %{"conn" => conn, "tasks" => tasks, "status" => status})
+    LiveView.Controller.live_render(conn, SundialWeb.TaskViewLive, session: %{"tasks" => tasks, "status" => status})
   end
 
   def new(conn, _params) do
@@ -58,7 +74,8 @@ defmodule SundialWeb.TaskController do
       {:ok, _task} ->
         conn
         |> put_flash(:info, "Task updated successfully.")
-        |> redirect(to: Routes.task_path(conn, :index))
+        # |> redirect(to: Routes.task_path(conn, :index))
+        LiveView.Controller.live_render(conn, SundialWeb.Live.Task.TaskComponent, session: %{"task" => task})
 
       {:error, %Ecto.Changeset{} = changeset} ->
         render(conn, "edit.html", task: task, changeset: changeset)

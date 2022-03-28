@@ -3,21 +3,11 @@
 <div class="state-actions-container absolute">
   <%= for status <- @status do %>
     <%= unless status.name == task_status do %>
-      <form class="m-0" method="post" action={Routes.task_path(@conn, :show, @task)}>
-      <%= form_tag(Routes.task_path(@conn, :show, @task), method: "post", remote: true) %>
-        <input name="_method" value="put" hidden>
-        <input name="task[status]" value={status.id} hidden>
-        <%= if status.id != 4 do %>
-          <input name="task[completed_on][year]" value="" hidden>
-          <input name="task[completed_on][month]" value="" hidden>
-          <input name="task[completed_on][day]" value="" hidden>
-          <input name="task[completed_on][hour]" value="" hidden>
-          <input name="task[completed_on][minute]" value="" hidden>
-        <% end %>
+      <a phx-click="update_status" phx-target={@myself} phx-value-status={status.id}>
         <button class={"has-tooltip-arrow has-tooltip-right action-state-link " <> status.name} data-tooltip={"Set " <> status.name} type="submit">
           <ion-icon name="ellipse" class={status.name}></ion-icon> <br>
         </button>
-      </form>
+      </a>
     <% end %>
   <% end %>
 </div>

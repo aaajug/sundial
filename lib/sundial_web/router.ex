@@ -17,7 +17,8 @@ defmodule SundialWeb.Router do
   scope "/", SundialWeb do
     pipe_through :browser
 
-    get "/", TaskController, :index
+    # get "/", TaskController, :index
+    live "/", TaskViewLive
 
     # resources "/users", UsersController, only: [:create, :update, :delete]
     # scope path: "/account" do
@@ -27,9 +28,12 @@ defmodule SundialWeb.Router do
     #   get "/logout", UsersController, :logout
     # end
 
-    # resources "/labels", LabelsController
+    resources "/tasks", TaskController, only: [:show, :create, :update, :delete]
+    live "/tasks", TaskController
 
-    resources "/tasks", TaskController
+    # live "/tasks/:id/update", TaskController, as: :update
+
+    # resources "/tasks", TaskController
 
     resources "/labels", LabelController
 

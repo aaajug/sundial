@@ -67,8 +67,9 @@
       ctx.shadowColor = options.shadowColor;
 
       var lineGradient = ctx.createLinearGradient(0, 0, canvas.width, 0);
-      for (var stop in options.barColors)
-        lineGradient.addColorStop(stop, options.barColors[stop]);
+      for (var stop in options.barColors) {
+        // lineGradient.addColorStop(stop, options.barColors[stop]);
+      }
       ctx.lineWidth = options.barThickness;
       ctx.beginPath();
       ctx.moveTo(0, options.barThickness / 2);

@@ -26,10 +26,133 @@ defmodule Sundial.Tasks do
                         desc: task.updated_at])
   end
 
+  def list_tasks(task_ids) do
+    from(task in Task, where: task.id in ^task_ids)
+      |> Repo.all()
+  end
+
+
+  def list_tasks_by_position do
+    from(task in Task, order_by: [task.position, task.updated_at, task.inserted_at])
+      |> Repo.all()
+  end
+
+  def initialize_positions do
+    list_tasks()
+      |> Enum.with_index
+      |> Enum.map(fn({task, position}) -> update_position(task, position * 1000) end)
+  end
+
+  def update_position(%Task{} = task, position) do
+    update_task(task, %{position: position})
+  end
+
+  def get_position(task_id) do
+    from(t in Task,
+      where: t.id == ^task_id,
+      select: t.position)
+        |> Repo.all()
+  end
+
+  def find_insert_position(%Task{} = task, _current_index, moves) do
+    # handle extremes (no before or after)
+
+    task_id = task.id
+    indices = from(t in Task,
+                    select: {t.id, (row_number() |> over(order_by: t.position))},
+                    where: t.status == ^task.status)
+                    |> Repo.all()
+
+
+
+     {{task_id, current_index}, list_index} =
+      indices
+        |> Enum.with_index
+        |> Enum.find(fn x -> match?({{^task_id, _}, _}, x) end)
+
+
+    # find current row_number of task
+    # current_index = from(t in Task,
+    #                 where: t.id == ^task.id,
+    #                 select: row_number()
+    #                   |> over(order_by: t.position))
+
+    # calculate new index based on moves
+    # new_index = String.to_integer(current_index) + String.to_integer(moves)
+    new_index = current_index + moves
+
+    before_index = list_index + moves - 1
+    after_index = list_index + moves
+
+    {before_task_id, _} = if before_index >= 0 do
+                            Enum.at(indices, before_index)
+                          else
+                            Enum.at(indices, 0)
+                          end
+
+    {after_task_id, _} = if i = Enum.at(indices, after_index) do
+                                i
+                         else
+                          {nil, nil}
+                              end
+
+    [position_before] = if before_index >= 0 do
+                          get_position(before_task_id)
+                        else
+                          [List.first(get_position(before_task_id)) - 1000]
+                        end
+
+    [position_after] = if after_task_id do
+                        get_position(after_task_id)
+                      else
+                        [position_before + 1000]
+                      end
+
+    # get position of record before and after new position
+  #   position_before = from(t in Task,
+  #   select: (nth_value(t.position, ^new_index) |> over(partition_by: t.status, order_by: t.position))
+  #   )
+  #   |> Repo.all()
+  #   |> Enum.reject(fn x -> !x end)
+  #   |> Enum.max()
+
+  #  position_after = from(t in Task,
+  #    select: (nth_value(t.position, ^new_index+1) |> over(partition_by: t.status, order_by: t.position))
+  #    )
+  #    |> Repo.all()
+  #    |> Enum.reject(fn x -> !x end)
+  #    |> Enum.max()
+
+    # c = from(t in Task,
+    #  select: {t.position |> over(order_by: t.position)}
+    #  )
+    #  |> Repo.all()
+
+    # calculate mid for new position
+    cond do
+      position_before -> mid = Integer.floor_div(position_before + position_after, 2)
+                         update_position(task, mid)
+                        #  {:error, "Can't execute action."}
+      true -> {:ok, "Retain original position"} # task card already at the end of the list, no need to update
+    end
+  end
+
+  def is_all_position_nil? do # need to check if all tasks have no position, if so, initialize positions
+    distinct_positions = Task
+                          |> select([task], task.position)
+                          |> distinct(true)
+                          |> Repo.all()
+
+    if distinct_positions == [nil], do: true
+  end
+
+
   @doc """
   Gets a single task.
 
-  Raises `Ecto.NoResultsError` if the Task does not exist.
+  Raises `Ecto.NoResultsError` if the Task does not exist.query = from si in subquery(current_index), where: si.id == ^task.id
+
+  #  query
 
   ## Examples
 
@@ -121,7 +244,7 @@ defmodule Sundial.Tasks do
 
     is_overdue
   """
-  def serialize_task(%Task{} = task) do
+  def serialize_task(%Task{} = task, index) do
     status_id = if task.status == 0 || task.status == nil do
                   1
                 else
@@ -159,18 +282,24 @@ defmodule Sundial.Tasks do
       status_desc: status_description,
       is_overdue: is_overdue,
       deadline_parsed: %{date: deadline_date, time: deadline_time, hour: deadline_time_hour, minute: deadline_time_minute},
-      completed_on_parsed: %{date: completed_on_date, time: completed_on_time, hour: completed_on_time_hour, minute: completed_on_time_minute}
+      completed_on_parsed: %{date: completed_on_date, time: completed_on_time, hour: completed_on_time_hour, minute: completed_on_time_minute},
+      position: task.position,
+      index: index
     }
   end
 
   def serialize(%Task{} = task) do
-    serialize_task(task)
+    serialize_task(task, nil)
   end
   @doc """
   Return a list of map objects corresponding to tasks
   """
   def serialize(tasks) do
-    Enum.map(tasks, fn(task) -> serialize_task(task) end)
+    tasks
+      |> Enum.with_index
+      |> Enum.map(fn({task, index}) -> serialize_task(task, index) end)
+
+      # Enum.map(tasks, fn(task) -> serialize_task(task,) end)
   end
 
   # private
