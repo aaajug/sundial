@@ -1,0 +1,46 @@
+<%= if @live_action in [:new] do %>
+  <.modal return_to={Routes.task_index_path(@socket, :index)}>
+    <.live_component
+      module={AliveWeb.TaskLive.FormComponent}
+      id={@task.id || :new}
+      title={@page_title}
+      action={@live_action}
+      task={@task}
+      status={@status}
+      return_to={Routes.task_index_path(@socket, :index)}
+    />
+  </.modal>
+<% end %>
+
+<% 
+  # TODO: Relocate out of view  
+  #grouped_tasks = Enum.chunk_by(@tasks, fn(task) -> task.status end)
+  status_labels = %{1 => "Not yet started", 2 => "In progress", 3 => "On hold", 4 => "Completed"}
+%>
+
+<%= #live_patch "Sort by deadline", to: Routes.live_path(@socket, Task, %{sort_by: "deadline"}) %>
+<%# <.live_component module={Task} id={@task.id} task={@task} /> %>
+
+<%= #live_patch "Back", to: Routes.live_path(@socket, SundialWeb.TaskUpdateLive, 4) %>
+<span><%= #live_patch "New Task", to: Routes.task_index_path(@socket, :new) %></span>
+<div class="columns pt-4">
+  <%= for status_id <- [1,2,3,4] do %>
+    <% group = Enum.filter(@tasks, fn task -> task.status == status_id end) %>
+    <div class="content column pane is-one-fourth mr-3 relative">
+      <div class="is-size-6 has-text-weight-very-light pb-1">
+        <%= #List.first(group).status_desc %>
+        <%= status_labels[status_id] %> (<%= Enum.count(group) %>)
+      </div>
+
+      <div class="task-list">
+        <%= for task <- group do %>
+            <%= #render "show.html", task: task, status: @status, options: %{truncated: true} %>
+            <%# <.live_component module={SundialWeb.Live.Task.TaskComponent} task={task} id={task.id} position={task.position} /> %>
+            <div class="task-card-component">
+              <.live_component module={SundialWeb.Live.Task.TaskComponent} id={task.id} />
+            </div>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+</div>

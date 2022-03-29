@@ -37,9 +37,6 @@ defmodule SundialWeb do
       import Phoenix.Controller,
         only: [get_flash: 1, get_flash: 2, view_module: 1, view_template: 1]
 
-      # import Phoenix.LiveView.Helpers
-      # import Phoenix.LiveView
-
       # Include shared imports and aliases for views
       unquote(view_helpers())
     end
@@ -94,6 +91,7 @@ defmodule SundialWeb do
 
       # Import LiveView and .heex helpers (live_render, live_patch, <.form>, etc)
       import Phoenix.LiveView.Helpers
+      import SundialWeb.LiveHelpers
 
       # Import basic rendering functionality (render, render_layout, etc)
       import Phoenix.View

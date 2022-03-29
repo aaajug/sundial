@@ -2,7 +2,8 @@
   <ion-icon name="color-palette-outline" class="icon is-medium"></ion-icon>
 <% end %>
 
-<%= link to: "/", class: "navbar-item" do %>
+<%= #link to: "/tasks/new", class: "navbar-item" do %>
+<%= link to: "/tasks/new", "data-phx-link": "patch", "data-phx-link-state": "push" do %>
   <ion-icon name="add-outline"></ion-icon> 
   Add task
 <% end %>
