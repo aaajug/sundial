@@ -26,31 +26,14 @@ import {Socket} from "phoenix"
 import {LiveSocket} from "phoenix_live_view"
 import Drag from './drag_hook';
 import {QuillEditor} from './quill_hook'
-import {DeadlineCheckbox} from "./task_form_hook";
-import {CompletedOnCheckbox} from "./task_form_hook";
+import {TimestampCheckbox, DeadlineCheckbox, CompletedOnCheckbox, DeadlineTimeSelect, CompletedOnTimeSelect} from "./task_form_hook";
 
-import "./task_form.js"
-// import "./task_reorder.js"
 
 
 let Hooks = {
-    QuillEditor,
-    Drag,
-    DeadlineCheckbox,
-    CompletedOnCheckbox
+    QuillEditor, Drag, TimestampCheckbox, DeadlineCheckbox,
+    CompletedOnCheckbox, DeadlineTimeSelect, CompletedOnTimeSelect
 }
-
-// let liveSocket = new LiveSocket("/live", Socket, { 
-//   hooks: Hooks, 
-//   params: { 
-//     _csrf_token: csrfToken, 
-//     width: window.innerWidth
-//   } 
-// })
-
-
-
-// let Hooks = { Drag };
 
 let csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content")
 let liveSocket = new LiveSocket("/live", Socket, {params: {_csrf_token: csrfToken}, hooks: Hooks})

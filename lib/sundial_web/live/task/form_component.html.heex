@@ -1,4 +1,5 @@
-<div>
+<div class="mt-6 task-form">
+  <p class="is-size-3 mb-3 has-text-weight-bold"> Add a new task </p>
 <% 
   task_object = if Map.has_key?(assigns, :task) && @task.id do
                   @serial_task
@@ -43,7 +44,7 @@
           <div class="field">
             <%= date_input f, :deadline, name: "", class: "date-selector", disabled: is_deadline_disabled, value: task_object.deadline_parsed.date %>
           </div>
-          <div class="field">
+          <div class="field" id="deadline-time-selector" phx-hook="DeadlineTimeSelect" data-checked={!is_deadline_disabled}>
             <%= time_select f, :deadline, name: "", value: task_object.deadline_parsed.time %>
             <%= error_tag f, :deadline %>
           </div>
@@ -51,7 +52,7 @@
       </div>
 
       <label class="checkbox">
-        <input type="checkbox" id="deadline_checkbox" phx-hook="DeadlineCheckbox" class= "disable-timestamp" data-target="task_deadline" checked={!is_deadline_disabled}>
+        <input type="checkbox" id="deadline_checkbox" class= "disable-timestamp" data-target="task_deadline" phx-hook="TimestampCheckbox" checked={!is_deadline_disabled}>
         <span class="is-tiny-text has-text-white">Task has a deadline</span>
       </label>
     </div>
@@ -63,14 +64,14 @@
           <div class="field">
             <%= date_input f, :completed_on, name: "", class: "date-selector", disabled: is_completed_on_disabled, value: task_object.completed_on_parsed.date %>
           </div>
-          <div class="field">
+          <div class="field" id="completed_on_time_select" phx-hook="CompletedOnTimeSelect" data-checked={!is_completed_on_disabled}>
             <%= time_select f, :completed_on, name: "", value: task_object.completed_on_parsed.time %>
             <%= error_tag f, :completed_on %>
           </div>
         </div>
       </div>
       <label class="checkbox">
-        <input type="checkbox" id="completed_on_checkbox" phx-hook="CompletedOnCheckbox" class= "disable-timestamp" data-target="task_completed_on" checked={!is_completed_on_disabled}>
+        <input type="checkbox" id="completed_on_checkbox" class= "disable-timestamp" data-target="task_completed_on" phx-hook="TimestampCheckbox" checked={!is_completed_on_disabled}>
         <span class="is-tiny-text has-text-white">Task is completed</span>
       </label>
     </div>
@@ -98,17 +99,17 @@
     <%= #error_tag f, :details %>
   </div>
 
-  <div class="field pt-3" phx-update="ignore" style="display: none">
-    <%= label f, "Want to add more details?" %>
-    <div id="editor">
-      <%= raw task_object.details %>
-    </div>
-    <%= error_tag f, :details %>
-  </div>
+  <%# <div class="field pt-3" phx-update="ignore" style="display: none"> %>
+    <%= #label f, "Want to add more details?" %>
+    <%# <div id="editor"> %>
+      <%= #raw task_object.details %>
+    <%# </div> %>
+    <%= #error_tag f, :details %>
+  <%# </div> %>
 
    <div phx-update="ignore">
       <%= #text_input f, :details, value: "none", type: "hidden", id: "read-only-quill" %>
-      <div id="quillEditor" phx-hook="QuillEditor" data-quill-input-id="read-only-quill" class="content is-small">
+      <div id="editor" phx-hook="QuillEditor" data-quill-input-id="read-only-quill" class="content is-small">
         <%= raw task_object.details %>
       </div>
     </div>

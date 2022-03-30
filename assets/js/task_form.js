@@ -1,6 +1,6 @@
 $(document).ready(function() {
-    deadline_disabled = $("#task_deadline").prop("disabled")
-    completed_on_disabled = $("#task_completed_on").prop("disabled")
+    deadline_disabled = $("#task_deadline").prop("disabled");
+    completed_on_disabled = $("#task_completed_on").prop("disabled");
 
     $("#task_deadline_hour").prop("disabled", deadline_disabled);
     $("#task_deadline_minute").prop("disabled", deadline_disabled);
