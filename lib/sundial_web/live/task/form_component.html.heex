@@ -107,16 +107,12 @@
     <%= error_tag f, :details %>
   </div>
 
-   <div phx-update="ignore">
-   Quill
-        <%= #text_input f, :details, value: "none", type: "hidden", id: "read-only-quill" %>
-        <div
-          id="quillEditor"
-          phx-hook="QuillEditor"
-          data-quill-input-id="read-only-quill"
-          class="content is-small">
-        </div>
+   <div phx-update="ignore" style="">
+      <%= #text_input f, :details, value: "none", type: "hidden", id: "read-only-quill" %>
+      <div id="quillEditor" phx-hook="QuillEditor" data-quill-input-id="read-only-quill" class="content is-small">
+        <%= raw task_object.details %>
       </div>
+    </div>
 
   <div class="field is-pulled-right pt-4">
     <%= button "Cancel", to: Routes.task_index_path(@socket, :index), method: "get", class: "button is-ghost" %>
@@ -124,9 +120,9 @@
   </div>
 </.form>
 
-  <script>
+  <%# <script>
     var quill = new Quill('#quillEditor', {
       theme: 'snow'
     });
-  </script>
+  </script> %>
 </div>
