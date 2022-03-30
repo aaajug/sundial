@@ -6,13 +6,13 @@ defmodule SundialWeb.Live.Task.TaskComponent do
   alias Sundial.Progress.States
   alias Sundial.Tasks
 
-  def mount(_params, _session, socket) do
-    {:ok, assign(socket, %{status: States.get()})}
-  end
+  # def mount(_params, _session, socket) do
+  #   {:ok, assign(socket, %{status: States.get()})}
+  # end
 
-  def mount(_session, socket) do
-    {:ok, assign(socket, %{status: States.get()})}
-  end
+  # def mount(_session, socket) do
+  #   {:ok, assign(socket, %{status: States.get()})}
+  # end
 
   def mount(socket) do
     {:ok, assign(socket, %{status: States.get()})}
@@ -38,14 +38,16 @@ defmodule SundialWeb.Live.Task.TaskComponent do
       |> assign(assigns)}
   end
 
-  def handle_event("update_status", task_params, socket) do
+  def handle_event("update_status", params, socket) do
     task = Tasks.get_task!(socket.assigns.task.id)
 
-    Map.put(task_params, "completed_on", NaiveDateTime.local_now)
+    task_params = %{}
+    task_params = Map.put(task_params, "status", params["status"])
+    task_params = Map.put(task_params, "completed_on", NaiveDateTime.local_now)
 
     case Tasks.update_task(task, task_params) do
       {:ok, _task} ->
-        {:reply, socket, push_redirect(socket, to: "/")}
+        {:reply, socket, push_redirect(socket, to: params["return_to"])}
 
       {:error, %Ecto.Changeset{} = _changeset} ->
         put_flash(socket, :error, "Can't update status as of the moment. Please try again later.")
@@ -75,5 +77,16 @@ defmodule SundialWeb.Live.Task.TaskComponent do
       {:error, _} ->
         put_flash(socket, :error, "Can't reorder tasks as of the moment. Please try again later.")
     end
+  end
+
+  def handle_event("delete", %{"id" => id}, socket) do
+    task = Tasks.get_task!(id)
+    {:ok, _} = Tasks.delete_task(task)
+
+    # {:noreply, assign(socket, :tasks, list_tasks())}
+    {:noreply,
+     socket
+       |> put_flash(:info, "Task successfully deleted.")
+       |> push_redirect(to: "/")}
   end
 end

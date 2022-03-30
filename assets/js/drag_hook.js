@@ -5,14 +5,16 @@ export default {
     const selector = '#' + this.el.id;
     var items = document.querySelectorAll(selector);
 
-    items.forEach(function (item) {
-      item.addEventListener('dragstart', handleDragStart);
-      item.addEventListener('dragover', handleDragOver);
-      item.addEventListener('dragenter', handleDragEnter);
-      item.addEventListener('dragleave', handleDragLeave);
-      item.addEventListener('dragend', handleDragEnd);
-      item.addEventListener('drop', handleDrop);
-    });
+    // if($(".task-card-component").data("drag_hook") == "Drag") {
+      items.forEach(function (item) {
+        item.addEventListener('dragstart', handleDragStart);
+        item.addEventListener('dragover', handleDragOver);
+        item.addEventListener('dragenter', handleDragEnter);
+        item.addEventListener('dragleave', handleDragLeave);
+        item.addEventListener('dragend', handleDragEnd);
+        item.addEventListener('drop', handleDrop);
+      });
+    // }
 
     function handleDragStart(e) {
         console.log("handle drag start");

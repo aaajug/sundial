@@ -64,9 +64,9 @@ defmodule SundialWeb.TaskLive.Sections do
       <%= live_patch to: Routes.task_index_path(@socket, :edit, assigns.task) do %>
         <ion-icon name="pencil-outline" class="is-clickable action-button"></ion-icon>
       <% end %>
-      <%= link to: "#", phx_click: "delete", phx_value_id: assigns.task.id, data: [confirm: "This task will be deleted. Are you sure?"] do %>
+      <a phx-click="delete" phx-value-id={assigns.task.id} data-confirm="This task will be deleted. Are you sure?" phx-target={assigns.myself}>
         <ion-icon name="trash-outline" class="is-clickable action-button"></ion-icon>
-      <% end %>
+      </a>
     </div>
     """
   end
@@ -78,7 +78,7 @@ defmodule SundialWeb.TaskLive.Sections do
     <div class="state-actions-container absolute">
       <%= for status <- assigns.status do %>
         <%= unless status.name == task_status do %>
-          <a phx-click="update_status" phx-target={assigns.myself} phx-value-status={status.id}>
+          <a phx-click="update_status" phx-target={assigns.myself} phx-value-status={status.id} phx-value-return_to={@return_to}>
             <button class={"has-tooltip-arrow has-tooltip-right action-state-link " <> status.name} data-tooltip={"Set " <> status.name} type="submit">
               <ion-icon name="ellipse" class={status.name}></ion-icon> <br>
             </button>

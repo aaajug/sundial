@@ -6,8 +6,29 @@ defmodule SundialWeb.TaskLive.Index do
   alias Sundial.Progress
 
   @impl true
-  def mount(_params, _session, socket) do
-    {:ok, assign(socket, :tasks, list_tasks())}
+  def mount(params, _session, socket) do
+    sort = if Map.has_key?(params, "sort"), do: params["sort"], else: nil
+
+    socket = case sort do
+      "default" ->
+        socket
+          |> assign(:sort_class, "is-warning is-active is-focused")
+          |> assign(:sort_target, "/")
+          |> assign(:return_target, "/?sort=default")
+          |> assign(:drag_hook, "")
+          |> assign(:tasks, list_tasks_by_default())
+
+      _ ->
+        socket
+          |> assign(:sort_class, "sort-custom-button")
+          |> assign(:sort_target, "/?sort=default")
+          |> assign(:return_target, "/")
+          |> assign(:drag_hook, "Drag")
+          |> assign(:tasks, list_tasks())
+
+    end
+
+    {:ok, socket}
   end
 
   @impl true
@@ -38,15 +59,19 @@ defmodule SundialWeb.TaskLive.Index do
     |> assign(:user, nil)
   end
 
-  @impl true
-  def handle_event("delete", %{"id" => id}, socket) do
-    task = Tasks.get_task!(id)
-    {:ok, _} = Tasks.delete_task(task)
+  # @impl true
+  # def handle_event("delete", %{"id" => id}, socket) do
+  #   task = Tasks.get_task!(id)
+  #   {:ok, _} = Tasks.delete_task(task)
 
-    {:noreply, assign(socket, :tasks, list_tasks())}
-  end
+  #   {:noreply, assign(socket, :tasks, list_tasks())}
+  # end
 
   defp list_tasks do
-    Tasks.list_tasks_by_position()
+    Tasks.list_tasks_by_position
+  end
+
+  defp list_tasks_by_default do
+    Tasks.list_tasks
   end
 end

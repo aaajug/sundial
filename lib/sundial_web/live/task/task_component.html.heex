@@ -3,7 +3,8 @@ Required: @task [status description]
 Optional: @task [details labels timestamps[deadline completed_on]]
 %>
 
-<div class={@task.status <> "-column-task-card"} phx-change="search_form_change" phx-hook="Drag" data-task_id={@task.id} data-task_status={@task.status}>
+<div class={@task.status <> "-column-task-card"} phx-change="search_form_change" phx-hook={@drag_hook} data-task_id={@task.id} data-task_status={@task.status}>
+  <%= #@return_to %>
   <% options = %{truncated: true} %>
   <% status = if @task.is_overdue do 
                 "overdue"
@@ -39,9 +40,9 @@ Optional: @task [details labels timestamps[deadline completed_on]]
       </a>
       <br> %>
       <%= #render "actions.html", task: @task %>
-      <.actions assigns={assigns} />
+      <.actions assigns={assigns} return_to={@return_to} />
     </div>
 
-    <.state_actions assigns={assigns} />
+    <.state_actions assigns={assigns} return_to={@return_to} />
   </div>
 </div>
