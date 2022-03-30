@@ -52,6 +52,7 @@ defmodule SundialWeb.TaskLive.Sections do
     <div class="card-content p-0 pt-2">
       <div class={class}>
         <%= raw assigns.task.details %>
+        <%= #Jason.encode!(@content_item.quill) %>
       </div>
     </div>
     """

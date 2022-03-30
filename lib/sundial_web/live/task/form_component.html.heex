@@ -108,6 +108,7 @@
   <%# </div> %>
 
    <div phx-update="ignore">
+      <%= label f, "Want to add more details?" %>
       <%= #text_input f, :details, value: "none", type: "hidden", id: "read-only-quill" %>
       <div id="editor" phx-hook="QuillEditor" data-quill-input-id="read-only-quill" class="content is-small">
         <%= raw task_object.details %>
