@@ -13,11 +13,14 @@ export const QuillEditor = {
       editorInstance.on('text-change', function (delta, oldDelta, source) {
         // const contents = editorInstance.getContents();
         const contents = $(".ql-editor").html();
+        const plaintext = $(".ql-editor").text();
         // console.log(contents);
         // input.value = JSON.stringify(contents);
         // $("#details-textarea").text(JSON.stringify(contents));
         $("#details-textarea").text(contents);
-        console.log($("#details-textarea").text());
+        $("#details-plaintext-textarea").text(plaintext);
+
+        console.log($("#details-plaintext-textarea").text());
       });
     }
   };

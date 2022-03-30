@@ -21,8 +21,9 @@ Optional: @task [details labels timestamps[deadline completed_on]]
 
       <.timestamps assigns={assigns} />
       <.header assigns={assigns} status={status} />
-
-      <%= if @task.details && String.trim(@task.details) != "<p><br></p>" do %>
+      <%= #to_iodata(@task.details) %>
+      <%= #if @task.details && String.trim(@task.details) != "<p><br></p>" do %>
+      <%= if @task.details && @task.details_plaintext && String.trim(@task.details_plaintext) != "" do %>
         <hr class="my-3">
         <.content assigns={assigns} options={options} />
       <% end %>

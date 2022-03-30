@@ -290,6 +290,7 @@ defmodule Sundial.Tasks do
       id: task.id,
       description: task.description,
       details: task.details,
+      details_plaintext: task.details_plaintext,
       deadline: deadline,
       completed_on: completed_on,
       status: status_name,
