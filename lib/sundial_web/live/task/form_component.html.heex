@@ -15,7 +15,6 @@
   for={@changeset} 
   phx-target={@myself}
   phx-submit="save"
-  id="task-form"
   class="task-form-container">
 
   <%= if @changeset.action do %>
@@ -52,7 +51,7 @@
       </div>
 
       <label class="checkbox">
-        <input type="checkbox" id="deadline_checkbox" class= "disable-timestamp" data-target="task_deadline" checked={!is_deadline_disabled}>
+        <input type="checkbox" id="deadline_checkbox" phx-hook="DeadlineCheckbox" class= "disable-timestamp" data-target="task_deadline" checked={!is_deadline_disabled}>
         <span class="is-tiny-text has-text-white">Task has a deadline</span>
       </label>
     </div>
@@ -71,7 +70,7 @@
         </div>
       </div>
       <label class="checkbox">
-        <input type="checkbox" id="completed_on_checkbox" class= "disable-timestamp" data-target="task_completed_on" checked={!is_completed_on_disabled}>
+        <input type="checkbox" id="completed_on_checkbox" phx-hook="CompletedOnCheckbox" class= "disable-timestamp" data-target="task_completed_on" checked={!is_completed_on_disabled}>
         <span class="is-tiny-text has-text-white">Task is completed</span>
       </label>
     </div>

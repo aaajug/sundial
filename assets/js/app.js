@@ -25,7 +25,9 @@ import "phoenix_html"
 import {Socket} from "phoenix"
 import {LiveSocket} from "phoenix_live_view"
 import Drag from './drag_hook';
-import QuillEditor from './quill_hook'
+import {QuillEditor} from './quill_hook'
+import {DeadlineCheckbox} from "./task_form_hook";
+import {CompletedOnCheckbox} from "./task_form_hook";
 
 import "./task_form.js"
 // import "./task_reorder.js"
@@ -33,7 +35,9 @@ import "./task_form.js"
 
 let Hooks = {
     QuillEditor,
-    Drag
+    Drag,
+    DeadlineCheckbox,
+    CompletedOnCheckbox
 }
 
 // let liveSocket = new LiveSocket("/live", Socket, { 

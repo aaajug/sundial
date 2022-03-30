@@ -1,7 +1,7 @@
 import Quill from "./quill.js";
 // import '../quill.snow.css';
 
-export default {
+export const QuillEditor = {
     mounted() {
       const hook = this;
       const selector = "#" + this.el.id;
