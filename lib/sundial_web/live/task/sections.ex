@@ -2,6 +2,7 @@ defmodule SundialWeb.TaskLive.Sections do
   import Phoenix.LiveView
   import Phoenix.LiveView.Helpers
   import Phoenix.HTML
+  alias SundialWeb.Router.Helpers, as: Routes
 
   alias Phoenix.LiveView.JS
 
@@ -58,9 +59,9 @@ defmodule SundialWeb.TaskLive.Sections do
   def actions(%{assigns: assigns}) do
     ~H"""
     <div class="">
-      <%= #live_patch to: Routes.task_index_path(@socket, :edit, assigns.task) do %>
+      <%= live_patch to: Routes.task_index_path(@socket, :edit, assigns.task) do %>
         <ion-icon name="pencil-outline" class="is-clickable action-button"></ion-icon>
-      <% #end %>
+      <% end %>
       <ion-icon name="trash-outline" class="is-clickable action-button"></ion-icon>
     </div>
     """

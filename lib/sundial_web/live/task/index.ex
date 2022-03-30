@@ -20,6 +20,7 @@ defmodule SundialWeb.TaskLive.Index do
     |> assign(:page_title, "Add task")
     |> assign(:status, Progress.list_status_options())
     |> assign(:task, %Task{})
+    |> assign(:serial_task, nil)
   end
 
   defp apply_action(socket, :edit, %{"id" => id}) do
