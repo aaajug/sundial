@@ -1,5 +1,5 @@
 import Quill from "./quill.js";
-import '../quill.snow.css';
+// import '../quill.snow.css';
 
 export default {
     mounted() {
