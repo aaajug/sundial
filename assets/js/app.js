@@ -26,13 +26,12 @@ import {Socket} from "phoenix"
 import {LiveSocket} from "phoenix_live_view"
 import Drag from './drag_hook';
 import {QuillEditor} from './quill_hook'
-import {TimestampCheckbox, DeadlineTimeSelect, CompletedOnTimeSelect} from "./task_form_hook";
-
-
-
+import {TimestampCheckbox, DeadlineTimeSelect, CompletedOnTimeSelect, 
+        StatusSelect, DeadlineDate, CompletedOnDate}  from "./task_form_hook";
+        
 let Hooks = {
     QuillEditor, Drag, TimestampCheckbox, DeadlineTimeSelect, 
-    CompletedOnTimeSelect
+    CompletedOnTimeSelect, StatusSelect, DeadlineDate, CompletedOnDate
 }
 
 let csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content")

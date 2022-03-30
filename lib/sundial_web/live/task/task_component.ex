@@ -1,6 +1,8 @@
 defmodule SundialWeb.Live.Task.TaskComponent do
   use Phoenix.LiveComponent
   import SundialWeb.TaskLive.Sections
+  import Phoenix.HTML
+  import Phoenix.HTML.Safe
 
   # alias SundialWeb.TaskView
   alias Sundial.Progress.States

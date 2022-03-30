@@ -42,7 +42,7 @@
       <div class="field is-horizontal">
         <div class="field-body">
           <div class="field">
-            <%= date_input f, :deadline, name: "", class: "date-selector", disabled: is_deadline_disabled, value: task_object.deadline_parsed.date %>
+            <%= date_input f, :deadline, name: "", "phx-hook": "DeadlineDate", class: "date-selector", disabled: is_deadline_disabled, value: task_object.deadline_parsed.date %>
           </div>
           <div class="field" id="deadline-time-selector" phx-hook="DeadlineTimeSelect" data-checked={!is_deadline_disabled}>
             <%= time_select f, :deadline, name: "", value: task_object.deadline_parsed.time %>
@@ -62,7 +62,7 @@
       <div class="field is-horizontal">
         <div class="field-body">
           <div class="field">
-            <%= date_input f, :completed_on, name: "", class: "date-selector", disabled: is_completed_on_disabled, value: task_object.completed_on_parsed.date %>
+            <%= date_input f, :completed_on, name: "", "phx-hook": "CompletedOnDate", class: "date-selector", disabled: is_completed_on_disabled, value: task_object.completed_on_parsed.date %>
           </div>
           <div class="field" id="completed_on_time_select" phx-hook="CompletedOnTimeSelect" data-checked={!is_completed_on_disabled}>
             <%= time_select f, :completed_on, name: "", value: task_object.completed_on_parsed.time %>
@@ -86,9 +86,9 @@
       </div>
     </div>
     <div class="column is-one-fifth">
-      <%= label f, "Status" %>
+      <%= label f, "Status"%>
       <div class="field is-horizontal">
-        <%= select f, :status, @status %>
+        <%= select f, :status, @status, "phx-hook": "StatusSelect" %>
       </div>
     </div>
   </div>
