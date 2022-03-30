@@ -1,13 +1,19 @@
 defmodule SundialWeb.Live.Task.TaskComponent do
   use Phoenix.LiveComponent
+  import SundialWeb.TaskLive.Sections
 
-  alias SundialWeb.TaskView
+  # alias SundialWeb.TaskView
   alias Sundial.Progress.States
   alias Sundial.Tasks
 
-  def render(assigns) do
-    TaskView.render("show.html", assigns)
-  end
+  # def render(assigns) do
+  #   TaskView.render("show.html", assigns)
+  # end
+
+  # def render(a,b) do
+  #   IO.inspect a
+
+  # end
 
   def mount(_params, _session, socket) do
     # IO.inspect("inspectdb: in mount/3 of taskcomponent")

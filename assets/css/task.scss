@@ -162,6 +162,9 @@ ion-icon {
   color: black;
 }
 
-// .task-card-component.over {
-//   // background-color: black;  
-// }
+.task-form-container {
+  input, select {
+    background-color: $white;
+    font-size: 11px;
+  }
+}

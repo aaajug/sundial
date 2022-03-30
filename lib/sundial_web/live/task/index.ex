@@ -3,7 +3,6 @@ defmodule SundialWeb.TaskLive.Index do
 
   alias Sundial.Tasks
   alias Sundial.Tasks.Task
-  alias Sundial.Progress.States
   alias Sundial.Progress
 
   @impl true

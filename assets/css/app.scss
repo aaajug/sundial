@@ -97,18 +97,24 @@ html, header {
 }
 
 .phx-modal-content {
-  background-color: #fefefe;
-  margin: 15vh auto;
-  padding: 20px;
-  border: 1px solid #888;
-  width: 80%;
+  background-color: $blue_whale;
+  // margin: 15vh auto;
+  padding: 120px 60px;
+  // border: 3px solid rgb(78, 78, 78);
+  box-shadow: 5px 0px 10px #141414;
+  width: 48%;
+  height: 100%;
+  position: relative;
 }
 
 .phx-modal-close {
   color: #aaa;
-  float: right;
+  // float: right;
   font-size: 28px;
   font-weight: bold;
+  position: absolute;
+  top: 30px;
+  right: 30px;
 }
 
 .phx-modal-close:hover,
