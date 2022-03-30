@@ -28,7 +28,6 @@ defmodule AliveWeb.TaskLive.FormComponent do
   end
 
   defp save_task(socket, :edit, task_params) do
-    IO.inspect task_params
     case Tasks.update_task(socket.assigns.task, task_params) do
       {:ok, _task} ->
         {:noreply,
