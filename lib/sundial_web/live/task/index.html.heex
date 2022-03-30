@@ -1,4 +1,4 @@
-<%= if @live_action in [:new] do %>
+<%= if @live_action in [:new, :edit] do %>
   <.modal return_to={Routes.task_index_path(@socket, :index)}>
     <.live_component
       module={AliveWeb.TaskLive.FormComponent}
@@ -7,6 +7,7 @@
       action={@live_action}
       task={@task}
       status={@status}
+      serial_task={@serial_task}
       return_to={Routes.task_index_path(@socket, :index)}
     />
   </.modal>

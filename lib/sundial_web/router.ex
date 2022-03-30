@@ -21,6 +21,8 @@ defmodule SundialWeb.Router do
     # live "/", TaskViewLive
     live "/", TaskLive.Index, :index
     live "/tasks/new", TaskLive.Index, :new
+    live "/tasks/:id/edit", TaskLive.Index, :edit
+
 
     # resources "/users", UsersController, only: [:create, :update, :delete]
     # scope path: "/account" do

@@ -58,7 +58,9 @@ defmodule SundialWeb.TaskLive.Sections do
   def actions(%{assigns: assigns}) do
     ~H"""
     <div class="">
-      <ion-icon name="pencil-outline" class="is-clickable action-button"></ion-icon>
+      <%= #live_patch to: Routes.task_index_path(@socket, :edit, assigns.task) do %>
+        <ion-icon name="pencil-outline" class="is-clickable action-button"></ion-icon>
+      <% #end %>
       <ion-icon name="trash-outline" class="is-clickable action-button"></ion-icon>
     </div>
     """

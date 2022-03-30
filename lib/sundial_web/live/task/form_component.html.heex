@@ -1,7 +1,7 @@
 <div>
 <% 
   task_object = if Map.has_key?(assigns, :task) && @task.id do
-                  @task
+                  @serial_task
                 else 
                   %{deadline: nil, completed_on: nil, deadline_parsed: %{time: nil, date: nil}, completed_on_parsed: %{time: nil, date: nil}, details: nil}
                 end
@@ -98,7 +98,7 @@
     <%= #error_tag f, :details %>
   </div>
 
-  <div class="field pt-3" phx-update="ignore">
+  <div class="field pt-3" phx-update="ignore" style="display: none">
     <%= label f, "Want to add more details?" %>
     <div id="editor">
       <%= raw task_object.details %>
@@ -106,7 +106,7 @@
     <%= error_tag f, :details %>
   </div>
 
-   <div phx-update="ignore" style="">
+   <div phx-update="ignore">
       <%= #text_input f, :details, value: "none", type: "hidden", id: "read-only-quill" %>
       <div id="quillEditor" phx-hook="QuillEditor" data-quill-input-id="read-only-quill" class="content is-small">
         <%= raw task_object.details %>
