@@ -3,6 +3,52 @@ export const TimestampCheckbox = {
     const selector = "#" + this.el.id;
     const selector_object = $(selector);
 
+    $(document).ready(function() {
+      deadline_disabled = $("#task_deadline").prop("disabled");
+      completed_on_disabled = $("#task_completed_on").prop("disabled");
+  
+      $("#task_deadline_hour").prop("disabled", deadline_disabled);
+      $("#task_deadline_minute").prop("disabled", deadline_disabled);
+      $("#task_completed_on_hour").prop("disabled", completed_on_disabled);
+      $("#task_completed_on_minute").prop("disabled", completed_on_disabled);
+  
+      // $("#task_completed_on").triggerHandler("change");/
+      if($("#completed_on_checkbox").is(":checked")) {
+          var completed_on_str = $("#task_completed_on").val();
+          var completed_on_date = new Date(completed_on_str);
+  
+          $("#task_completed_on_year").val(completed_on_date.getFullYear());
+          $("#task_completed_on_month").val(completed_on_date.getMonth() + 1);
+          $("#task_completed_on_day").val(completed_on_date.getDate());
+  
+          // $("#task_completed_on_hour").triggerHandler("change");
+          var hour = $("#task_completed_on_hour");
+          $("#task_completed_on_hour_field").val(hour.val());
+  
+          // $("#task_completed_on_minute").triggerHandler("change");
+          var minute = $("#task_completed_on_minute");
+          $("#task_completed_on_minute_field").val(minute.val());
+      }
+  
+      if($("#deadline_checkbox").is(":checked")) {
+          // $("#task_deadline").triggerHandler("change");
+          var deadline_str = $("#task_deadline").val();
+          var deadline_date = new Date(deadline_str);
+  
+          $("#task_deadline_year").val(deadline_date.getFullYear());
+          $("#task_deadline_month").val(deadline_date.getMonth() + 1);
+          $("#task_deadline_day").val(deadline_date.getDate());
+  
+          // $("#task_deadline_hour").triggerHandler("change");
+          var hour = $("#task_deadline_hour");
+          $("#task_deadline_hour_field").val(hour.val());
+  
+          // $("#task_deadline_minute").triggerHandler("change");
+          var minute = $("#task_deadline_minute");
+          $("#task_deadline_minute_field").val(minute.val());
+      }
+    });
+
     selector_object.change(function() {
       var target = "#" + $(this).data("target");
   
