@@ -4,7 +4,7 @@ Optional: @task [details labels timestamps[deadline completed_on]]
 %>
 
 <div class={@task.status <> "-column-task-card"} phx-change="search_form_change" phx-hook={@drag_hook} data-task_id={@task.id} data-task_status={@task.status}>
-  <%= #@return_to %>
+  <%= #@task.is_overdue %>
   <% options = %{truncated: true} %>
   <% status = if @task.is_overdue do 
                 "overdue"

@@ -79,7 +79,7 @@ defmodule SundialWeb.Live.Task.TaskComponent do
     end
   end
 
-  def handle_event("delete", %{"id" => id}, socket) do
+  def handle_event("delete", %{"id" => id, "return_to" => return_to}, socket) do
     task = Tasks.get_task!(id)
     {:ok, _} = Tasks.delete_task(task)
 
@@ -87,6 +87,6 @@ defmodule SundialWeb.Live.Task.TaskComponent do
     {:noreply,
      socket
        |> put_flash(:info, "Task successfully deleted.")
-       |> push_redirect(to: "/")}
+       |> push_redirect(to: return_to)}
   end
 end

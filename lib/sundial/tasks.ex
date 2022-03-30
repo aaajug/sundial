@@ -267,7 +267,7 @@ defmodule Sundial.Tasks do
 
     [{status_name, status_description}] = Repo.all(from s in "status", where: s.id == ^status_id, select: {s.name, s.description})
 
-    is_overdue = if task.deadline && task.completed_on == nil && task.status != 3 do
+    is_overdue = if task.deadline && (task.completed_on == nil || (task.completed_on != nil && task.status != 4)) && task.status != 3 do
                    NaiveDateTime.compare(NaiveDateTime.local_now, task.deadline) == :gt
                  else
                    false

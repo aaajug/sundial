@@ -61,10 +61,10 @@ defmodule SundialWeb.TaskLive.Sections do
   def actions(%{assigns: assigns}) do
     ~H"""
     <div class="">
-      <%= live_patch to: Routes.task_index_path(@socket, :edit, assigns.task) do %>
+      <%= live_patch to: Routes.task_index_path(@socket, :edit, assigns.task, %{return_to: @return_to}) do %>
         <ion-icon name="pencil-outline" class="is-clickable action-button"></ion-icon>
       <% end %>
-      <a phx-click="delete" phx-value-id={assigns.task.id} data-confirm="This task will be deleted. Are you sure?" phx-target={assigns.myself}>
+      <a phx-click="delete" phx-value-id={assigns.task.id} phx-value-return_to={@return_to} data-confirm="This task will be deleted. Are you sure?" phx-target={assigns.myself}>
         <ion-icon name="trash-outline" class="is-clickable action-button"></ion-icon>
       </a>
     </div>

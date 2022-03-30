@@ -15,7 +15,7 @@ defmodule SundialWeb.TaskLive.Index do
           |> assign(:sort_class, "is-warning is-active is-focused")
           |> assign(:sort_target, "/")
           |> assign(:return_target, "/?sort=default")
-          |> assign(:drag_hook, "")
+          |> assign(:drag_hook, "None")
           |> assign(:tasks, list_tasks_by_default())
 
       _ ->
@@ -44,7 +44,7 @@ defmodule SundialWeb.TaskLive.Index do
     |> assign(:serial_task, nil)
   end
 
-  defp apply_action(socket, :edit, %{"id" => id}) do
+  defp apply_action(socket, :edit, %{"id" => id, "return_to" => return_to}) do
     task = Tasks.get_task!(id)
 
     socket
@@ -52,6 +52,7 @@ defmodule SundialWeb.TaskLive.Index do
     |> assign(:status, Progress.list_status_options())
     |> assign(:task, task)
     |> assign(:serial_task, Tasks.serialize(task))
+    |> assign(:return_to, return_to)
   end
 
   defp apply_action(socket, :index, _params) do
