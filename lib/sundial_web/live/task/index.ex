@@ -38,6 +38,14 @@ defmodule SundialWeb.TaskLive.Index do
     |> assign(:user, nil)
   end
 
+  @impl true
+  def handle_event("delete", %{"id" => id}, socket) do
+    task = Tasks.get_task!(id)
+    {:ok, _} = Tasks.delete_task(task)
+
+    {:noreply, assign(socket, :tasks, list_tasks())}
+  end
+
   defp list_tasks do
     Tasks.list_tasks_by_position()
   end

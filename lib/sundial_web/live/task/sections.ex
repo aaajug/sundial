@@ -2,8 +2,9 @@ defmodule SundialWeb.TaskLive.Sections do
   import Phoenix.LiveView
   import Phoenix.LiveView.Helpers
   import Phoenix.HTML
-  alias SundialWeb.Router.Helpers, as: Routes
+  import Phoenix.HTML.Link
 
+  alias SundialWeb.Router.Helpers, as: Routes
   alias Phoenix.LiveView.JS
 
   def timestamps(%{assigns: assigns}) do
@@ -62,7 +63,9 @@ defmodule SundialWeb.TaskLive.Sections do
       <%= live_patch to: Routes.task_index_path(@socket, :edit, assigns.task) do %>
         <ion-icon name="pencil-outline" class="is-clickable action-button"></ion-icon>
       <% end %>
-      <ion-icon name="trash-outline" class="is-clickable action-button"></ion-icon>
+      <%= link to: "#", phx_click: "delete", phx_value_id: assigns.task.id, data: [confirm: "This task will be deleted. Are you sure?"] do %>
+        <ion-icon name="trash-outline" class="is-clickable action-button"></ion-icon>
+      <% end %>
     </div>
     """
   end
