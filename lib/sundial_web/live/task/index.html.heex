@@ -32,18 +32,16 @@
 
 <div class="columns pt-4">
   <%= for status_id <- [1,2,3,4] do %>
-    <% group = Enum.filter(@tasks, fn task -> task.status == status_id end) %>
+    <% group = Enum.filter(@tasks, fn task -> task.status == status_id end) |> Enum.with_index %>
     <div class="content column pane is-one-fourth mr-3 relative">
       <div class="is-size-6 has-text-weight-very-light pb-1">
         <%= status_labels[status_id] %> (<%= Enum.count(group) %>)
       </div>
 
       <div class="task-list">
-        <div class="dropzone" phx-hook={@drag_hook} id={"dropzone-" <> Integer.to_string(status_id)} data-kind="dropzone" style="background-color: green;width:100%;height:30px;">
-        </div>
-        <%= for task <- group do %>
+        <%= for {task, index} <- group do %>
           <div class="task-card-component" data-drag_hook={@drag_hook}>
-            <.live_component module={SundialWeb.Live.Task.TaskComponent} id={task.id} drag_hook={@drag_hook} return_to={@return_target} />
+            <.live_component module={SundialWeb.Live.Task.TaskComponent} id={task.id} drag_hook={@drag_hook} return_to={@return_target} card_index={index} />
           </div>
         <% end %>
       </div>

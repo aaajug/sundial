@@ -23,6 +23,8 @@ export default {
       
         e.dataTransfer.effectAllowed = 'move';
         e.dataTransfer.setData('text/html', this.innerHTML);
+        // e.dataTransfer.setData("height", this.offsetHeight + "px");
+        // console.log(e.dataTransfer.getData("height"));
       }
       
       function handleDragEnd(e) {
@@ -34,7 +36,7 @@ export default {
       }
       
       function handleDragOver(e) {
-        this.style.background = "gray";
+        // this.style.background = "gray";
 
         if (e.preventDefault) {
           e.preventDefault();
@@ -44,12 +46,17 @@ export default {
       }
       
       function handleDragEnter(e) {
+        this.style.height = (dragSrcEl.offsetHeight + 100) + "px";
         this.classList.add('over');
       }
       
       function handleDragLeave(e) {
-        this.style.background = "transparent";
-
+        if(this.classList.contains("dropzone")) {
+          this.style.height = "120px";
+        } else {
+          this.style.background = "transparent";
+        }
+        
         this.classList.remove('over');
       }
       
