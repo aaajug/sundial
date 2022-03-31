@@ -3,8 +3,9 @@ Required: @task [status description]
 Optional: @task [details labels timestamps[deadline completed_on]]
 %>
 
-<div class={@task.status <> "-column-task-card"} phx-change="search_form_change" phx-hook={@drag_hook} data-task_id={@task.id} data-task_status={@task.status}>
-  <%= #@task.is_overdue %>
+<div>
+<div class={@task.status <> "-column-task-card"} id={"drag-card-"  <> Integer.to_string(@task.id)} phx-change="search_form_change" phx-hook={@drag_hook} data-task_id={@task.id} data-task_status={@task.status}>
+  <%= #@task.id %>
   <% options = %{truncated: true} %>
   <% status = if @task.is_overdue do 
                 "overdue"
@@ -13,7 +14,8 @@ Optional: @task [details labels timestamps[deadline completed_on]]
               end %>
 
   <div class="flex relative">
-    <div class={"fullwidth task-card card is-clipped mt-3 " <> status} draggable="true" data-task_id={@task.id}>
+    <div class={"fullwidth task-card card is-clipped mt-3 " <> status <> " " <> @task.status <> "-column"} draggable="true" data-task_id={@task.id}>
+    <%= @task.id %>
       <%= #unless @task.status != "paused" do %>
         <%# <div class="overlay"></div> %>
       <% #end %>
@@ -45,4 +47,9 @@ Optional: @task [details labels timestamps[deadline completed_on]]
 
     <.state_actions assigns={assigns} return_to={@return_to} />
   </div>
+</div>
+
+<div class="dropzone" phx-hook={@drag_hook} id={"dropzone-" <> Integer.to_string(@task.id)} 
+     data-kind="dropzone" style="background-color: green;width:100%;height:30px;">
+</div>
 </div>

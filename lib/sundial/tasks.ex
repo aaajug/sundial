@@ -19,10 +19,16 @@ defmodule Sundial.Tasks do
 
   """
   def list_tasks do
+    # Repo.all(from task in Task,
+    #          order_by: [desc: task.completed_on,
+    #                     asc: task.status,
+    #                     asc: task.deadline,
+    #                     desc: task.updated_at])
+
     Repo.all(from task in Task,
-             order_by: [desc: task.completed_on,
+             order_by: [asc: task.deadline,
                         asc: task.status,
-                        asc: task.deadline,
+                        desc: task.completed_on,
                         desc: task.updated_at])
   end
 
@@ -44,7 +50,7 @@ defmodule Sundial.Tasks do
   end
 
   def update_position(%Task{} = task, position) do
-    update_task(task, %{position: position})
+    update_task(task, %{"position" => position})
   end
 
   def get_position(task_id) do
@@ -210,6 +216,13 @@ defmodule Sundial.Tasks do
 
   """
   def update_task(%Task{} = task, attrs) do
+    attrs = cond do
+              Map.has_key?(attrs, "status") && attrs["status"] != 4 ->
+                Map.put(attrs, "completed_on", nil)
+
+              task.status != 4 -> Map.put(attrs, "completed_on", nil)
+            end
+
     task
     |> Task.changeset(attrs)
     |> Repo.update()

@@ -57,7 +57,7 @@ defmodule SundialWeb.TaskLive.Index do
 
   defp apply_action(socket, :index, _params) do
     socket
-    |> assign(:user, nil)
+    |> assign(:task, nil)
   end
 
   # @impl true
