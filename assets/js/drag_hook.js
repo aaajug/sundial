@@ -5,32 +5,19 @@ export default {
     const selector = '#' + this.el.id;
     var items = document.querySelectorAll(selector);
 
-    // if($(".task-card-component").data("drag_hook") == "Drag") {
       items.forEach(function (item) {
         item.addEventListener('dragstart', handleDragStart);
         item.addEventListener('dragleave', handleDragLeave);
           item.addEventListener('dragend', handleDragEnd);
 
         if (item.dataset.kind == "dropzone") {
-          // console.log("dropzone");
           item.addEventListener('dragover', handleDragOver);
           item.addEventListener('dragenter', handleDragEnter);
           item.addEventListener('drop', handleDrop);
         }
       });
-    // }
-
-    // var dropzones = document.querySelector(".dropzone");
-    // dropzones.forEach(function(item) {
-    //     item.addEventListener('dragover', handleDragOver);
-    //     item.addEventListener('dragenter', handleDragEnter);
-    //     item.addEventListener('dragleave', handleDragLeave);
-    //     item.addEventListener('dragend', handleDragEnd);
-    //     item.addEventListener('drop', handleDrop);
-    // });
 
     function handleDragStart(e) {
-        // console.log("handle drag start");
         this.style.opacity = '0.4';
         dragSrcEl = this;
       
@@ -47,7 +34,6 @@ export default {
       }
       
       function handleDragOver(e) {
-        // console.log("dragover");
         this.style.background = "gray";
 
         if (e.preventDefault) {
@@ -58,7 +44,6 @@ export default {
       }
       
       function handleDragEnter(e) {
-        // console.log("drag enter");
         this.classList.add('over');
       }
       
@@ -69,7 +54,6 @@ export default {
       }
       
       function handleDrop(e) {      
-        // console.log("handle drop");
         e.stopPropagation();
       
         if (dragSrcEl !== this) {
@@ -95,15 +79,10 @@ export default {
 
 
           var list = [];
-          // document.querySelectorAll("." + this.dataset.task_status + "-column-task-card > .flex > .task-card" ).forEach((card) => {
-          // document.querySelectorAll("." + this.dataset.task_status + ".task-card").forEach((card) => {
-            console.log(".task-card." + dragSrcEl.dataset.task_status + "-column");
             document.querySelectorAll(".task-card." + dragSrcEl.dataset.task_status + "-column").forEach((card) => {
             list.push(card.dataset.task_id);
           });
 
-          console.log(list);
-          
           hook.pushEventTo(selector, 'dropped', {
             list: list,
           });
