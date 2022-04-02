@@ -33,6 +33,8 @@ export default {
         items.forEach(function (item) {
           item.classList.remove('over');
         });
+
+        dragSrcEl = null;
       }
       
       function handleDragOver(e) {
@@ -46,6 +48,11 @@ export default {
       }
       
       function handleDragEnter(e) {
+        console.log(e.path);
+
+        // if(!dragSrcEl.classList.contains("task-card-container"))
+        //   return false;
+
         this.style.height = (dragSrcEl.offsetHeight + 100) + "px";
         this.classList.add('over');
       }
@@ -95,6 +102,7 @@ export default {
           });
         }
       
+        dragSrcEl = null;
         return false;
       }    
   }

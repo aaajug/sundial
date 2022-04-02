@@ -4,10 +4,13 @@ defmodule Sundial.Tasks do
   """
 
   import Ecto.Query, warn: false
+  # import Sundial.Progress
   alias Sundial.Repo
 
   alias Sundial.Tasks.Task
   alias Sundial.Tasks.SerialTask
+  # alias Sundial.Progress.Status
+  alias Sundial.Progress
 
   @doc """
   Returns the list of tasks.
@@ -278,7 +281,8 @@ defmodule Sundial.Tasks do
                   task.status
                 end
 
-    [{status_name, status_description}] = Repo.all(from s in "status", where: s.id == ^status_id, select: {s.name, s.description})
+    # [{status_name, status_description}] = Repo.all(from s in "status", where: s.id == ^status_id, select: {s.name, s.description})
+    task_status = Progress.list_status() |> Enum.filter(fn status -> status.id == status_id end) |> List.first
 
     is_overdue = if task.deadline && (task.completed_on == nil || (task.completed_on != nil && task.status != 4)) && task.status != 3 do
                    NaiveDateTime.compare(NaiveDateTime.local_now, task.deadline) == :gt
@@ -306,8 +310,8 @@ defmodule Sundial.Tasks do
       details_plaintext: task.details_plaintext,
       deadline: deadline,
       completed_on: completed_on,
-      status: status_name,
-      status_desc: status_description,
+      status: task_status.name,
+      status_desc: task_status.description,
       is_overdue: is_overdue,
       deadline_parsed: %{date: deadline_date, time: deadline_time, hour: deadline_time_hour, minute: deadline_time_minute},
       completed_on_parsed: %{date: completed_on_date, time: completed_on_time, hour: completed_on_time_hour, minute: completed_on_time_minute},
