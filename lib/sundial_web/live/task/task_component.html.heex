@@ -6,13 +6,13 @@ Optional: @task [details labels timestamps[deadline completed_on]]
 <div>
 <%= case @card_index do %>
 <%    0 -> %>
-      <div class="dropzone" phx-hook={@drag_hook} id={"dropzone-header-" <> Integer.to_string(@task.id)} data-kind="dropzone">
+      <div class="dropzone" phx-hook={@drag_hook} id={"dropzone-header-" <> Integer.to_string(@card_index)} data-kind="dropzone">
       </div>
 <%    _ ->  %> 
 <%  end %>
 
 
-<div class={@task.status <> "-column-task-card"} id={"drag-card-"  <> Integer.to_string(@task.id)} phx-change="search_form_change" phx-hook={@drag_hook} data-task_id={@task.id} data-task_status={@task.status}>
+<div class={@task.status <> "-column-task-card"} id={"drag-card-"  <> Integer.to_string(@card_index)} phx-change="search_form_change" phx-hook={@drag_hook} data-card_index={@card_index} data-task_id={@task.id} data-task_status={@task.status}>
   <%= #@task.id %>
   <% options = %{truncated: true} %>
   <% status = if @task.is_overdue do 
@@ -57,6 +57,6 @@ Optional: @task [details labels timestamps[deadline completed_on]]
   </div>
 </div>
 
-<div class="dropzone" phx-hook={@drag_hook} id={"dropzone-" <> Integer.to_string(@task.id)} data-kind="dropzone">
+<div class="dropzone" phx-hook={@drag_hook} id={"dropzone-" <> Integer.to_string(@card_index)} data-kind="dropzone">
 </div>
 </div>

@@ -48,10 +48,12 @@ export default {
       }
       
       function handleDragEnter(e) {
-        console.log(e.path);
+        // console.log(dragSrcEl);
+        // console.log(this);
+        var dragged = dragSrcEl.dataset.card_index;
 
-        // if(!dragSrcEl.classList.contains("task-card-container"))
-        //   return false;
+        if(this.id == "dropzone-header-" + dragged || this.id == "dropzone-" + dragged || this.id == "dropzone-" + (dragged-1))
+          return false;
 
         this.style.height = (dragSrcEl.offsetHeight + 100) + "px";
         this.classList.add('over');
@@ -69,6 +71,11 @@ export default {
       
       function handleDrop(e) {      
         e.stopPropagation();
+        
+        var dragged = dragSrcEl.dataset.card_index;
+
+        if(this.id == "dropzone-header-" + dragged || this.id == "dropzone-" + dragged || this.id == "dropzone-" + (dragged-1))
+          return false;
       
         if (dragSrcEl !== this) {
           dragged_task_id = dragSrcEl.dataset.task_id;                 // get task.id of the element being dragged (moved)
