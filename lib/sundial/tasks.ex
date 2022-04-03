@@ -147,19 +147,44 @@ defmodule Sundial.Tasks do
 
   # Updates positions of tasks in order of the given list of IDs
   def update_positions(list) do
+    initial_positions = []
+    result = true
+
     list
       |> Enum.with_index(
           fn id, new_position ->
             task = get_task!(id)
 
-            # TODO: use case to check if update is successful, do rollback if not, return {:error, _}
-            if !update_position(task, new_position * 1000) do
-              :break
+            initial_positions = [ %{id: id, attr: %{"position" => task.position}} | initial_positions]
+
+            try do
+              if !update_position(task, new_position * 1000) do
+                throw(:break)
+              end
+            catch
+              :break -> result = :broken
+              result
             end
           end
         )
 
-    {:ok, "Tasks reordered"}
+    case result do
+      :broken ->
+        rollback(initial_positions)
+        {:error, "Failed to reorder tasks. Doing a rollback."}
+      true -> {:ok, "Tasks reordered"}
+    end
+  end
+
+  def rollback(rollback_data) do
+    rollback_data
+      |> Enum.each(
+        fn obj ->
+          task = get_task!(obj.id)
+
+          update_task(task, obj.attr)
+        end
+      )
   end
 
   def is_all_position_nil? do # need to check if all tasks have no position, if so, initialize positions
