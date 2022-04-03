@@ -153,7 +153,9 @@ defmodule Sundial.Tasks do
             task = get_task!(id)
 
             # TODO: use case to check if update is successful, do rollback if not, return {:error, _}
-            update_position(task, new_position * 1000)
+            if !update_position(task, new_position * 1000) do
+              :break
+            end
           end
         )
 

@@ -4,22 +4,62 @@ export default {
 
     const selector = '#' + this.el.id;
     var items = document.querySelectorAll(selector);
+    // console.log("selector: " + selector);
 
       items.forEach(function (item) {
-        item.addEventListener('dragstart', handleDragStart);
-        item.addEventListener('dragleave', handleDragLeave);
-          item.addEventListener('dragend', handleDragEnd);
 
         if (item.dataset.kind == "dropzone") {
           item.addEventListener('dragover', handleDragOver);
           item.addEventListener('dragenter', handleDragEnter);
           item.addEventListener('drop', handleDrop);
+        } else {
+          item.addEventListener('dragstart', handleDragStart);
+          item.addEventListener('dragleave', handleDragLeave);
+          item.addEventListener('dragend', handleDragEnd);
+          item.addEventListener('click', handleClick);
         }
       });
 
+      // $(".task-card").click(function() {
+      //   // console.log("task card clicked");
+      
+      //   var unexpanded = $(this).find(".content").hasClass("truncated");
+      //   console.log("unexpanded: " + unexpanded);
+      
+      
+      //   $(".task-card").find(".content").addClass("truncated");
+      
+      //   if(unexpanded)
+      //     $(this).find(".content").removeClass("truncated");
+      
+      // });
+
+    function handleClick(e) {
+      var content = this.querySelector(".content");
+
+      if(content) {
+        var unexpanded = content.classList.contains("truncated");
+    
+        $(".task-card").find(".content").addClass("truncated");
+        
+        // console.log("unexpanded: " + unexpanded);
+        if(unexpanded)
+          content.classList.remove("truncated");
+      }
+    }
+
+
     function handleDragStart(e) {
-        this.style.opacity = '0.4';
         dragSrcEl = this;
+
+        this.style.opacity = '0.4';
+
+        var content = this.querySelector(".content");
+        if (content)
+          content.classList.add("truncated");
+
+        $(".dropzone").show();
+        $(".dropzone").css("z-index", 10);
       
         e.dataTransfer.effectAllowed = 'move';
         e.dataTransfer.setData('text/html', this.innerHTML);
@@ -48,20 +88,19 @@ export default {
       }
       
       function handleDragEnter(e) {
-        // console.log(dragSrcEl);
-        // console.log(this);
-        var dragged = dragSrcEl.dataset.card_index;
+        var dragged_card_index = dragSrcEl.dataset.card_index;
+        var dropzone_card_index = this.dataset.card_index;
 
-        if(this.id == "dropzone-header-" + dragged || this.id == "dropzone-" + dragged || this.id == "dropzone-" + (dragged-1))
+        if(dropzone_card_index == dragged_card_index || dropzone_card_index == dragged_card_index - 1)
           return false;
 
-        this.style.height = (dragSrcEl.offsetHeight + 100) + "px";
+        this.style.height = (dragSrcEl.offsetHeight + 80) + "px";
         this.classList.add('over');
       }
       
       function handleDragLeave(e) {
         if(this.classList.contains("dropzone")) {
-          this.style.height = "120px";
+          this.style.height = "50px";
         } else {
           this.style.background = "transparent";
         }
@@ -71,10 +110,11 @@ export default {
       
       function handleDrop(e) {      
         e.stopPropagation();
-        
-        var dragged = dragSrcEl.dataset.card_index;
 
-        if(this.id == "dropzone-header-" + dragged || this.id == "dropzone-" + dragged || this.id == "dropzone-" + (dragged-1))
+        var dragged_card_index = dragSrcEl.dataset.card_index;
+        var dropzone_card_index = this.dataset.card_index;
+
+        if(dropzone_card_index == dragged_card_index || dropzone_card_index == dragged_card_index - 1)
           return false;
       
         if (dragSrcEl !== this) {
@@ -104,6 +144,7 @@ export default {
             list.push(card.dataset.task_id);
           });
 
+          // console.log(list);
           hook.pushEventTo(selector, 'dropped', {
             list: list,
           });

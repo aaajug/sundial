@@ -70,12 +70,8 @@ defmodule SundialWeb.Live.Task.TaskComponent do
   end
 
   def handle_event("dropped", %{"list" => list}, socket) do
-    IO.inspect "New order: "
-    IO.inspect list
-
     case Tasks.update_positions(list) do
       {:ok, _} ->
-        IO.inspect "Done position update"
         {:reply, socket, push_redirect(socket, to: "/")}
       {:error, _} ->
         put_flash(socket, :error, "Can't reorder tasks as of the moment. Please try again later.")
