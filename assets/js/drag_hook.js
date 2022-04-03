@@ -74,12 +74,9 @@ export default {
 
         $(".dropzone").hide();
 
-        var object = document.querySelector("#" + this.id);
-
-        if(object) {
-          var column = object.closest(".task-list");
-          column.style.overflowY = "scroll";
-        }
+        document.querySelectorAll(".task-list").forEach(function (item) {
+          item.style.overflowY = "scroll";
+        });  
 
         document.querySelectorAll(".dropzone").forEach(function (item) {
           item.style.height = "50px";
