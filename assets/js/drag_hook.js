@@ -4,7 +4,6 @@ export default {
 
     const selector = '#' + this.el.id;
     var items = document.querySelectorAll(selector);
-    // console.log("selector: " + selector);
 
       items.forEach(function (item) {
 
@@ -48,7 +47,6 @@ export default {
       }
     }
 
-
     function handleDragStart(e) {
         dragSrcEl = this;
 
@@ -60,6 +58,11 @@ export default {
 
         $(".dropzone").show();
         $(".dropzone").css("z-index", 10);
+
+        var column = document.querySelector("#" + this.id).closest(".task-list");
+        column.style.overflowY = "visible";
+
+        console.log("column: " + column);
       
         e.dataTransfer.effectAllowed = 'move';
         e.dataTransfer.setData('text/html', this.innerHTML);
@@ -69,6 +72,10 @@ export default {
       
       function handleDragEnd(e) {
         this.style.opacity = '1';
+
+        document.querySelectorAll(".dropzone").forEach(function (item) {
+          item.style.height = "50px";
+        });
       
         items.forEach(function (item) {
           item.classList.remove('over');

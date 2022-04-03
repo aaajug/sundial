@@ -1,6 +1,7 @@
 .content.column.pane .task-list {
   height: 90vh;
   overflow-y: scroll;
+  // overflow-y: visible;
 }
   
 .content.column.pane .task-list::-webkit-scrollbar-track {

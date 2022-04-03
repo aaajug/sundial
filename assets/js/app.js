@@ -25,6 +25,7 @@ import "phoenix_html"
 import {Socket} from "phoenix"
 import {LiveSocket} from "phoenix_live_view"
 import None from './none';
+import "./scroll.js"
 
 import Drag from './drag_hook';
 import {QuillEditor} from './quill_hook'
