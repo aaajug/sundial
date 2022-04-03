@@ -6,15 +6,15 @@ export default {
     var items = document.querySelectorAll(selector);
 
       items.forEach(function (item) {
+        item.addEventListener('dragstart', handleDragStart);
+          item.addEventListener('dragleave', handleDragLeave);
+          item.addEventListener('dragend', handleDragEnd);
 
         if (item.dataset.kind == "dropzone") {
           item.addEventListener('dragover', handleDragOver);
           item.addEventListener('dragenter', handleDragEnter);
           item.addEventListener('drop', handleDrop);
         } else {
-          item.addEventListener('dragstart', handleDragStart);
-          item.addEventListener('dragleave', handleDragLeave);
-          item.addEventListener('dragend', handleDragEnd);
           item.addEventListener('click', handleClick);
         }
       });
@@ -59,10 +59,9 @@ export default {
         $(".dropzone").show();
         $(".dropzone").css("z-index", 10);
 
-        var column = document.querySelector("#" + this.id).closest(".task-list");
-        column.style.overflowY = "visible";
+        // var column = document.querySelector("#" + this.id).closest(".task-list");
+        // column.style.overflowY = "unset";
 
-        console.log("column: " + column);
       
         e.dataTransfer.effectAllowed = 'move';
         e.dataTransfer.setData('text/html', this.innerHTML);
@@ -72,6 +71,15 @@ export default {
       
       function handleDragEnd(e) {
         this.style.opacity = '1';
+
+        $(".dropzone").hide();
+
+        var object = document.querySelector("#" + this.id);
+        
+        if(column) {
+          var column = object.closest(".task-list");
+          column.style.overflowY = "scroll";
+        }
 
         document.querySelectorAll(".dropzone").forEach(function (item) {
           item.style.height = "50px";
@@ -95,6 +103,9 @@ export default {
       }
       
       function handleDragEnter(e) {
+        var column = document.querySelector("#" + this.id).closest(".task-list");
+        column.style.overflowY = "unset";
+
         var dragged_card_index = dragSrcEl.dataset.card_index;
         var dropzone_card_index = this.dataset.card_index;
 
@@ -102,21 +113,31 @@ export default {
           return false;
 
         this.style.height = (dragSrcEl.offsetHeight + 80) + "px";
-        this.classList.add('over');
+        // this.classList.add('over');
       }
       
       function handleDragLeave(e) {
+        // this.style.background = "pink";
         if(this.classList.contains("dropzone")) {
           this.style.height = "50px";
         } else {
           this.style.background = "transparent";
         }
         
-        this.classList.remove('over');
+        // this.classList.remove('over');
       }
       
       function handleDrop(e) {      
         e.stopPropagation();
+
+        $(".dropzone").hide();
+
+        document.querySelectorAll(".dropzone").forEach(function (item) {
+          item.style.height = "50px";
+        });
+
+        var column = document.querySelector("#" + this.id).closest(".task-list");
+        column.style.overflowY = "scroll";
 
         var dragged_card_index = dragSrcEl.dataset.card_index;
         var dropzone_card_index = this.dataset.card_index;
