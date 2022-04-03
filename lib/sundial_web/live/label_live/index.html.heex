@@ -1,0 +1,41 @@
+<h1>Listing Labels</h1>
+
+<%= if @live_action in [:new, :edit] do %>
+  <.modal return_to={Routes.label_index_path(@socket, :index)}>
+    <.live_component
+      module={SundialWeb.LabelLive.FormComponent}
+      id={@label.id || :new}
+      title={@page_title}
+      action={@live_action}
+      label={@label}
+      return_to={Routes.label_index_path(@socket, :index)}
+    />
+  </.modal>
+<% end %>
+
+<table>
+  <thead>
+    <tr>
+      <th>Color</th>
+      <th>Name</th>
+
+      <th></th>
+    </tr>
+  </thead>
+  <tbody id="labels">
+    <%= for label <- @labels do %>
+      <tr id={"label-#{label.id}"}>
+        <td><%= label.color %></td>
+        <td><%= label.name %></td>
+
+        <td>
+          <span><%= live_redirect "Show", to: Routes.label_show_path(@socket, :show, label) %></span>
+          <span><%= live_patch "Edit", to: Routes.label_index_path(@socket, :edit, label) %></span>
+          <span><%= link "Delete", to: "#", phx_click: "delete", phx_value_id: label.id, data: [confirm: "Are you sure?"] %></span>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<span><%= live_patch "New Label", to: Routes.label_index_path(@socket, :new) %></span>

@@ -3,7 +3,7 @@ defmodule Sundial.Labels.Label do
   import Ecto.Changeset
 
   schema "labels" do
-    field :color_class, :string, null: false, default: "yellow-buff"
+    field :color, :string, null: false, default: "#000000"
     field :name, :string, null: false, default: "new label"
 
     timestamps()
@@ -12,7 +12,7 @@ defmodule Sundial.Labels.Label do
   @doc false
   def changeset(label, attrs) do
     label
-    |> cast(attrs, [:name, :color_class])
-    |> validate_required([:name, :color_class])
+    |> cast(attrs, [:name, :color])
+    |> validate_required([:name, :color])
   end
 end

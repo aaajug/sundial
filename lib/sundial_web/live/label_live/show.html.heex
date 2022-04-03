@@ -1,0 +1,31 @@
+<h1>Show Label</h1>
+
+<%= if @live_action in [:edit] do %>
+  <.modal return_to={Routes.label_show_path(@socket, :show, @label)}>
+    <.live_component
+      module={SundialWeb.LabelLive.FormComponent}
+      id={@label.id}
+      title={@page_title}
+      action={@live_action}
+      label={@label}
+      return_to={Routes.label_show_path(@socket, :show, @label)}
+    />
+  </.modal>
+<% end %>
+
+<ul>
+
+  <li>
+    <strong>Color:</strong>
+    <%= @label.color %>
+  </li>
+
+  <li>
+    <strong>Name:</strong>
+    <%= @label.name %>
+  </li>
+
+</ul>
+
+<span><%= live_patch "Edit", to: Routes.label_show_path(@socket, :edit, @label), class: "button" %></span> |
+<span><%= live_redirect "Back", to: Routes.label_index_path(@socket, :index) %></span>

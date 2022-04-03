@@ -23,6 +23,10 @@ defmodule SundialWeb.Router do
     live "/tasks/new", TaskLive.Index, :new
     live "/tasks/:id/edit", TaskLive.Index, :edit
 
+    live "/labels", LabelLive.Index, :index
+    live "/labels/new", LabelLive.Index, :new
+    live "/labels/:id/edit", LabelLive.Index, :edit
+
 
     # resources "/users", UsersController, only: [:create, :update, :delete]
     # scope path: "/account" do
@@ -39,7 +43,7 @@ defmodule SundialWeb.Router do
 
     # resources "/tasks", TaskController
 
-    resources "/labels", LabelController
+    # resources "/labels", LabelController
 
     resources "/status", StatusController
 
