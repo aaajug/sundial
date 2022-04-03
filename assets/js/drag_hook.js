@@ -75,8 +75,8 @@ export default {
         $(".dropzone").hide();
 
         var object = document.querySelector("#" + this.id);
-        
-        if(column) {
+
+        if(object) {
           var column = object.closest(".task-list");
           column.style.overflowY = "scroll";
         }
