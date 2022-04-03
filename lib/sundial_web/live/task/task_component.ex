@@ -62,8 +62,9 @@ defmodule SundialWeb.Live.Task.TaskComponent do
 
     case Tasks.find_insert_position(task, index, moves) do
       {:ok, _} ->
-        IO.inspect "Task reordered"
-        {:reply, socket, push_redirect(socket, to: "/")}
+        # {:reply, socket, push_redirect(socket, to: "/")}
+        # {:reply, socket, "Success"}
+        {:noreply, socket}
       {:error, _} ->
         put_flash(socket, :error, "Can't reorder tasks as of the moment. Please try again later.")
     end
