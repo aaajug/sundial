@@ -3,7 +3,7 @@
 <% end %>
 
 <%= #link to: "/tasks/new", class: "navbar-item" do %>
-<%= link to: "/tasks/new", "data-phx-link": "patch", "data-phx-link-state": "push", class: "navbar-item", id: "new-task-link" do %>
+<%= link to: "/tasks/new", "phx-click": "add_new_task", "data-phx-link": "patch", "data-phx-link-state": "push", class: "navbar-item", id: "new-task-link" do %>
   <ion-icon name="add-outline"></ion-icon> 
   Add task
 <% end %>

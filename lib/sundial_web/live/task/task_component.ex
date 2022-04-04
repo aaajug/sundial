@@ -6,14 +6,6 @@ defmodule SundialWeb.Live.Task.TaskComponent do
   alias Sundial.Progress.States
   alias Sundial.Tasks
 
-  # def mount(_params, _session, socket) do
-  #   {:ok, assign(socket, %{status: States.get()})}
-  # end
-
-  # def mount(_session, socket) do
-  #   {:ok, assign(socket, %{status: States.get()})}
-  # end
-
   def mount(socket) do
     {:ok, assign(socket, %{status: States.get()})}
   end
@@ -82,6 +74,9 @@ defmodule SundialWeb.Live.Task.TaskComponent do
   def handle_event("delete", %{"id" => id, "return_to" => return_to}, socket) do
     task = Tasks.get_task!(id)
     {:ok, _} = Tasks.delete_task(task)
+
+    IO.inspect "debug:"
+    IO.inspect return_to
 
     # {:noreply, assign(socket, :tasks, list_tasks())}
     {:noreply,

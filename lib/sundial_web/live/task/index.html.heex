@@ -38,6 +38,7 @@
         <%= status_labels[status_id] %> (<%= Enum.count(group) %>)
       </div>
 
+      <%#  id={"task-list-" <> Integer.to_string(status_id)} %>
       <div class="task-list">
         <%= for {task, index} <- group do %>
           <div class="task-card-component" data-drag_hook={@drag_hook}>

@@ -11,7 +11,7 @@ Optional: @task [details labels timestamps[deadline completed_on]]
 <% _ ->  %> 
 <% end %>
 
-<div class={@task.status <> "-column-task-card"} id={"drag-card-" <> Integer.to_string(@task.id) <> "-" <> Integer.to_string(@card_index)} phx-change="search_form_change" phx-hook={@drag_hook} data-card_index={@card_index} data-task_id={@task.id} data-task_status={@task.status}>
+<div class={@task.status <> "-column-task-card"} id={"drag-card-" <> Integer.to_string(@task.id)} phx-change="search_form_change" phx-hook={@drag_hook} data-card_index={@card_index} data-task_id={@task.id} data-task_status={@task.status}>
   <%= #@task.id %>
   <% options = %{truncated: true} %>
   <% status = if @task.is_overdue do 
@@ -22,17 +22,9 @@ Optional: @task [details labels timestamps[deadline completed_on]]
 
   <div class="flex relative">
     <div class={"fullwidth task-card card is-clipped mt-3 " <> status <> " " <> @task.status <> "-column"} draggable="true" data-task_id={@task.id}>
-    <%= @task.id %>
-      <%= #unless @task.status != "paused" do %>
-        <%# <div class="overlay"></div> %>
-      <% #end %>
-      <%= #unless @task.position, do: "nil" # success: prints nil for all tasks with uninitialized positions %> 
-      <%= #@task.id %> <%= #@task.position#, do: "nil" # success: prints position of task %> 
-
+      <%= @task.id %>
       <.timestamps assigns={assigns} />
       <.header assigns={assigns} status={status} />
-      <%= #to_iodata(@task.details) %>
-      <%= #if @task.details && String.trim(@task.details) != "<p><br></p>" do %>
       <%= if @task.details && @task.details_plaintext && String.trim(@task.details_plaintext) != "" do %>
         <hr class="my-3">
         <.content assigns={assigns} options={options} />
@@ -40,15 +32,6 @@ Optional: @task [details labels timestamps[deadline completed_on]]
     </div>
 
     <div class = "pl-3 place-flex-end">
-      <%# <a phx-click="update_position" phx-target={@myself} phx-value-index={@task.index} phx-value-up={1}>
-      <ion-icon name="caret-up-outline"></ion-icon> 
-      </a>
-      <br>
-      <a phx-click="update_position" phx-target={@myself} phx-value-index={@task.index} phx-value-down={1}>
-      <ion-icon name="caret-down-outline"></ion-icon>
-      </a>
-      <br> %>
-      <%= #render "actions.html", task: @task %>
       <.actions assigns={assigns} return_to={@return_to} />
     </div>
 
