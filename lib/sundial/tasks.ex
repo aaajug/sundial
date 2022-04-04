@@ -53,7 +53,9 @@ defmodule Sundial.Tasks do
   end
 
   def update_position(%Task{} = task, position) do
-    update_task(task, %{"position" => position})
+    task
+      |> Task.changeset(%{"position" => position})
+      |> Repo.update()
   end
 
   def get_position(task_id) do
@@ -63,87 +65,88 @@ defmodule Sundial.Tasks do
         |> Repo.all()
   end
 
-  def find_insert_position(%Task{} = task, _current_index, moves) do
-    # handle extremes (no before or after)
+  # Deprecated in favor the drag&drop feature
+  # def find_insert_position(%Task{} = task, _current_index, moves) do
+  #   # handle extremes (no before or after)
 
-    task_id = task.id
-    indices = from(t in Task,
-                    select: {t.id, (row_number() |> over(order_by: t.position))},
-                    where: t.status == ^task.status)
-                    |> Repo.all()
-
-
-     {{task_id, current_index}, list_index} =
-      indices
-        |> Enum.with_index
-        |> Enum.find(fn x -> match?({{^task_id, _}, _}, x) end)
+  #   task_id = task.id
+  #   indices = from(t in Task,
+  #                   select: {t.id, (row_number() |> over(order_by: t.position))},
+  #                   where: t.status == ^task.status)
+  #                   |> Repo.all()
 
 
-    # find current row_number of task
-    # current_index = from(t in Task,
-    #                 where: t.id == ^task.id,
-    #                 select: row_number()
-    #                   |> over(order_by: t.position))
+  #    {{task_id, current_index}, list_index} =
+  #     indices
+  #       |> Enum.with_index
+  #       |> Enum.find(fn x -> match?({{^task_id, _}, _}, x) end)
 
-    # calculate new index based on moves
-    # new_index = String.to_integer(current_index) + String.to_integer(moves)
-    new_index = current_index + moves
 
-    before_index = list_index + moves - 1
-    after_index = list_index + moves
+  #   # find current row_number of task
+  #   # current_index = from(t in Task,
+  #   #                 where: t.id == ^task.id,
+  #   #                 select: row_number()
+  #   #                   |> over(order_by: t.position))
 
-    {before_task_id, _} = if before_index >= 0 do
-                            Enum.at(indices, before_index)
-                          else
-                            Enum.at(indices, 0)
-                          end
+  #   # calculate new index based on moves
+  #   # new_index = String.to_integer(current_index) + String.to_integer(moves)
+  #   new_index = current_index + moves
 
-    {after_task_id, _} = if i = Enum.at(indices, after_index) do
-                                i
-                         else
-                          {nil, nil}
-                              end
+  #   before_index = list_index + moves - 1
+  #   after_index = list_index + moves
 
-    [position_before] = if before_index >= 0 do
-                          get_position(before_task_id)
-                        else
-                          [List.first(get_position(before_task_id)) - 1000]
-                        end
+  #   {before_task_id, _} = if before_index >= 0 do
+  #                           Enum.at(indices, before_index)
+  #                         else
+  #                           Enum.at(indices, 0)
+  #                         end
 
-    [position_after] = if after_task_id do
-                        get_position(after_task_id)
-                      else
-                        [position_before + 1000]
-                      end
+  #   {after_task_id, _} = if i = Enum.at(indices, after_index) do
+  #                               i
+  #                        else
+  #                         {nil, nil}
+  #                             end
 
-    # get position of record before and after new position
-  #   position_before = from(t in Task,
-  #   select: (nth_value(t.position, ^new_index) |> over(partition_by: t.status, order_by: t.position))
-  #   )
-  #   |> Repo.all()
-  #   |> Enum.reject(fn x -> !x end)
-  #   |> Enum.max()
+  #   [position_before] = if before_index >= 0 do
+  #                         get_position(before_task_id)
+  #                       else
+  #                         [List.first(get_position(before_task_id)) - 1000]
+  #                       end
 
-  #  position_after = from(t in Task,
-  #    select: (nth_value(t.position, ^new_index+1) |> over(partition_by: t.status, order_by: t.position))
-  #    )
-  #    |> Repo.all()
-  #    |> Enum.reject(fn x -> !x end)
-  #    |> Enum.max()
+  #   [position_after] = if after_task_id do
+  #                       get_position(after_task_id)
+  #                     else
+  #                       [position_before + 1000]
+  #                     end
 
-    # c = from(t in Task,
-    #  select: {t.position |> over(order_by: t.position)}
-    #  )
-    #  |> Repo.all()
+  #   # get position of record before and after new position
+  # #   position_before = from(t in Task,
+  # #   select: (nth_value(t.position, ^new_index) |> over(partition_by: t.status, order_by: t.position))
+  # #   )
+  # #   |> Repo.all()
+  # #   |> Enum.reject(fn x -> !x end)
+  # #   |> Enum.max()
 
-    # calculate mid for new position
-    cond do
-      position_before -> mid = Integer.floor_div(position_before + position_after, 2)
-                         update_position(task, mid)
-                        #  {:error, "Can't execute action."}
-      true -> {:ok, "Retain original position"} # task card already at the end of the list, no need to update
-    end
-  end
+  # #  position_after = from(t in Task,
+  # #    select: (nth_value(t.position, ^new_index+1) |> over(partition_by: t.status, order_by: t.position))
+  # #    )
+  # #    |> Repo.all()
+  # #    |> Enum.reject(fn x -> !x end)
+  # #    |> Enum.max()
+
+  #   # c = from(t in Task,
+  #   #  select: {t.position |> over(order_by: t.position)}
+  #   #  )
+  #   #  |> Repo.all()
+
+  #   # calculate mid for new position
+  #   cond do
+  #     position_before -> mid = Integer.floor_div(position_before + position_after, 2)
+  #                        update_position(task, mid)
+  #                       #  {:error, "Can't execute action."}
+  #     true -> {:ok, "Retain original position"} # task card already at the end of the list, no need to update
+  #   end
+  # end
 
   # Updates positions of tasks in order of the given list of IDs
   def update_positions(list) do
@@ -178,7 +181,7 @@ defmodule Sundial.Tasks do
 
   def rollback(rollback_data) do
     rollback_data
-      |> Enum.each(
+      |> Enum.map(
         fn obj ->
           task = get_task!(obj.id)
 
@@ -250,7 +253,14 @@ defmodule Sundial.Tasks do
               Map.has_key?(attrs, "status") && attrs["status"] != 4 ->
                 Map.put(attrs, "completed_on", nil)
 
-              task.status != 4 -> Map.put(attrs, "completed_on", nil)
+              Map.has_key?(attrs, :status) && attrs.status != 4 ->
+                Map.put(attrs, :completed_on, nil)
+
+              task.status != 4 && Map.has_key?(attrs, "completed_on") -> Map.put(attrs, "completed_on", nil)
+
+              task.status != 4 && Map.has_key?(attrs, :completed_on) -> Map.put(attrs, :completed_on, nil)
+
+              true -> attrs
             end
 
     task

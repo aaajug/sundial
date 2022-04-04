@@ -15,7 +15,9 @@ defmodule Sundial.TasksFixtures do
         deadline: ~N[2022-03-16 03:09:00],
         description: "some description",
         details: "some details",
-        pane_id: 42
+        pane_id: 42,
+        position: 0,
+        status: 1
       })
       |> Sundial.Tasks.create_task()
 
