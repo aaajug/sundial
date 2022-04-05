@@ -1,39 +1,52 @@
+import { ColorStyle } from "./quill";
+
 export default {
   mounted() {
     const hook = this;
+    var dragSrcEl;
 
-    const selector = '#' + this.el.id;
-    // var items = document.querySelectorAll(selector);
-    var item = document.getElementById(this.el.id);
-    // items.forEach(function (item) {
+    selector = "#" + hook.el.id;
+
+    attachListeners(document.querySelectorAll(".dropzone"));
+    attachListeners(document.querySelectorAll(".draggable-card"));
+
+    function attachListeners(items) {
+      items.forEach(function (item) {
+        item.addEventListener('dragstart', handleDragStart);
+        item.addEventListener('dragleave', handleDragLeave);
+        item.addEventListener('dragend', handleDragEnd);
     
-    item.addEventListener('dragstart', handleDragStart);
-    item.addEventListener('dragleave', handleDragLeave);
-    item.addEventListener('dragend', handleDragEnd);
-
-    if (item.dataset.kind == "dropzone") {
-      item.addEventListener('dragover', handleDragOver);
-      item.addEventListener('dragenter', handleDragEnter);
-      item.addEventListener('drop', handleDrop);
-    } else {
-      item.addEventListener('click', handleClick);
+        if (item.dataset.kind == "dropzone") {
+          item.addEventListener('dragover', handleDragOver);
+          item.addEventListener('dragenter', handleDragEnter);
+          item.addEventListener('drop', handleDrop);
+        } else {
+          item.addEventListener('click', handleClick);
+        }
+      });
     }
 
     function handleClick(e) {
       var content = this.querySelector(".content");
+      var flex_container = this.querySelector(".flex");
 
       if(content) {
         var unexpanded = content.classList.contains("truncated");
     
         $(".task-card").find(".content").addClass("truncated");
+        $(".draggable-card").find(".flex").removeClass("highlighted");
         
-        if(unexpanded)
+        if(unexpanded) {
           content.classList.remove("truncated");
+          flex_container.classList.add("highlighted");
+        }
       }
     }
 
     function handleDragStart(e) {
         dragSrcEl = this;
+
+        this.click();
 
         this.style.opacity = '0.4';
 
@@ -46,7 +59,7 @@ export default {
       
         e.dataTransfer.effectAllowed = 'move';
         e.dataTransfer.setData('text/html', this.innerHTML);
-      }
+    }
       
       function handleDragEnd(e) {
         this.style.opacity = '1';
@@ -59,10 +72,6 @@ export default {
 
         document.querySelectorAll(".dropzone").forEach(function (item) {
           item.style.height = "50px";
-        });
-      
-        items.forEach(function (item) {
-          item.classList.remove('over');
         });
 
         dragSrcEl = null;
@@ -83,8 +92,12 @@ export default {
         var dragged_card_index = dragSrcEl.dataset.card_index;
         var dropzone_card_index = this.dataset.card_index;
 
-        if(dropzone_card_index == dragged_card_index || dropzone_card_index == dragged_card_index - 1)
-          return false;
+        var dragged_card_column = dragSrcEl.dataset.task_status;
+        var dropzone_card_column = this.dataset.column;
+
+        if(dragged_card_column == dropzone_card_column)
+          if(dropzone_card_index == dragged_card_index || dropzone_card_index == dragged_card_index - 1)
+            return false;
 
         this.style.height = (dragSrcEl.offsetHeight + 80) + "px";
       }
@@ -98,8 +111,6 @@ export default {
       }
       
       function handleDrop(e) {      
-        e.stopPropagation();
-
         $(".dropzone").hide();
 
         document.querySelectorAll(".dropzone").forEach(function (item) {
@@ -109,8 +120,16 @@ export default {
         var column = document.querySelector("#" + this.id).closest(".task-list");
         column.style.overflowY = "scroll";
 
+        var dragged_card_column = dragSrcEl.dataset.task_status;
+        var dropzone_card_column = this.dataset.column;
+
+        if(dragged_card_column != dropzone_card_column){
+          hook.pushEventTo(selector, 'move_column', {});
+        }
+
         var dragged_card_index = dragSrcEl.dataset.card_index;
         var dropzone_card_index = this.dataset.card_index;
+
 
         if(dropzone_card_index == dragged_card_index || dropzone_card_index == dragged_card_index - 1)
           return false;
@@ -132,7 +151,7 @@ export default {
             list: list,
           });
         }
-      
+
         dragSrcEl = null;
         return false;
       }    

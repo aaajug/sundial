@@ -31,6 +31,7 @@ html, header {
 }
 
 .alert {
+  z-index: 100;
   padding: 15px;
   margin-bottom: 20px;
   border: 1px solid transparent;
@@ -127,18 +128,18 @@ html, header {
 }
 
 .fade-in-scale {
-  animation: 0.2s ease-in 0s normal forwards 1 fade-in-scale-keys;
+  animation: 1s ease-in 0s normal forwards 1 fade-in-scale-keys;
 }
 
 .fade-out-scale {
-  animation: 0.2s ease-out 0s normal forwards 1 fade-out-scale-keys;
+  animation: 1s ease-out 0s normal forwards 1 fade-out-scale-keys;
 }
 
 .fade-in {
-  animation: 0.2s ease-out 0s normal forwards 1 fade-in-keys;
+  animation: 1s ease-out 0s normal forwards 1 fade-in-keys;
 }
 .fade-out {
-  animation: 0.2s ease-out 0s normal forwards 1 fade-out-keys;
+  animation: 1s ease-out 0s normal forwards 1 fade-out-keys;
 }
 
 @keyframes fade-in-scale-keys{

@@ -43,6 +43,23 @@ defmodule SundialWeb.TaskLive.Index do
   end
 
   @impl true
+  def handle_event("dropped", %{"list" => list}, socket) do
+    case Tasks.update_positions(list) do
+      {:ok, _, _} ->
+        {:reply, socket, push_redirect(socket, to: "/")}
+      {:error, _} ->
+        put_flash(socket, :error, "Can't reorder tasks as of the moment. Please try again later.")
+        {:reply, socket, push_redirect(socket, to: "/")}
+    end
+  end
+
+  @impl true
+  def handle_event("move_column", _params, socket) do
+    socket = put_flash(socket, :error, "Dropping to another column not allowed. Please use the status button on the left side of each task card.")
+    {:reply, socket, push_redirect(socket, to: "/")}
+  end
+
+  @impl true
   def handle_params(params, _url, socket) do
     {:noreply, apply_action(socket, socket.assigns.live_action, params)}
   end

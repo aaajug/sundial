@@ -20,17 +20,15 @@
 %>
 
 <div>
-  <%# <a href={@sort_target}> %>
-    <button class={"button is-small " <> @sort_class} phx-click="toggle-sorting" phx-value-sort_target={@sort_target} id="toggle-sorting">
-      <span class="icon is-small">
-        <ion-icon name="funnel-outline"></ion-icon> 
-      </span>
-      <span><%= @sort_label %> default sorting</span>
-    </button>
-  <%# </a> %>
+  <button class={"button is-small " <> @sort_class} phx-click="toggle-sorting" phx-value-sort_target={@sort_target} id="toggle-sorting">
+    <span class="icon is-small">
+      <ion-icon name="funnel-outline"></ion-icon> 
+    </span>
+    <span><%= @sort_label %> default sorting</span>
+  </button>
 </div>
 
-<div class="columns pt-4">
+<div class="columns pt-4" id="task-grid" phx-hook={@drag_hook}>
   <%= for status_id <- [1,2,3,4] do %>
     <% group = Enum.filter(@tasks, fn task -> task.status == status_id end) |> Enum.with_index %>
     <div class="content column pane is-one-fourth mr-3 relative">
