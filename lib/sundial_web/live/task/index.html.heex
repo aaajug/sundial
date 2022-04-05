@@ -20,14 +20,14 @@
 %>
 
 <div>
-  <a href={@sort_target}>
-    <button class={"button is-small " <> @sort_class}>
+  <%# <a href={@sort_target}> %>
+    <button class={"button is-small " <> @sort_class} phx-click="toggle-sorting" phx-value-sort_target={@sort_target} id="toggle-sorting">
       <span class="icon is-small">
         <ion-icon name="funnel-outline"></ion-icon> 
       </span>
-      <span>Use default sorting</span>
+      <span><%= @sort_label %> default sorting</span>
     </button>
-  </a>
+  <%# </a> %>
 </div>
 
 <div class="columns pt-4">
@@ -38,8 +38,7 @@
         <%= status_labels[status_id] %> (<%= Enum.count(group) %>)
       </div>
 
-      <%#  id={"task-list-" <> Integer.to_string(status_id)} %>
-      <div class="task-list">
+      <div class="task-list" id={"task-list-" <> Integer.to_string(status_id)}>
         <%= for {task, index} <- group do %>
           <div class="task-card-component" data-drag_hook={@drag_hook}>
             <.live_component module={SundialWeb.Live.Task.TaskComponent} id={task.id} drag_hook={@drag_hook} return_to={@return_target} card_index={index} />

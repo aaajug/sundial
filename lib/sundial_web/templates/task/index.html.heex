@@ -18,7 +18,7 @@
         <%= status_labels[status_id] %> (<%= Enum.count(group) %>)
       </div>
 
-      <div class="task-list">
+      <div class="task-list" id={"task-list-" <> Integer.to_string(status_id)}>
         <%= for task <- group do %>
             <%= #render "show.html", task: task, status: @status, options: %{truncated: true} %>
             <%# <.live_component module={SundialWeb.Live.Task.TaskComponent} task={task} id={task.id} position={task.position} /> %>

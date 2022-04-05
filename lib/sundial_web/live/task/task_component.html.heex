@@ -22,7 +22,7 @@ Optional: @task [details labels timestamps[deadline completed_on]]
 
   <div class="flex relative">
     <div class={"fullwidth task-card card is-clipped mt-3 " <> status <> " " <> @task.status <> "-column"} draggable="true" data-task_id={@task.id}>
-      <%= @task.id %>
+      <%= #@task.id %>
       <.timestamps assigns={assigns} />
       <.header assigns={assigns} status={status} />
       <%= if @task.details && @task.details_plaintext && String.trim(@task.details_plaintext) != "" do %>

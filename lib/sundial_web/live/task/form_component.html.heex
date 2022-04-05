@@ -1,5 +1,7 @@
 <div class="mt-6 task-form">
-  <p class="is-size-3 mb-3 has-text-weight-bold"> Add a new task </p>
+  <p class="is-size-3 mb-3 has-text-weight-bold">
+  <%= @title %>
+  </p>
 <% 
   task_object = if Map.has_key?(assigns, :task) && @task.id do
                   @serial_task

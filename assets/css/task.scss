@@ -4,6 +4,7 @@
 }
 
 .task-card {
+  overflow-wrap: anywhere;
   border-radius: 8px;
   padding: 20px;
   
@@ -71,7 +72,7 @@
       overflow: hidden;
       display: -webkit-box;
       -webkit-line-clamp: 3;
-      -webkit-box-orient: vertical;  
+      -webkit-box-orient: vertical;
     }
   }
 }

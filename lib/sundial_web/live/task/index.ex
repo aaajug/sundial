@@ -16,6 +16,7 @@ defmodule SundialWeb.TaskLive.Index do
           |> assign(:sort_target, "/")
           |> assign(:return_target, "/?sort=default")
           |> assign(:drag_hook, "None")
+          |> assign(:sort_label, "Disable")
           |> assign(:tasks, list_tasks_by_default())
 
       _ ->
@@ -24,11 +25,21 @@ defmodule SundialWeb.TaskLive.Index do
           |> assign(:sort_target, "/?sort=default")
           |> assign(:return_target, "/")
           |> assign(:drag_hook, "Drag")
+          |> assign(:sort_label, "Enable")
           |> assign(:tasks, list_tasks())
-
     end
 
     {:ok, socket}
+  end
+
+  @impl true
+  def handle_event("toggle-sorting", %{"sort_target" => sort_target}, socket) do
+    {:reply, socket, push_redirect(socket, to: sort_target)}
+  end
+
+  @impl true
+  def handle_event("add-task", _params, socket) do
+    {:reply, socket, push_redirect(socket, to: "/tasks/new")}
   end
 
   @impl true
@@ -38,7 +49,7 @@ defmodule SundialWeb.TaskLive.Index do
 
   defp apply_action(socket, :new, _params) do
     socket
-    |> assign(:page_title, "Add task")
+    |> assign(:page_title, "Add a new task")
     |> assign(:status, Progress.list_status_options())
     |> assign(:task, %Task{})
     |> assign(:serial_task, nil)
@@ -59,14 +70,6 @@ defmodule SundialWeb.TaskLive.Index do
     socket
     |> assign(:task, nil)
   end
-
-  # @impl true
-  # def handle_event("delete", %{"id" => id}, socket) do
-  #   task = Tasks.get_task!(id)
-  #   {:ok, _} = Tasks.delete_task(task)
-
-  #   {:noreply, assign(socket, :tasks, list_tasks())}
-  # end
 
   defp list_tasks do
     Tasks.list_tasks_by_position

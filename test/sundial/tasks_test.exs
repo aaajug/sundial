@@ -39,24 +39,22 @@ defmodule Sundial.TasksTest do
     end
 
     test "update_positions/1 updates positions in order of the task ids given by the list" do
-      task = task_fixture()
-      list = [task]
+      list = [task_fixture(position: 100), task_fixture(position: 300), task_fixture(position: 200), task_fixture(position: 500)]
       list_ids = list |> Enum.map(fn t -> t.id end)
       new_positions = [0, 1000, 2000, 3000, 4000]
 
-      Tasks.update_positions(list_ids)
+      {:ok, list, _} = Tasks.update_positions(list_ids)
 
       list |>
         Enum.with_index(
-          fn task, i ->
+          fn {:ok, task}, i ->
             assert task.position == Enum.at(new_positions, i)
           end
         )
     end
 
     test "rollback/1 updates given tasks based on the the passed rollback data (specially to rollback task positions)" do
-      task = task_fixture()
-      list = [task]
+      list = [task_fixture(position: 100), task_fixture(position: 300), task_fixture(position: 200), task_fixture(position: 500)]
       list_ids = list |> Enum.map(fn t -> t.id end)
 
       initial_positions = list

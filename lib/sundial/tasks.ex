@@ -153,29 +153,33 @@ defmodule Sundial.Tasks do
     initial_positions = []
     result = true
 
-    list
-      |> Enum.with_index(
-          fn id, new_position ->
-            task = get_task!(id)
+    updated_tasks =
+      list
+        |> Enum.with_index(
+            fn id, new_position ->
+              task = get_task!(id)
 
-            initial_positions = [ %{id: id, attr: %{"position" => task.position}} | initial_positions]
+              initial_positions = [ %{id: id, attr: %{"position" => task.position}} | initial_positions]
 
-            try do
-              if !update_position(task, new_position * 1000) do
-                throw(:break)
+              try do
+                result = update_position(task, new_position * 1000)
+                if !update_position(task, new_position * 1000) do
+                  throw(:break)
+                else
+                  result
+                end
+              catch
+                :break -> result = :broken
+                result
               end
-            catch
-              :break -> result = :broken
-              result
             end
-          end
-        )
+          )
 
     case result do
       :broken ->
         rollback(initial_positions)
         {:error, "Failed to reorder tasks. Doing a rollback."}
-      true -> {:ok, "Tasks reordered"}
+      true -> {:ok, updated_tasks, "Tasks reordered"}
     end
   end
 
@@ -250,15 +254,17 @@ defmodule Sundial.Tasks do
   """
   def update_task(%Task{} = task, attrs) do
     attrs = cond do
-              Map.has_key?(attrs, "status") && attrs["status"] != 4 ->
+              Map.has_key?(attrs, "status") && (attrs["status"] != "4" && attrs["status"] != 4 ) ->
                 Map.put(attrs, "completed_on", nil)
 
-              Map.has_key?(attrs, :status) && attrs.status != 4 ->
+              Map.has_key?(attrs, :status) && (attrs.status != "4" && attrs.status != 4) ->
                 Map.put(attrs, :completed_on, nil)
 
-              task.status != 4 && Map.has_key?(attrs, "completed_on") -> Map.put(attrs, "completed_on", nil)
+              !Map.has_key?(attrs, "status") && !Map.has_key?(attrs, :status) && task.status != 4 && Map.has_key?(attrs, "completed_on") ->
+                Map.put(attrs, "completed_on", nil)
 
-              task.status != 4 && Map.has_key?(attrs, :completed_on) -> Map.put(attrs, :completed_on, nil)
+              !Map.has_key?(attrs, "status") && !Map.has_key?(attrs, :status) && task.status != 4 && Map.has_key?(attrs, :completed_on) ->
+                Map.put(attrs, :completed_on, nil)
 
               true -> attrs
             end

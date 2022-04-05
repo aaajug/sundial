@@ -47,24 +47,24 @@ defmodule SundialWeb.Live.Task.TaskComponent do
   end
 
   # No longer used -- replaced by the drag&drop functionality
-  def handle_event("update_position", params, socket) do
-    task = Tasks.get_task!(socket.assigns.task.id)
-    index = params["index"] |> String.to_integer()
-    moves = if params["down"], do: params["down"] |> String.to_integer, else: -(params["up"] |> String.to_integer)
+  # def handle_event("update_position", params, socket) do
+  #   task = Tasks.get_task!(socket.assigns.task.id)
+  #   index = params["index"] |> String.to_integer()
+  #   moves = if params["down"], do: params["down"] |> String.to_integer, else: -(params["up"] |> String.to_integer)
 
-    case Tasks.find_insert_position(task, index, moves) do
-      {:ok, _} ->
-        # {:reply, socket, push_redirect(socket, to: "/")}
-        # {:reply, socket, "Success"}
-        {:noreply, socket}
-      {:error, _} ->
-        put_flash(socket, :error, "Can't reorder tasks as of the moment. Please try again later.")
-    end
-  end
+  #   case Tasks.find_insert_position(task, index, moves) do
+  #     {:ok, _} ->
+  #       # {:reply, socket, push_redirect(socket, to: "/")}
+  #       # {:reply, socket, "Success"}
+  #       {:noreply, socket}
+  #     {:error, _} ->
+  #       put_flash(socket, :error, "Can't reorder tasks as of the moment. Please try again later.")
+  #   end
+  # end
 
   def handle_event("dropped", %{"list" => list}, socket) do
     case Tasks.update_positions(list) do
-      {:ok, _} ->
+      {:ok, _, _} ->
         {:reply, socket, push_redirect(socket, to: "/")}
       {:error, _} ->
         put_flash(socket, :error, "Can't reorder tasks as of the moment. Please try again later.")
@@ -74,9 +74,6 @@ defmodule SundialWeb.Live.Task.TaskComponent do
   def handle_event("delete", %{"id" => id, "return_to" => return_to}, socket) do
     task = Tasks.get_task!(id)
     {:ok, _} = Tasks.delete_task(task)
-
-    IO.inspect "debug:"
-    IO.inspect return_to
 
     # {:noreply, assign(socket, :tasks, list_tasks())}
     {:noreply,
