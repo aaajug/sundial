@@ -128,7 +128,7 @@ html, header {
 }
 
 .fade-in-scale {
-  animation: 1s ease-in 0s normal forwards 1 fade-in-scale-keys;
+  animation: 0.2s ease-in 0s normal forwards 1 fade-in-scale-keys;
 }
 
 .fade-out-scale {
@@ -136,7 +136,7 @@ html, header {
 }
 
 .fade-in {
-  animation: 1s ease-out 0s normal forwards 1 fade-in-keys;
+  animation: 0.2s ease-out 0s normal forwards 1 fade-in-keys;
 }
 .fade-out {
   animation: 1s ease-out 0s normal forwards 1 fade-out-keys;

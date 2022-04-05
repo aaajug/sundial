@@ -55,7 +55,7 @@ defmodule SundialWeb.TaskLive.Index do
 
   @impl true
   def handle_event("move_column", _params, socket) do
-    socket = put_flash(socket, :error, "Dropping to another column not allowed. Please use the status button on the left side of each task card.")
+    socket = put_flash(socket, :error, "Dropping to another column not allowed. Please use the status buttons on the left side of each task card.")
     {:reply, socket, push_redirect(socket, to: "/")}
   end
 
