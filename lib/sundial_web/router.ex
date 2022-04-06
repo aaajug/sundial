@@ -1,5 +1,6 @@
 defmodule SundialWeb.Router do
   use SundialWeb, :router
+  use Pow.Phoenix.Router
 
   pipeline :browser do
     plug :accepts, ["html"]
@@ -12,6 +13,12 @@ defmodule SundialWeb.Router do
 
   pipeline :api do
     plug :accepts, ["json"]
+  end
+
+  scope "/" do
+    pipe_through :browser
+
+    pow_routes()
   end
 
   scope "/", SundialWeb do
@@ -48,6 +55,40 @@ defmodule SundialWeb.Router do
     # resources "/boards", BoardsController
 
     # get "/attachments", AttachmentsController, :index
+
+    live "/boards", BoardLive.Index, :index
+    live "/boards/new", BoardLive.Index, :new
+    live "/boards/:id/edit", BoardLive.Index, :edit
+
+    live "/boards/:id", BoardLive.Show, :show
+    live "/boards/:id/show/edit", BoardLive.Show, :edit
+
+
+
+    live "/lists", ListLive.Index, :index
+    live "/lists/new", ListLive.Index, :new
+    live "/lists/:id/edit", ListLive.Index, :edit
+
+    live "/lists/:id", ListLive.Show, :show
+    live "/lists/:id/show/edit", ListLive.Show, :edit
+
+
+
+    live "/comments", CommentLive.Index, :index
+    live "/comments/new", CommentLive.Index, :new
+    live "/comments/:id/edit", CommentLive.Index, :edit
+
+    live "/comments/:id", CommentLive.Show, :show
+    live "/comments/:id/show/edit", CommentLive.Show, :edit
+
+
+
+    live "/permissions", PermissionLive.Index, :index
+    live "/permissions/new", PermissionLive.Index, :new
+    live "/permissions/:id/edit", PermissionLive.Index, :edit
+
+    live "/permissions/:id", PermissionLive.Show, :show
+    live "/permissions/:id/show/edit", PermissionLive.Show, :edit
   end
 
   # Other scopes may use custom stacks.

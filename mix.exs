@@ -50,7 +50,8 @@ defmodule Sundial.MixProject do
       {:jason, "~> 1.2"},
       {:plug_cowboy, "~> 2.5"},
       {:dart_sass, "~> 0.1", runtime: Mix.env() == :dev},
-      {:bulma, "0.9.3"}
+      {:bulma, "0.9.3"},
+      {:pow, "~> 1.0.26"}
     ]
   end
 

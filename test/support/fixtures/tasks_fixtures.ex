@@ -23,4 +23,20 @@ defmodule Sundial.TasksFixtures do
 
     task
   end
+
+  @doc """
+  Generate a comment.
+  """
+  def comment_fixture(attrs \\ %{}) do
+    {:ok, comment} =
+      attrs
+      |> Enum.into(%{
+        content: "some content",
+        task_id: 42,
+        user_id: 42
+      })
+      |> Sundial.Tasks.create_comment()
+
+    comment
+  end
 end

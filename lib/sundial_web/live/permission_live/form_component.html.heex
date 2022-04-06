@@ -1,0 +1,40 @@
+<div>
+  <h2><%= @title %></h2>
+
+  <.form
+    let={f}
+    for={@changeset}
+    id="permission-form"
+    phx-target={@myself}
+    phx-change="validate"
+    phx-submit="save">
+  
+    <%= label f, :user_id %>
+    <%= number_input f, :user_id %>
+    <%= error_tag f, :user_id %>
+  
+    <%= label f, :board_id %>
+    <%= number_input f, :board_id %>
+    <%= error_tag f, :board_id %>
+  
+    <%= label f, :write %>
+    <%= checkbox f, :write %>
+    <%= error_tag f, :write %>
+  
+    <%= label f, :delete %>
+    <%= checkbox f, :delete %>
+    <%= error_tag f, :delete %>
+  
+    <%= label f, :manage_users %>
+    <%= checkbox f, :manage_users %>
+    <%= error_tag f, :manage_users %>
+  
+    <%= label f, :read %>
+    <%= checkbox f, :read %>
+    <%= error_tag f, :read %>
+  
+    <div>
+      <%= submit "Save", phx_disable_with: "Saving..." %>
+    </div>
+  </.form>
+</div>

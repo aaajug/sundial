@@ -1,0 +1,51 @@
+<h1>Show Permission</h1>
+
+<%= if @live_action in [:edit] do %>
+  <.modal return_to={Routes.permission_show_path(@socket, :show, @permission)}>
+    <.live_component
+      module={SundialWeb.PermissionLive.FormComponent}
+      id={@permission.id}
+      title={@page_title}
+      action={@live_action}
+      permission={@permission}
+      return_to={Routes.permission_show_path(@socket, :show, @permission)}
+    />
+  </.modal>
+<% end %>
+
+<ul>
+
+  <li>
+    <strong>User:</strong>
+    <%= @permission.user_id %>
+  </li>
+
+  <li>
+    <strong>Board:</strong>
+    <%= @permission.board_id %>
+  </li>
+
+  <li>
+    <strong>Write:</strong>
+    <%= @permission.write %>
+  </li>
+
+  <li>
+    <strong>Delete:</strong>
+    <%= @permission.delete %>
+  </li>
+
+  <li>
+    <strong>Manage users:</strong>
+    <%= @permission.manage_users %>
+  </li>
+
+  <li>
+    <strong>Read:</strong>
+    <%= @permission.read %>
+  </li>
+
+</ul>
+
+<span><%= live_patch "Edit", to: Routes.permission_show_path(@socket, :edit, @permission), class: "button" %></span> |
+<span><%= live_redirect "Back", to: Routes.permission_index_path(@socket, :index) %></span>
