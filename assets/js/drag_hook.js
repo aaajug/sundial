@@ -130,7 +130,6 @@ export default {
         var dragged_card_index = dragSrcEl.dataset.card_index;
         var dropzone_card_index = this.dataset.card_index;
 
-
         if(dropzone_card_index == dragged_card_index || dropzone_card_index == dragged_card_index - 1)
           return false;
       

@@ -11,7 +11,7 @@ defmodule SundialWeb.Live.Task.TaskComponent do
   end
 
   def preload(list_of_assigns) do
-    if Tasks.is_all_position_nil?(), do: Tasks.initialize_positions # or create a migration to update all existing records?
+    # if Tasks.is_all_position_nil?(), do: Tasks.initialize_positions # or create a migration to update all existing records?
 
     task_ids = Enum.map(list_of_assigns, & &1.id)
 
