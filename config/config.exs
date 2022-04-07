@@ -57,7 +57,8 @@ config :dart_sass,
 
 config :sundial, :pow,
   user: Sundial.Users.User,
-  repo: Sundial.Repo
+  repo: Sundial.Repo,
+  web_module: SundialWeb
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.

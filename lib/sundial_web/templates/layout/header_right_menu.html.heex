@@ -15,9 +15,14 @@
   Add pane
 <% end %>
 
-
 <button class="button is-warning is-rounded ml-5 mt-3">
-  <%= link to: "/", class: "navbar-item" do %>
-    <span class="is-text-blue-whale"> Sundial </span>
+  <%= if Pow.Plug.current_user(@conn) do %>
+    <%= link to: Routes.pow_session_path(@conn, :delete), method: :delete, class: "navbar-item" do %>
+      <span class="is-text-blue-whale"> Logout </span>
+    <% end %>
+  <% else %>
+    <%= link to: Routes.pow_session_path(@conn, :new), class: "navbar-item" do %>
+      <span class="is-text-blue-whale"> Sign in or create an account </span>
+    <% end %>
   <% end %>
 </button>
