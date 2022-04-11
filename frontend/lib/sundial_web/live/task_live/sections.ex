@@ -6,18 +6,20 @@ defmodule SundialWeb.TaskLive.Sections do
 
   alias SundialWeb.Router.Helpers, as: Routes
   alias Phoenix.LiveView.JS
+  alias Sundial.Tasks.SerialTask
+  alias Sundial.API.TaskAPI
 
   def timestamps(%{assigns: assigns}) do
     ~H"""
-    <%= if assigns.task.deadline do %>
+    <%= if assigns.task["deadline"] do %>
       <span class="tag is-tiny-text is-danger is-light is-letter-spaced-0 mt-2">
-        Due: <%= assigns.task.deadline %>
+        Due: <%= assigns.task["deadline"] %>
       </span>
     <% end %>
 
-    <%= if assigns.task.completed_on do %>
+    <%= if assigns.task["completed_on"] do %>
       <span class="tag is-tiny-text is-success is-light is-letter-spaced-0 mt-2">
-        Completed: <%= assigns.task.completed_on %>
+        Completed: <%= assigns.task["completed_on"] %>
       </span>
     <% end %>
     """
@@ -27,10 +29,10 @@ defmodule SundialWeb.TaskLive.Sections do
     ~H"""
     <div class="header mt-3 py-1">
       <p class="is-size-6 has-text-weight-semibold mb-0">
-        <%= assigns.task.description %>
+        <%= assigns.task["description"] %>
       </p>
       <p class="is-size-7 is-letter-spaced-0">
-        <span class="is-italic"><%= assigns.task.status_desc %></span>
+        <span class="is-italic"><%= assigns.task["status_desc"] %></span>
         <%= if status == "overdue" do %>
           <span class="has-text-weight-bold">&nbsp;&bull; OVERDUE</span>
         <% end %>
@@ -51,20 +53,23 @@ defmodule SundialWeb.TaskLive.Sections do
 
     <div class="card-content p-0 pt-2">
       <div class={class}>
-        <%= raw assigns.task.details %>
+        <%= raw assigns.task["details"] %>
         <%= #Jason.encode!(@content_item.quill) %>
       </div>
     </div>
     """
   end
 
+  # TODO: links for API editing
   def actions(%{assigns: assigns}) do
+    # IO.inspect assigns
     ~H"""
     <div class="">
-      <%= live_patch to: Routes.task_index_path(@socket, :edit, assigns.task, %{return_to: @return_to}), id: "edit-task" do %>
+      <%= live_patch to: Routes.task_index_path(@socket, :edit, %SerialTask{id: assigns.task["id"]}, %{return_to: @return_to}), id: "edit-task" do %>
+      <%= #link to: "/" do %>
         <ion-icon name="pencil-outline" class="is-clickable action-button"></ion-icon>
       <% end %>
-      <a id={"delete-task-" <> Integer.to_string(assigns.task.id)} phx-click="delete" phx-value-id={assigns.task.id} phx-value-return_to={@return_to} data-confirm="This task will be deleted. Are you sure?" phx-target={assigns.myself}>
+      <a id={"delete-task-" <> Integer.to_string(assigns.task["id"])} phx-click="delete" phx-value-id={assigns.task["id"]} phx-value-return_to={@return_to} data-confirm="This task will be deleted. Are you sure?" phx-target={assigns.myself}>
         <ion-icon name="trash-outline" class="is-clickable action-button"></ion-icon>
       </a>
     </div>
@@ -72,11 +77,18 @@ defmodule SundialWeb.TaskLive.Sections do
   end
 
   def state_actions(%{assigns: assigns}) do
-    task_status = assigns.task.status
+    status_states = [
+      %{description: "Not yet started", id: 1, name: "initial"},
+      %{description: "In progress", id: 2, name: "started"},
+      %{description: "On hold", id: 3, name: "paused"},
+      %{description: "Completed", id: 4, name: "completed"}
+    ]
+
+    task_status = assigns.task["status"]
 
     ~H"""
     <div class="state-actions-container absolute">
-      <%= for status <- assigns.status do %>
+      <%= for status <- status_states do %>
         <%= unless status.name == task_status do %>
           <a id={"state-action-" <> status.name} phx-click="update_status" phx-target={assigns.myself} phx-value-status={status.id} phx-value-return_to={@return_to}>
             <button class={"has-tooltip-arrow has-tooltip-right action-state-link " <> status.name} data-tooltip={"Set " <> status.name} type="submit">

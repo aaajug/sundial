@@ -4,6 +4,7 @@ defmodule SundialWeb.TaskLive.Index do
   alias Sundial.Tasks
   alias Sundial.Tasks.Task
   alias Sundial.Progress
+  alias Sundial.API.TaskAPI
 
   @impl true
   def mount(params, _session, socket) do
@@ -42,6 +43,8 @@ defmodule SundialWeb.TaskLive.Index do
     {:reply, socket, push_redirect(socket, to: "/tasks/new")}
   end
 
+
+  # TODO: Move to backend
   @impl true
   def handle_event("dropped", %{"list" => list}, socket) do
     case Tasks.update_positions(list) do
@@ -64,7 +67,11 @@ defmodule SundialWeb.TaskLive.Index do
     {:noreply, apply_action(socket, socket.assigns.live_action, params)}
   end
 
+
+   # TODO: Move to backend
   defp apply_action(socket, :new, _params) do
+    IO.inspect "new task in live"
+
     socket
     |> assign(:page_title, "Add a new task")
     |> assign(:status, Progress.list_status_options())
@@ -72,14 +79,17 @@ defmodule SundialWeb.TaskLive.Index do
     |> assign(:serial_task, nil)
   end
 
+   # TODO: Move to backend
   defp apply_action(socket, :edit, %{"id" => id, "return_to" => return_to}) do
-    task = Tasks.get_task!(id)
+    # task = Tasks.get_task!(id)
+    task = TaskAPI.get_task(%{id: id})
+    task = for {key, val} <- task, into: %{}, do: {String.to_atom(key), val}
 
     socket
     |> assign(:page_title, "Edit Task")
     |> assign(:status, Progress.list_status_options())
     |> assign(:task, task)
-    |> assign(:serial_task, Tasks.serialize(task))
+    |> assign(:serial_task, task)
     |> assign(:return_to, return_to)
   end
 
@@ -88,11 +98,15 @@ defmodule SundialWeb.TaskLive.Index do
     |> assign(:task, nil)
   end
 
+  # TODO: Move to backend
   defp list_tasks do
-    Tasks.list_tasks_by_position
+    # Tasks.list_tasks_by_position
+    TaskAPI.get_tasks
   end
 
+  # TODO: Move to backend
   defp list_tasks_by_default do
-    Tasks.list_tasks
+    # Tasks.list_tasks
+    TaskAPI.get_tasks_default_sorting
   end
 end

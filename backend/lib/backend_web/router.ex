@@ -17,6 +17,13 @@ defmodule BackendWeb.Router do
     pipe_through :api
 
     get("/ping", PingController, :show)
+
+    get "/tasks/:id/changeset", TaskController, :changeset
+    get("/tasks/default", TaskController, :list_tasks_by_default)
+    get("/tasks", TaskController, :list_tasks)
+    # get("/tasks/new", TaskController, :new)
+    # post("/tasks/create", TaskController, :create)
+    resources "/tasks", TaskController, except: [:index]
   end
 
   # Enables LiveDashboard only for development

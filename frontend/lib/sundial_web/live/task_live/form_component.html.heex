@@ -6,7 +6,7 @@
   task_object = if Map.has_key?(assigns, :task) && @task.id do
                   @serial_task
                 else 
-                  %{deadline: nil, completed_on: nil, deadline_parsed: %{time: nil, date: nil}, completed_on_parsed: %{time: nil, date: nil}, details: nil}
+                  %{deadline: nil, completed_on: nil, description: nil, deadline_parsed: %{time: nil, date: nil}, completed_on_parsed: %{time: nil, date: nil}, details: nil, status_id: 1}
                 end
 
   is_deadline_disabled = if task_object.deadline, do: false, else: true
@@ -44,10 +44,10 @@
       <div class="field is-horizontal">
         <div class="field-body">
           <div class="field">
-            <%= date_input f, :deadline, name: "", "phx-hook": "DeadlineDate", class: "date-selector", disabled: is_deadline_disabled, value: task_object.deadline_parsed.date %>
+            <%= date_input f, :deadline, name: "", "phx-hook": "DeadlineDate", class: "date-selector", disabled: is_deadline_disabled, value: task_object.deadline_parsed["date"] %>
           </div>
           <div class="field" id="deadline-time-selector" phx-hook="DeadlineTimeSelect" data-checked={!is_deadline_disabled}>
-            <%= time_select f, :deadline, name: "", value: task_object.deadline_parsed.time %>
+            <%= time_select f, :deadline, name: "", value: task_object.deadline_parsed["time"] %>
             <%= error_tag f, :deadline %>
           </div>
         </div>
@@ -64,10 +64,10 @@
       <div class="field is-horizontal">
         <div class="field-body">
           <div class="field">
-            <%= date_input f, :completed_on, name: "", "phx-hook": "CompletedOnDate", class: "date-selector", disabled: is_completed_on_disabled, value: task_object.completed_on_parsed.date %>
+            <%= date_input f, :completed_on, name: "", "phx-hook": "CompletedOnDate", class: "date-selector", disabled: is_completed_on_disabled, value: task_object.completed_on_parsed["date"] %>
           </div>
           <div class="field" id="completed_on_time_select" phx-hook="CompletedOnTimeSelect" data-checked={!is_completed_on_disabled}>
-            <%= time_select f, :completed_on, name: "", value: task_object.completed_on_parsed.time %>
+            <%= time_select f, :completed_on, name: "", value: task_object.completed_on_parsed["time"] %>
             <%= error_tag f, :completed_on %>
           </div>
         </div>
@@ -83,14 +83,23 @@
     <div class="column">
       <%= label f, "What's the task?" %>
       <div class="field is-horizontal">
-        <%= text_input f, :description, required: true %>
+        <%= text_input f, :description, value: task_object.description, required: true %>
         <%= error_tag f, :description %>
       </div>
     </div>
     <div class="column is-one-fifth">
       <%= label f, "Status"%>
       <div class="field is-horizontal">
-        <%= select f, :status, @status, "phx-hook": "StatusSelect" %>
+        <%= #select f, :status, @status, "phx-hook": "StatusSelect" %>
+        <select id="task_status" name="task[status]" phx-hook="StatusSelect">
+          <%= for status <- @status do %>
+            <% is_selected = cond  do 
+              elem(status, 1) == task_object.status_id -> true
+              true -> false
+            end %>
+            <option value={elem(status, 1)} selected={is_selected}><%= elem(status, 0) %></option>
+          <% end %>
+        </select>
       </div>
     </div>
   </div>

@@ -5,21 +5,30 @@ defmodule SundialWeb.Live.Task.TaskComponent do
 
   alias Sundial.Progress.States
   alias Sundial.Tasks
+  alias Sundial.API.TaskAPI
 
   def mount(socket) do
     {:ok, assign(socket, %{status: States.get()})}
   end
 
+  # TODO: Move to backend
   def preload(list_of_assigns) do
-    if Tasks.is_all_position_nil?(), do: Tasks.initialize_positions # or create a migration to update all existing records?
+    # IO.inspect "list_of_assigns"
+    # IO.inspect list_of_assigns
+
+    #if Tasks.is_all_position_nil?(), do: Tasks.initialize_positions # or create a migration to update all existing records?
+
+
 
     task_ids = Enum.map(list_of_assigns, & &1.id)
+    # TaskAPI.preload(task_ids)
 
-    tasks = Tasks.list_tasks(task_ids)
-    tasks = Tasks.serialize(tasks)
+    # tasks = Tasks.list_tasks(task_ids)
+    # tasks = Tasks.serialize(tasks)
+    tasks = TaskAPI.get_tasks(task_ids)
 
     Enum.map(list_of_assigns, fn(assigns) ->
-      task = Enum.find(tasks, fn(task) -> assigns.id == task.id end)
+      task = Enum.find(tasks, fn(task) -> assigns.id == task["id"] end)
       Map.merge(assigns, %{task: task})
      end)
   end
@@ -73,8 +82,9 @@ defmodule SundialWeb.Live.Task.TaskComponent do
   # end
 
   def handle_event("delete", %{"id" => id, "return_to" => return_to}, socket) do
-    task = Tasks.get_task!(id)
-    {:ok, _} = Tasks.delete_task(task)
+    # task = Tasks.get_task!(id)
+    # {:ok, _} = Tasks.delete_task(task)
+    TaskAPI.delete_task(%{id: id})
 
     # {:noreply, assign(socket, :tasks, list_tasks())}
     {:noreply,
