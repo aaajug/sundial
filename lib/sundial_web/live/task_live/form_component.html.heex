@@ -1,0 +1,132 @@
+<div class="mt-6 task-form">
+  <p class="is-size-3 mb-3 has-text-weight-bold">
+  <%= @title %>
+  </p>
+<% 
+  task_object = if Map.has_key?(assigns, :task) && @task.id do
+                  @serial_task
+                else 
+                  %{deadline: nil, completed_on: nil, deadline_parsed: %{time: nil, date: nil}, completed_on_parsed: %{time: nil, date: nil}, details: nil}
+                end
+
+  is_deadline_disabled = if task_object.deadline, do: false, else: true
+  is_completed_on_disabled = if task_object.completed_on, do: false, else: true
+%>
+
+<.form 
+  let={f} 
+  for={@changeset} 
+  phx-target={@myself}
+  phx-submit="save"
+  class="task-form-container">
+
+  <%= if @changeset.action do %>
+    <div class="alert alert-danger">
+      <p>Oops, something went wrong! Please check the errors below.</p>
+    </div>
+  <% end %>
+
+  <%= text_input f, :deadline, name: "task[deadline][year]", id: "task_deadline_year", hidden: true %>
+  <%= text_input f, :deadline, name: "task[deadline][month]", id: "task_deadline_month", hidden: true %>
+  <%= text_input f, :deadline, name: "task[deadline][day]", id: "task_deadline_day", hidden: true %>
+  <%= text_input f, :deadline, name: "task[deadline][hour]", id: "task_deadline_hour_field", hidden: true %>
+  <%= text_input f, :deadline, name: "task[deadline][minute]", id: "task_deadline_minute_field", hidden: true %>
+
+  <%= text_input f, :completed_on, name: "task[completed_on][year]", id: "task_completed_on_year", hidden: true %>
+  <%= text_input f, :completed_on, name: "task[completed_on][month]", id: "task_completed_on_month", hidden: true %>
+  <%= text_input f, :completed_on, name: "task[completed_on][day]", id: "task_completed_on_day", hidden: true %>
+  <%= text_input f, :completed_on, name: "task[completed_on][hour]", id: "task_completed_on_hour_field", hidden: true %>
+  <%= text_input f, :completed_on, name: "task[completed_on][minute]", id: "task_completed_on_minute_field", hidden: true %>
+
+  <div class="columns"> 
+    <div class="column"> 
+      <%= label f, :deadline %>
+      <div class="field is-horizontal">
+        <div class="field-body">
+          <div class="field">
+            <%= date_input f, :deadline, name: "", "phx-hook": "DeadlineDate", class: "date-selector", disabled: is_deadline_disabled, value: task_object.deadline_parsed.date %>
+          </div>
+          <div class="field" id="deadline-time-selector" phx-hook="DeadlineTimeSelect" data-checked={!is_deadline_disabled}>
+            <%= time_select f, :deadline, name: "", value: task_object.deadline_parsed.time %>
+            <%= error_tag f, :deadline %>
+          </div>
+        </div>
+      </div>
+
+      <label class="checkbox">
+        <input type="checkbox" id="deadline_checkbox" class= "disable-timestamp" data-target="task_deadline" phx-hook="TimestampCheckbox" checked={!is_deadline_disabled}>
+        <span class="is-tiny-text has-text-white">Task has a deadline</span>
+      </label>
+    </div>
+
+    <div class="column"> 
+      <%= label f, :completed_on %>
+      <div class="field is-horizontal">
+        <div class="field-body">
+          <div class="field">
+            <%= date_input f, :completed_on, name: "", "phx-hook": "CompletedOnDate", class: "date-selector", disabled: is_completed_on_disabled, value: task_object.completed_on_parsed.date %>
+          </div>
+          <div class="field" id="completed_on_time_select" phx-hook="CompletedOnTimeSelect" data-checked={!is_completed_on_disabled}>
+            <%= time_select f, :completed_on, name: "", value: task_object.completed_on_parsed.time %>
+            <%= error_tag f, :completed_on %>
+          </div>
+        </div>
+      </div>
+      <label class="checkbox">
+        <input type="checkbox" id="completed_on_checkbox" class= "disable-timestamp" data-target="task_completed_on" phx-hook="TimestampCheckbox" checked={!is_completed_on_disabled}>
+        <span class="is-tiny-text has-text-white">Task is completed</span>
+      </label>
+    </div>
+  </div>
+
+  <div class="columns">
+    <div class="column">
+      <%= label f, "What's the task?" %>
+      <div class="field is-horizontal">
+        <%= text_input f, :description, required: true %>
+        <%= error_tag f, :description %>
+      </div>
+    </div>
+    <div class="column is-one-fifth">
+      <%= label f, "Status"%>
+      <div class="field is-horizontal">
+        <%= select f, :status, @status, "phx-hook": "StatusSelect" %>
+      </div>
+    </div>
+  </div>
+
+  <div class="field pt-3" style="display: none">
+    <%# <%= #label f, "Want to add more details?" %>
+    <%= textarea f, :details, class: "textarea", rows: 5, id: "details-textarea" %>
+    <%= textarea f, :details_plaintext, class: "textarea", rows: 5, id: "details-plaintext-textarea" %>
+    <%= #error_tag f, :details %>
+  </div>
+
+  <%# <div class="field pt-3" phx-update="ignore" style="display: none"> %>
+    <%= #label f, "Want to add more details?" %>
+    <%# <div id="editor"> %>
+      <%= #raw task_object.details %>
+    <%# </div> %>
+    <%= #error_tag f, :details %>
+  <%# </div> %>
+
+   <div>
+      <%= label f, "Want to add more details?" %>
+      <%= #text_input f, :details, value: "none", type: "hidden", id: "read-only-quill" %>
+      <div id="editor" phx-hook="QuillEditor" data-quill-input-id="read-only-quill" class="content is-small">
+        <%= raw task_object.details %>
+      </div>
+    </div>
+
+  <div class="field is-pulled-right pt-4">
+    <%= #button "Cancel", to: Routes.task_index_path(@socket, :index), method: "get", class: "button is-ghost" %>
+    <%= submit "Save", phx_disable_with: "Saving...", class: "button is-success is-active" %>
+  </div>
+</.form>
+
+  <%# <script>
+    var quill = new Quill('#quillEditor', {
+      theme: 'snow'
+    });
+  </script> %>
+</div>
