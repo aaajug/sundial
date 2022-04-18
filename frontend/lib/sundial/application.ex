@@ -9,7 +9,7 @@ defmodule Sundial.Application do
   def start(_type, _args) do
     children = [
       # Start the Ecto repository
-      Sundial.Repo,
+      # Sundial.Repo,
       # Start the Telemetry supervisor
       SundialWeb.Telemetry,
       # Start the PubSub system

@@ -7,8 +7,8 @@
 # General application configuration
 import Config
 
-config :sundial,
-  ecto_repos: [Sundial.Repo]
+# config :sundial,
+#   ecto_repos: [Sundial.Repo]
 
 # Configures the endpoint
 config :sundial, SundialWeb.Endpoint,
@@ -60,7 +60,7 @@ config :sundial, :pow,
   repo: Sundial.Repo,
   web_module: SundialWeb
 
-config :tesla, adapter: Tesla.Adapter.Hackney
+# config :tesla, adapter: Tesla.Adapter.Hackney
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.

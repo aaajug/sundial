@@ -18,6 +18,7 @@ defmodule BackendWeb.Router do
 
     get("/ping", PingController, :show)
 
+    patch "tasks/:id/update/status", TaskController, :update_status
     get "/tasks/:id/changeset", TaskController, :changeset
     get("/tasks/default", TaskController, :list_tasks_by_default)
     get("/tasks", TaskController, :list_tasks)

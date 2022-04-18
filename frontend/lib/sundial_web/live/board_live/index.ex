@@ -3,6 +3,7 @@ defmodule SundialWeb.BoardLive.Index do
 
   alias Sundial.Boards
   alias Sundial.Boards.Board
+  alias Sundial.API.BoardAPI
 
   @impl true
   def mount(_params, _session, socket) do
@@ -34,13 +35,15 @@ defmodule SundialWeb.BoardLive.Index do
 
   @impl true
   def handle_event("delete", %{"id" => id}, socket) do
-    board = Boards.get_board!(id)
-    {:ok, _} = Boards.delete_board(board)
+    # board = Boards.get_board!(id)
+    # {:ok, _} = Boards.delete_board(board)
+    BoardAPI.delete(id)
 
     {:noreply, assign(socket, :boards, list_boards())}
   end
 
   defp list_boards do
-    Boards.list_boards()
+    BoardAPI.get
+    # Boards.list_boards()
   end
 end

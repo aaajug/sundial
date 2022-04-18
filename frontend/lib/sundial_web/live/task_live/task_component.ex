@@ -40,19 +40,25 @@ defmodule SundialWeb.Live.Task.TaskComponent do
   end
 
   def handle_event("update_status", params, socket) do
-    task = Tasks.get_task!(socket.assigns.task.id)
+    TaskAPI.update_task_status(socket.assigns.task["id"], %{"status" =>  params["status"]})
 
-    task_params = %{}
-    task_params = Map.put(task_params, "status", params["status"])
-    task_params = Map.put(task_params, "completed_on", NaiveDateTime.local_now)
+    {:noreply,
+         socket
+         |> put_flash(:info, "Task updated successfully")
+         |> push_redirect(to: socket.assigns.return_to)}
+    # task = Tasks.get_task!(socket.assigns.task.id)
 
-    case Tasks.update_task(task, task_params) do
-      {:ok, _task} ->
-        {:reply, socket, push_redirect(socket, to: params["return_to"])}
+    # task_params = %{}
+    # task_params = Map.put(task_params, "status", params["status"])
+    # task_params = Map.put(task_params, "completed_on", NaiveDateTime.local_now)
 
-      {:error, %Ecto.Changeset{} = _changeset} ->
-        put_flash(socket, :error, "Can't update status as of the moment. Please try again later.")
-    end
+    # case Tasks.update_task(task, task_params) do
+    #   {:ok, _task} ->
+    #     {:reply, socket, push_redirect(socket, to: params["return_to"])}
+
+    #   {:error, %Ecto.Changeset{} = _changeset} ->
+    #     put_flash(socket, :error, "Can't update status as of the moment. Please try again later.")
+    # end
   end
 
   # No longer used -- replaced by the drag&drop functionality

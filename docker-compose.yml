@@ -1,0 +1,43 @@
+version: '3.6'
+services:
+  postgres:
+    environment:
+      PGDATA: /var/lib/postgresql/data/pgdata
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+      DATABASE_HOST: db
+      DATABASE_NAME: sundial_dev
+      PGPORT: 5432
+      POSTGRES_HOST_AUTH_METHOD: trust
+    image: 'postgres:11-alpine'
+    restart: always
+    ports:
+      - '5432:5432'
+    volumes:
+      - 'pgdata:/var/lib/postgresql/data'
+  backend:
+    build: ./backend
+    depends_on:
+      - postgres
+    environment:
+      MIX_ENV: dev
+    # env_file:
+    #   - .env
+    ports:
+      - '4000:4000'
+    volumes:
+      - ./backend:/app
+  frontend:
+    build: ./frontend
+    depends_on:
+      - backend
+    environment:
+      MIX_ENV: dev
+    # env_file:
+    #   - .env
+    ports:
+      - '4040:4040'
+    volumes:
+      - ./frontend:/app
+volumes:
+  pgdata:

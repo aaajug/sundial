@@ -34,8 +34,9 @@ defmodule BackendWeb.TaskController do
     # text(conn, "Posted create task")
     case Tasks.create_task(task_params) do
             {:ok, task} ->
-              data = Tasks.serialize(task) |> Jason.encode
-              Jason.encode(data)
+              data = Tasks.serialize(task)
+              # Jason.encode(data)
+              json conn, data
               # conn
               #   |> text(Jason.encode(task))
               # |> put_flash(:info, "Task created successfully.")
@@ -46,6 +47,23 @@ defmodule BackendWeb.TaskController do
               text(conn, "error creating task")
               # render(conn, "new.html", changeset: changeset)
           end
+  end
+
+  # %{"id" => id, "data" => task_params}
+  def update(conn, params) do
+    id = String.to_integer(params["id"])
+    task = Tasks.get_task!(id)
+
+    task_params = Map.delete(params, "id")
+
+    case Tasks.update_task(task, task_params) do
+            {:ok, _task} ->
+              data = Tasks.serialize(Tasks.get_task!(id))
+              json conn, data
+
+            {:error, %Ecto.Changeset{} = changeset} ->
+              text(conn, "error updating task")
+    end
   end
 
   # def list_tasks(conn, params) do
@@ -95,6 +113,27 @@ defmodule BackendWeb.TaskController do
         "error"
         # put_flash(socket, :error, "Can't reorder tasks as of the moment. Please try again later.")
         # {:reply, socket, push_redirect(socket, to: "/")}
+    end
+  end
+
+  def update_status(conn, params) do
+    id = String.to_integer(params["id"])
+    task = Tasks.get_task!(id)
+
+    task_params = %{}
+    task_params = Map.put(task_params, "status", String.to_integer(params["status"]))
+    task_params = Map.put(task_params, "completed_on", NaiveDateTime.local_now)
+
+    IO.inspect "task params"
+    IO.inspect task_params
+
+    case Tasks.update_task(task, task_params) do
+      {:ok, _task} ->
+        data = Tasks.serialize(Tasks.get_task!(id))
+        json conn, data
+
+      {:error, %Ecto.Changeset{} = _changeset} ->
+        text(conn, "Unable to update task")
     end
   end
 

@@ -1,4 +1,4 @@
-defmodule AliveWeb.TaskLive.FormComponent do
+defmodule SundialWeb.TaskLive.FormComponent do
   use SundialWeb, :live_component
 
   alias Sundial.Tasks
@@ -32,16 +32,17 @@ defmodule AliveWeb.TaskLive.FormComponent do
 
   # TODO: Move to backend
   defp save_task(socket, :edit, task_params) do
-    case Tasks.update_task(socket.assigns.task, task_params) do
-      {:ok, _task} ->
+    # case TaskAPI.update_task(socket.assigns.task.id, task_params) do
+      TaskAPI.update_task(socket.assigns.task.id, task_params)
+      # {:ok, _task} ->
         {:noreply,
          socket
          |> put_flash(:info, "Task updated successfully")
          |> push_redirect(to: socket.assigns.return_to)}
 
-      {:error, %Ecto.Changeset{} = changeset} ->
-        {:noreply, assign(socket, :changeset, changeset)}
-    end
+      # {:error, %Ecto.Changeset{} = changeset} ->
+      #   {:noreply, assign(socket, :changeset, changeset)}
+    # end
   end
 
   # TODO: Move to backend

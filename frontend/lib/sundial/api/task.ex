@@ -1,6 +1,10 @@
 defmodule Sundial.API.TaskAPI do
   use Tesla
-  plug Tesla.Middleware.BaseUrl, "http://localhost:4040/api"
+
+  adapter Tesla.Adapter.Httpc
+  plug Tesla.Middleware.BaseUrl, "http://backend:4000/api"
+  # plug Tesla.Middleware.Headers, [{"content-type", "application/json; charset=utf-8"}]
+  # plug Tesla.Middleware.Logger
   plug Tesla.Middleware.JSON
 
   # TODO: Refactor to reuse repeating code blocks (inside do block)
@@ -13,9 +17,16 @@ defmodule Sundial.API.TaskAPI do
 
   def get_tasks, do: get_tasks(nil)
   def get_tasks(params) do
-    case get("/tasks?ids=" <> format_ids(params)) do
+    url = if params do
+      "/tasks?ids=" <> format_ids(params)
+    else
+      "/tasks"
+    end
+
+    case get(url) do
       {:ok, %{body: body}} -> body
         {_, %{body: body}} -> ""
+        {:error, _} -> nil
     end
   end
 
@@ -23,11 +34,12 @@ defmodule Sundial.API.TaskAPI do
     case get("/tasks/default") do
       {:ok, %{body: body}} -> body
         {_, %{body: body}} -> ""
+        {:error, _} -> nil
     end
   end
 
   def create_task(params) do
-    case post("/tasks/create", params) do
+    case post("/tasks", params) do
       {:ok, %{body: body}} -> body
         {_, %{body: body}} -> ""
     end
@@ -40,10 +52,17 @@ defmodule Sundial.API.TaskAPI do
     end
   end
 
-  def update_task(params) do
-    case post("/tasks/:id", params) do
+  def update_task(id, params) do
+    case patch("/tasks/" <> Integer.to_string(id), params) do
       {:ok, %{body: body}} -> body
         {_, %{body: body}} -> ""
+    end
+  end
+
+  def update_task_status(id, params) do
+    case patch("/tasks/" <> Integer.to_string(id) <> "/update/status", params) do
+      {:ok, %{body: body}} -> body
+      {_, %{body: body}} -> ""
     end
   end
 

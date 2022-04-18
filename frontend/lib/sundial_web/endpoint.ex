@@ -28,7 +28,7 @@ defmodule SundialWeb.Endpoint do
     socket "/phoenix/live_reload/socket", Phoenix.LiveReloader.Socket
     plug Phoenix.LiveReloader
     plug Phoenix.CodeReloader
-    plug Phoenix.Ecto.CheckRepoStatus, otp_app: :sundial
+    # plug Phoenix.Ecto.CheckRepoStatus, otp_app: :sundial
   end
 
   plug Phoenix.LiveDashboard.RequestLogger,
@@ -46,6 +46,6 @@ defmodule SundialWeb.Endpoint do
   plug Plug.MethodOverride
   plug Plug.Head
   plug Plug.Session, @session_options
-  plug Pow.Plug.Session, otp_app: :sundial
+  # plug Pow.Plug.Session, otp_app: :sundial
   plug SundialWeb.Router
 end

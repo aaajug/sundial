@@ -1,7 +1,7 @@
 <%= if @live_action in [:new, :edit] do %>
   <.modal return_to={@return_target}>
     <.live_component
-      module={AliveWeb.TaskLive.FormComponent}
+      module={SundialWeb.TaskLive.FormComponent}
       id={@task.id || :new}
       title={@page_title}
       action={@live_action}
@@ -28,6 +28,7 @@
   </button>
 </div>
 
+<%= if @tasks do %>
 <div class="columns pt-4" id="task-grid" phx-hook={@drag_hook}>
   <%= for status_id <- [1,2,3,4] do %>
     <% group = Enum.filter(@tasks, fn task -> task["status_id"] == status_id end) |> Enum.with_index %>
@@ -46,3 +47,4 @@
     </div>
   <% end %>
 </div>
+<% end %>

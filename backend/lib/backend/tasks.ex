@@ -256,19 +256,26 @@ defmodule Backend.Tasks do
   def update_task(%Task{} = task, attrs) do
     attrs = cond do
               Map.has_key?(attrs, "status") && (attrs["status"] != "4" && attrs["status"] != 4 ) ->
+                IO.inspect "first cond"
                 Map.put(attrs, "completed_on", nil)
 
               Map.has_key?(attrs, :status) && (attrs.status != "4" && attrs.status != 4) ->
+                IO.inspect "second cond"
                 Map.put(attrs, :completed_on, nil)
 
               !Map.has_key?(attrs, "status") && !Map.has_key?(attrs, :status) && task.status != 4 && Map.has_key?(attrs, "completed_on") ->
+                IO.inspect "third cond"
                 Map.put(attrs, "completed_on", nil)
 
               !Map.has_key?(attrs, "status") && !Map.has_key?(attrs, :status) && task.status != 4 && Map.has_key?(attrs, :completed_on) ->
+                IO.inspect "fourth cond"
                 Map.put(attrs, :completed_on, nil)
 
               true -> attrs
             end
+
+    IO.inspect "attrs"
+    IO.inspect attrs
 
     task
     |> Task.changeset(attrs)
