@@ -56,6 +56,7 @@ export const TimestampCheckbox = {
           }
       } else {
           $(target).prop("disabled", true);  
+          $(target + "_time").prop("disabled", true);  
   
           $(target + "_year").val("");        
           $(target + "_month").val("");        
