@@ -47,13 +47,20 @@ defmodule SundialWeb.TaskLive.Index do
   # TODO: Move to backend
   @impl true
   def handle_event("dropped", %{"list" => list}, socket) do
-    case Tasks.update_positions(list) do
-      {:ok, _, _} ->
-        {:reply, socket, push_redirect(socket, to: "/")}
-      {:error, _} ->
-        put_flash(socket, :error, "Can't reorder tasks as of the moment. Please try again later.")
-        {:reply, socket, push_redirect(socket, to: "/")}
-    end
+    TaskAPI.update_positions(%{list: list})
+
+    {:noreply,
+    socket
+    |> put_flash(:info, "Tasks reordered successfully")
+    |> push_redirect(to: "/")}
+
+    # case Tasks.update_positions(list) do
+    #   {:ok, _, _} ->
+    #     {:reply, socket, push_redirect(socket, to: "/")}
+    #   {:error, _} ->
+    #     put_flash(socket, :error, "Can't reorder tasks as of the moment. Please try again later.")
+    #     {:reply, socket, push_redirect(socket, to: "/")}
+    # end
   end
 
   @impl true

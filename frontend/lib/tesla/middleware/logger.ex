@@ -4,8 +4,8 @@ defmodule Tesla.Middleware.Logger do
   @impl Tesla.Middleware
   def call(env, next, _) do
     env
-    |> IO.inspect("Env: ")
+    |> IO.inspect(label: "Env")
     |> Tesla.run(next)
-    |> IO.inspect("Response: ")
+    |> IO.inspect(label: "Response")
   end
 end

@@ -9,8 +9,6 @@ defmodule BackendWeb.TaskController do
     task = Tasks.get_task!(id)
     changeset = Tasks.change_task(task)
 
-    IO.inspect changeset
-
     text(conn, "Changeset")
     # json conn, changeset
   end
@@ -104,13 +102,21 @@ defmodule BackendWeb.TaskController do
     Progress.list_status_options()
   end
 
-  def update_positions(%{"list" => list}) do
+  def update_positions(conn, %{"list" => list}) do
+    list = list
+      # |> String.split("[")
+      # |> Enum.join
+      # |> String.split("]")
+      # |> Enum.join
+      # |> String.split(",")
+      |> Enum.map(fn id -> String.to_integer(id) end)
+
     case Tasks.update_positions(list) do
       {:ok, _, _} ->
         # {:reply, socket, push_redirect(socket, to: "/")}
-        "success"
+        text(conn, "tasks reordered")
       {:error, _} ->
-        "error"
+        text(conn, "error updating task")
         # put_flash(socket, :error, "Can't reorder tasks as of the moment. Please try again later.")
         # {:reply, socket, push_redirect(socket, to: "/")}
     end
@@ -124,9 +130,6 @@ defmodule BackendWeb.TaskController do
     task_params = Map.put(task_params, "status", String.to_integer(params["status"]))
     task_params = Map.put(task_params, "completed_on", NaiveDateTime.local_now)
 
-    IO.inspect "task params"
-    IO.inspect task_params
-
     case Tasks.update_task(task, task_params) do
       {:ok, _task} ->
         data = Tasks.serialize(Tasks.get_task!(id))
@@ -138,8 +141,6 @@ defmodule BackendWeb.TaskController do
   end
 
   def delete(conn, %{"id" => id}) do
-    IO.inspect "IN DELETE"
-
     task = Tasks.get_task!(id)
     {:ok, _task} = Tasks.delete_task(task)
 
