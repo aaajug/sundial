@@ -48,8 +48,6 @@ defmodule SundialWeb.TaskLive.FormComponent do
 
   # TODO: Move to backend
   defp save_task(socket, :new, task_params) do
-    IO.inspect "taskformdb2: "
-    IO.inspect task_params
     # text(socket, API.send(task_params))
     TaskAPI.create_task(%{"data" => task_params})
     # case Tasks.create_task(task_params) do

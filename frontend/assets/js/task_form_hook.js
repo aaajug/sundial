@@ -158,13 +158,9 @@ export const DeadlineDate = {
       $("#task_deadline_month").val(deadline_date.getMonth() + 1);
       $("#task_deadline_day").val(deadline_date.getDate());
   
-      // $("#task_deadline_hour").triggerHandler("change");
-      var hour = $("#task_deadline_hour");
-      $("#task_deadline_hour_field").val(hour.val());
-  
-      // $("#task_deadline_minute").triggerHandler("change");
-      var minute = $("#task_deadline_minute");
-      $("#task_deadline_minute_field").val(minute.val());
+      var time = $("#task_deadline_time").val().split(":");
+      $("#task_deadline_hour_field").val(time[0]);  
+      $("#task_deadline_minute_field").val(time[1]);
     });
   }
 };
@@ -181,13 +177,9 @@ export const CompletedOnDate = {
       $("#task_completed_on_month").val(completed_on_date.getMonth() + 1);
       $("#task_completed_on_day").val(completed_on_date.getDate());
   
-      // $("#task_completed_on_hour").triggerHandler("change");
-      var hour = $("#task_completed_on_hour");
-      $("#task_completed_on_hour_field").val(hour.val());
-  
-      // $("#task_completed_on_minute").triggerHandler("change");
-      var minute = $("#task_completed_on_minute");
-      $("#task_completed_on_minute_field").val(minute.val());
+      var time = $("#task_completed_on_time").val().split(":");
+      $("#task_completed_on_hour_field").val(time[0]);
+      $("#task_completed_on_minute_field").val(time[1]);
     });  
   }
 };
