@@ -8,12 +8,13 @@ defmodule SundialWeb.TaskLive.FormComponent do
   @impl true
   def update(%{task: task} = assigns, socket) do
     # changeset = Tasks.change_task(task)
-    changeset = %Ecto.Changeset{action: nil, changes: %{}, errors: [], data: %Sundial.Tasks.Task{}, valid?: true}
+    # changeset = %{action: nil, changes: %{}, errors: [], data: %Sundial.Tasks.Task{}, valid?: true}
 
     {:ok,
      socket
      |> assign(assigns)
-     |> assign(:changeset, changeset)}
+    #  |> assign(:changeset, changeset)}
+  }
   end
 
   @impl true
@@ -47,6 +48,8 @@ defmodule SundialWeb.TaskLive.FormComponent do
 
   # TODO: Move to backend
   defp save_task(socket, :new, task_params) do
+    IO.inspect "taskformdb2: "
+    IO.inspect task_params
     # text(socket, API.send(task_params))
     TaskAPI.create_task(%{"data" => task_params})
     # case Tasks.create_task(task_params) do

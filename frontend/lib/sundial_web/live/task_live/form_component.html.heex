@@ -13,42 +13,61 @@
   is_completed_on_disabled = if task_object.completed_on, do: false, else: true
 %>
 
-<.form 
+<%# <.form 
   let={f} 
-  for={@changeset} 
+  for={@socket} 
   phx-target={@myself}
+  phx-submit="save"
+  class="task-form-container"> %>
+
+  <form phx-target={@myself}
   phx-submit="save"
   class="task-form-container">
 
-  <%= if @changeset.action do %>
-    <div class="alert alert-danger">
+  <% #IO.inspect("form debug: ", f)  %>
+
+  <%= #if @changeset.action do %>
+    <%# <div class="alert alert-danger">
       <p>Oops, something went wrong! Please check the errors below.</p>
-    </div>
-  <% end %>
+    </div> %>
+  <% #end %>
 
-  <%= text_input f, :deadline, name: "task[deadline][year]", id: "task_deadline_year", hidden: true %>
-  <%= text_input f, :deadline, name: "task[deadline][month]", id: "task_deadline_month", hidden: true %>
-  <%= text_input f, :deadline, name: "task[deadline][day]", id: "task_deadline_day", hidden: true %>
-  <%= text_input f, :deadline, name: "task[deadline][hour]", id: "task_deadline_hour_field", hidden: true %>
-  <%= text_input f, :deadline, name: "task[deadline][minute]", id: "task_deadline_minute_field", hidden: true %>
+  <input name="task[deadline][year]" id="task_deadline_year" value={task_object["deadline"]["year"]} hidden>
+  <input name="task[deadline][month]" id="task_deadline_month" value={task_object["deadline"]["month"]} hidden>
+  <input name="task[deadline][day]" id="task_deadline_day" value={task_object["deadline"]["day"]} hidden>
+  <input name="task[deadline][hour]" id="task_deadline_hour_field" value={task_object["deadline"]["hour"]} hidden>
+  <input name="task[deadline][minute]" id="task_deadline_minute_field" value={task_object["deadline"]["minute"]} hidden>
+  <%= #text_input f, :deadline, name: "task[deadline][year]", id: "task_deadline_year", hidden: true %>
+  <%= #text_input f, :deadline, name: "task[deadline][month]", id: "task_deadline_month", hidden: true %>
+  <%= #text_input f, :deadline, name: "task[deadline][day]", id: "task_deadline_day", hidden: true %>
+  <%= #text_input f, :deadline, name: "task[deadline][hour]", id: "task_deadline_hour_field", hidden: true %>
+  <%= #text_input f, :deadline, name: "task[deadline][minute]", id: "task_deadline_minute_field", hidden: true %>
 
-  <%= text_input f, :completed_on, name: "task[completed_on][year]", id: "task_completed_on_year", hidden: true %>
-  <%= text_input f, :completed_on, name: "task[completed_on][month]", id: "task_completed_on_month", hidden: true %>
-  <%= text_input f, :completed_on, name: "task[completed_on][day]", id: "task_completed_on_day", hidden: true %>
-  <%= text_input f, :completed_on, name: "task[completed_on][hour]", id: "task_completed_on_hour_field", hidden: true %>
-  <%= text_input f, :completed_on, name: "task[completed_on][minute]", id: "task_completed_on_minute_field", hidden: true %>
+  <input name="task[completed_on][year]" id="task_completed_on_year" value={task_object["completed_on"]["year"]} hidden>
+  <input name="task[completed_on][month]" id="task_completed_on_month" value={task_object["completed_on"]["month"]} hidden>
+  <input name="task[completed_on][day]" id="task_completed_on_day" value={task_object["completed_on"]["day"]} hidden>
+  <input name="task[completed_on][hour]" id="task_completed_on_hour_field" value={task_object["completed_on"]["hour"]} hidden>
+  <input name="task[completed_on][minute]" id="task_completed_on_minute_field" value={task_object["completed_on"]["minute"]} hidden>
+  <%= #text_input f, :completed_on, name: "task[completed_on][year]", id: "task_completed_on_year", hidden: true %>
+  <%= #text_input f, :completed_on, name: "task[completed_on][month]", id: "task_completed_on_month", hidden: true %>
+  <%= #text_input f, :completed_on, name: "task[completed_on][day]", id: "task_completed_on_day", hidden: true %>
+  <%= #text_input f, :completed_on, name: "task[completed_on][hour]", id: "task_completed_on_hour_field", hidden: true %>
+  <%= #text_input f, :completed_on, name: "task[completed_on][minute]", id: "task_completed_on_minute_field", hidden: true %>
 
   <div class="columns"> 
     <div class="column"> 
-      <%= label f, :deadline %>
+      <%= #label f, :deadline %>
+      <label>Deadline</label>
       <div class="field is-horizontal">
         <div class="field-body">
           <div class="field">
-            <%= date_input f, :deadline, name: "", "phx-hook": "DeadlineDate", class: "date-selector", disabled: is_deadline_disabled, value: task_object.deadline_parsed["date"] %>
+            <input id="task_deadline" type="date" name="" phx-hook="DeadlineDate" class="date-selector" disabled={is_deadline_disabled} value={task_object.deadline_parsed["date"]}>
+            <%= #date_input f, :deadline, name: "", "phx-hook": "DeadlineDate", class: "date-selector", disabled: is_deadline_disabled, value: task_object.deadline_parsed["date"] %>
           </div>
           <div class="field" id="deadline-time-selector" phx-hook="DeadlineTimeSelect" data-checked={!is_deadline_disabled}>
-            <%= time_select f, :deadline, name: "", value: task_object.deadline_parsed["time"] %>
-            <%= error_tag f, :deadline %>
+            <input type="time" id="task_deadline_time" value={task_object.deadline_parsed["time"]} disabled={is_deadline_disabled}>
+            <%= #time_select f, :deadline, name: "", value: task_object.deadline_parsed["time"] %>
+            <%= #error_tag f, :deadline %>
           </div>
         </div>
       </div>
@@ -60,15 +79,18 @@
     </div>
 
     <div class="column"> 
-      <%= label f, :completed_on %>
+    <label>Completed on</label>
+      <%= #label f, :completed_on %>
       <div class="field is-horizontal">
         <div class="field-body">
           <div class="field">
-            <%= date_input f, :completed_on, name: "", "phx-hook": "CompletedOnDate", class: "date-selector", disabled: is_completed_on_disabled, value: task_object.completed_on_parsed["date"] %>
+            <input id="task_completed_on" type="date" name="" phx-hook="CompletedOnDate" class="date-selector" disabled={is_completed_on_disabled} value={task_object.completed_on_parsed["date"]}>
+            <%= #date_input f, :completed_on, name: "", "phx-hook": "CompletedOnDate", class: "date-selector", disabled: is_completed_on_disabled, value: task_object.completed_on_parsed["date"] %>
           </div>
           <div class="field" id="completed_on_time_select" phx-hook="CompletedOnTimeSelect" data-checked={!is_completed_on_disabled}>
-            <%= time_select f, :completed_on, name: "", value: task_object.completed_on_parsed["time"] %>
-            <%= error_tag f, :completed_on %>
+          <input type="time" id="task_completed_on_time" value={task_object.completed_on_parsed["time"]} disabled={is_completed_on_disabled}>
+            <%= #time_select f, :completed_on, name: "", value: task_object.completed_on_parsed["time"] %>
+            <%= #error_tag f, :completed_on %>
           </div>
         </div>
       </div>
@@ -81,14 +103,17 @@
 
   <div class="columns">
     <div class="column">
-      <%= label f, "What's the task?" %>
+    <label>What's the task?</label>
+      <%= #label f, "What's the task?" %>
       <div class="field is-horizontal">
-        <%= text_input f, :description, value: task_object.description, required: true %>
-        <%= error_tag f, :description %>
+        <input id="task_description" name="task[description]" value={task_object.description} required>
+        <%= #text_input f, :description, value: task_object.description, required: true %>
+        <%= #error_tag f, :description %>
       </div>
     </div>
     <div class="column is-one-fifth">
-      <%= label f, "Status"%>
+      <label>Status</label>
+      <%= #label f, "Status"%>
       <div class="field is-horizontal">
         <%= #select f, :status, @status, "phx-hook": "StatusSelect" %>
         <select id="task_status" name="task[status]" phx-hook="StatusSelect">
@@ -106,21 +131,28 @@
 
   <div class="field pt-3" style="display: none">
     <%# <%= #label f, "Want to add more details?" %>
-    <%= textarea f, :details, class: "textarea", rows: 5, id: "details-textarea" %>
-    <%= textarea f, :details_plaintext, class: "textarea", rows: 5, id: "details-plaintext-textarea" %>
+    <textarea id="details-textarea" name="task[details]" class="textarea" rows="5">
+      <%= task_object["details"] %>
+    </textarea>
+    <%= #textarea f, :details, class: "textarea", rows: 5, id: "details-textarea" %>
+    <textarea id="details-plaintext-textarea" name="task[details_plaintext]" class="textarea" rows="5">
+      <%= task_object["details_plaintext"] %>
+    </textarea>
+    <%= #textarea f, :details_plaintext, class: "textarea", rows: 5, id: "details-plaintext-textarea" %>
     <%= #error_tag f, :details %>
   </div>
 
   <%# <div class="field pt-3" phx-update="ignore" style="display: none"> %>
+    <label>Want to add more details?</label>
     <%= #label f, "Want to add more details?" %>
-    <%# <div id="editor"> %>
-      <%= #raw task_object.details %>
-    <%# </div> %>
+    <div id="editor">
+      <%= raw task_object.details %>
+    </div>
     <%= #error_tag f, :details %>
   <%# </div> %>
 
    <div>
-      <%= label f, "Want to add more details?" %>
+      <%= #label f, "Want to add more details?" %>
       <%= #text_input f, :details, value: "none", type: "hidden", id: "read-only-quill" %>
       <div id="editor" phx-hook="QuillEditor" data-quill-input-id="read-only-quill" class="content is-small">
         <%= raw task_object.details %>
@@ -131,7 +163,7 @@
     <%= #button "Cancel", to: Routes.task_index_path(@socket, :index), method: "get", class: "button is-ghost" %>
     <%= submit "Save", phx_disable_with: "Saving...", class: "button is-success is-active" %>
   </div>
-</.form>
+</form>
 
   <%# <script>
     var quill = new Quill('#quillEditor', {
