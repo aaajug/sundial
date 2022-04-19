@@ -10,8 +10,14 @@ defmodule Backend.Tasks.Task do
     field :status, :integer, default: 1
     field :completed_on, :naive_datetime, default: nil
     field :position, :integer
-    field :list_id, :integer, null: false, default: 0
-    field :board_id, :integer, null: false, default: 0
+    # field :list_id, :integer, null: false, default: 0
+    # field :board_id, :integer, null: false, default: 0
+
+    belongs_to :list, Backend.Lists.List
+    belongs_to :board, Backend.Boards.Board
+    belongs_to :assignee,  {"assignee", Backend.Accounts.User}
+    belongs_to :author, {"author", Backend.Accounts.User}
+    has_many :comments, Backend.Tasks.Comment
 
     timestamps()
   end

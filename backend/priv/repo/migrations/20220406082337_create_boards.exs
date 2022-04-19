@@ -4,7 +4,6 @@ defmodule Backend.Repo.Migrations.CreateBoards do
   def change do
     create table(:boards) do
       add :title, :string
-      add :user_id, :integer
 
       timestamps()
     end

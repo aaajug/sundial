@@ -7,6 +7,7 @@ defmodule Backend.Lists do
   alias Backend.Repo
 
   alias Backend.Lists.List
+  alias Backend.Lists.SerialList
 
   @doc """
   Returns the list of lists.
@@ -50,6 +51,8 @@ defmodule Backend.Lists do
 
   """
   def create_list(attrs \\ %{}) do
+    IO.inspect %List{} |> List.changeset(attrs), label: "changesetdb"
+
     %List{}
     |> List.changeset(attrs)
     |> Repo.insert()
@@ -87,6 +90,25 @@ defmodule Backend.Lists do
   """
   def delete_list(%List{} = list) do
     Repo.delete(list)
+  end
+
+  def serialize(%List{} = list) do
+    %SerialList{
+      id: list.id,
+      board_id: list.board_id,
+      position: list.position,
+      title: list.title,
+      owner_id: list.user_id
+    }
+  end
+
+  def serialize(lists) do
+    lists
+      |> Enum.map(
+        fn list ->
+          serialize(list)
+        end
+      )
   end
 
   @doc """

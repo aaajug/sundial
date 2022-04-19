@@ -19,7 +19,7 @@ defmodule BackendWeb.Router do
     get("/ping", PingController, :show)
 
     post "/tasks/reorder", TaskController, :update_positions
-    patch "tasks/:id/update/status", TaskController, :update_status
+    patch "/tasks/:id/update/status", TaskController, :update_status
     get "/tasks/:id/changeset", TaskController, :changeset
     get("/tasks/default", TaskController, :list_tasks_by_default)
     get("/tasks", TaskController, :list_tasks)
@@ -27,10 +27,10 @@ defmodule BackendWeb.Router do
     # post("/tasks/create", TaskController, :create)
     resources "/tasks", TaskController, except: [:index]
 
-
-
     # Boards API
+    get "/boards/:id/tasks", BoardController, :get_tasks
     resources "/boards", BoardController
+    resources "/lists", ListController
   end
 
   # Enables LiveDashboard only for development

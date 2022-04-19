@@ -55,7 +55,7 @@ defmodule Backend.Boards do
       Map.put(attrs, "user_id", attrs["user_id"])
     end
 
-    IO.inspect(attrs, label: "attrsdb")
+    IO.inspect(attrs, label: "attrsdb3")
     %Board{}
     |> Board.changeset(attrs)
     |> Repo.insert()

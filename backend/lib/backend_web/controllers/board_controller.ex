@@ -8,11 +8,12 @@ defmodule BackendWeb.BoardController do
     boards = Boards.list_boards()
     serialized_boards = Boards.serialize(boards)
 
-    IO.inspect "boardsdb4"
-    IO.inspect serialized_boards
-
     json conn, serialized_boards
   end
+
+  # def get_task(conn, %{"id" => id}) do
+  #   tasks =
+  # end
 
   def new(conn, _params) do
     changeset = Boards.change_board(%Board{})

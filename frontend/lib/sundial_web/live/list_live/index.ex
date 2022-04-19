@@ -2,7 +2,7 @@ defmodule SundialWeb.ListLive.Index do
   use SundialWeb, :live_view
 
   alias Sundial.Lists
-  alias Sundial.Lists.List
+  alias Sundial.API.ListAPI
 
   @impl true
   def mount(_params, _session, socket) do
@@ -20,10 +20,21 @@ defmodule SundialWeb.ListLive.Index do
     |> assign(:list, Lists.get_list!(id))
   end
 
-  defp apply_action(socket, :new, _params) do
+  defp apply_action(socket, :new, %{"id" => id}) do
+    return_to = "/boards/" <> id
+
+    # TODO: add user id
+    params = %{list: %{board_id: id, user_id: 1}}
+    ListAPI.create_list(params)
+
     socket
-    |> assign(:page_title, "New List")
-    |> assign(:list, %List{})
+      |> put_flash(:info, "Board created successfully")
+      |> push_redirect(to: return_to)
+  # }
+
+    # socket
+    # |> assign(:page_title, "New List")
+    # |> assign(:list, %List{})
   end
 
   defp apply_action(socket, :index, _params) do
@@ -41,6 +52,6 @@ defmodule SundialWeb.ListLive.Index do
   end
 
   defp list_lists do
-    Lists.list_lists()
+    ListAPI.get_lists
   end
 end

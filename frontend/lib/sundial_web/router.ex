@@ -68,7 +68,7 @@ defmodule SundialWeb.Router do
     live "/boards/:id/show/edit", BoardLive.Show, :edit
 
     live "/lists", ListLive.Index, :index
-    live "/lists/new", ListLive.Index, :new
+    live "/boards/:id/lists/new", ListLive.Index, :new
     live "/lists/:id/edit", ListLive.Index, :edit
 
     live "/lists/:id", ListLive.Show, :show

@@ -15,8 +15,8 @@ defmodule Sundial.API.TaskAPI do
 
   def get_tasks, do: get_tasks(nil)
   def get_tasks(params) do
-    url = if params do
-      "/tasks?ids=" <> format_ids(params)
+    url = if params && Map.has_key?(params, :ids) do
+      "/tasks?ids=" <> format_ids(params.ids)
     else
       "/tasks"
     end

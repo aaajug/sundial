@@ -4,8 +4,11 @@ defmodule Backend.Tasks.Comment do
 
   schema "comments" do
     field :content, :string
-    field :task_id, :integer
-    field :user_id, :integer
+    # field :task_id, :integer
+    # field :user_id, :integer
+
+    belongs_to :task, Backend.Tasks.Task
+    belongs_to :user, Backend.Users.User
 
     timestamps()
   end

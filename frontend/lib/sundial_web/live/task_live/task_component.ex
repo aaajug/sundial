@@ -25,7 +25,7 @@ defmodule SundialWeb.Live.Task.TaskComponent do
 
     # tasks = Tasks.list_tasks(task_ids)
     # tasks = Tasks.serialize(tasks)
-    tasks = TaskAPI.get_tasks(task_ids)
+    tasks = TaskAPI.get_tasks(%{ids: task_ids})
 
     Enum.map(list_of_assigns, fn(assigns) ->
       task = Enum.find(tasks, fn(task) -> assigns.id == task["id"] end)

@@ -4,8 +4,7 @@ defmodule Backend.Repo.Migrations.CreateComments do
   def change do
     create table(:comments) do
       add :content, :text
-      add :user_id, :integer
-      add :task_id, :integer
+      add :task_id, references(:tasks)
 
       timestamps()
     end
