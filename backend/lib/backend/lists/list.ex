@@ -10,7 +10,7 @@ defmodule Backend.Lists.List do
     # field :board_id, :integer, default: 0
     field :position, :integer, default: 0
 
-    belongs_to :user, Backend.Accounts.User
+    belongs_to :user, Backend.Users.User
     belongs_to :board, Backend.Boards.Board
     has_many :tasks, Backend.Tasks.Task
 

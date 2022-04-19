@@ -1,5 +1,6 @@
 defmodule BackendWeb.Router do
   use BackendWeb, :router
+  use Pow.Phoenix.Router
 
   pipeline :browser do
     plug :accepts, ["html"]
@@ -11,6 +12,12 @@ defmodule BackendWeb.Router do
 
   pipeline :api do
     plug :accepts, ["json","html"]
+  end
+
+  scope "/" do
+    pipe_through :browser
+
+    pow_routes()
   end
 
   scope "/api", BackendWeb do
