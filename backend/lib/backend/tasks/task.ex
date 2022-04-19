@@ -9,8 +9,9 @@ defmodule Backend.Tasks.Task do
     field :deadline, :naive_datetime, default: nil
     field :status, :integer, default: 1
     field :completed_on, :naive_datetime, default: nil
-    field :pane_id, :integer, null: false, default: 0
     field :position, :integer
+    field :list_id, :integer, null: false, default: 0
+    field :board_id, :integer, null: false, default: 0
 
     timestamps()
   end
@@ -18,7 +19,7 @@ defmodule Backend.Tasks.Task do
   @doc false
   def changeset(task, attrs) do
     task
-    |> cast(attrs, [:description, :details, :details_plaintext, :deadline, :status, :completed_on, :pane_id, :position])
-    |> validate_required([:description])
+    |> cast(attrs, [:description, :details, :details_plaintext, :deadline, :status, :completed_on, :list_id, :board_id, :position])
+    |> validate_required([:description, :board_id, :list_id])
   end
 end

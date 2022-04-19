@@ -7,6 +7,7 @@ defmodule Backend.Boards do
   alias Backend.Repo
 
   alias Backend.Boards.Board
+  alias Backend.Boards.SerialBoard
 
   @doc """
   Returns the list of boards.
@@ -50,6 +51,11 @@ defmodule Backend.Boards do
 
   """
   def create_board(attrs \\ %{}) do
+    attrs = if attrs do
+      Map.put(attrs, "user_id", attrs["user_id"])
+    end
+
+    IO.inspect(attrs, label: "attrsdb")
     %Board{}
     |> Board.changeset(attrs)
     |> Repo.insert()
@@ -100,5 +106,23 @@ defmodule Backend.Boards do
   """
   def change_board(%Board{} = board, attrs \\ %{}) do
     Board.changeset(board, attrs)
+  end
+
+  # def serialize(%Board{} = board), do: serialize(board)
+  def serialize(%Board{} = board) do
+    %SerialBoard{
+      id: board.id,
+      title: board.title,
+      owner_id: board.user_id
+    }
+  end
+
+  def serialize(boards) do
+    boards
+      |> Enum.map(
+        fn board ->
+          serialize(board)
+        end
+      )
   end
 end

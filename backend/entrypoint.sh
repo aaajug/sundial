@@ -22,9 +22,11 @@ if ! [[ -z print_db_name ]]; then
   # createdb -E UTF8 sundial_dev en_US.UTF-8 -T template0
   mix ecto.drop
   mix ecto.create
-  mix ecto.migrate
   # mix run priv/repo/seeds.exs
   echo "Database sundial_dev created."
+
+  mix ecto.migrate
+  echo "Database sundial_dev migrated."
 fi
 
 exec mix phx.server

@@ -1,0 +1,29 @@
+<div class="board column is-3 relative">
+  <style>
+    .board-card {
+      background-color: #E9C333; border-radius: 10px; height: 15vw; margin: auto; text-align: center; display: flex; align-items: center;
+      padding: 32px;
+      overflow: hidden;
+       
+    }
+    
+    .board-card .content {
+      color: #122329; 
+      width: 100%;
+      overflow: hidden;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+    }
+  </style>
+
+  <a href={"/boards/" <> Integer.to_string(@board["id"])}>
+    <div class="board-card">
+      <div class="content">
+        <%= @board["title"] %>
+      </div>
+    </div>
+  </a>
+
+  <.actions assigns={assigns} />
+</div>

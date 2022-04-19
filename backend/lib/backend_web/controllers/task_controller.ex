@@ -74,6 +74,9 @@ defmodule BackendWeb.TaskController do
 
     serialized_tasks = Tasks.serialize(tasks)
 
+    IO.inspect "boardsdb5"
+    IO.inspect serialized_tasks
+
     json conn, serialized_tasks
   end
 

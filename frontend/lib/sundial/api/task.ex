@@ -3,8 +3,6 @@ defmodule Sundial.API.TaskAPI do
 
   adapter Tesla.Adapter.Httpc
   plug Tesla.Middleware.BaseUrl, "http://backend:4000/api"
-  # plug Tesla.Middleware.Headers, [{"content-type", "application/json; charset=utf-8"}]
-  # plug Tesla.Middleware.Logger
   plug Tesla.Middleware.JSON
 
   # TODO: Refactor to reuse repeating code blocks (inside do block)
@@ -61,6 +59,13 @@ defmodule Sundial.API.TaskAPI do
 
   def update_task_status(id, params) do
     case patch("/tasks/" <> Integer.to_string(id) <> "/update/status", params) do
+      {:ok, %{body: body}} -> body
+      {_, %{body: body}} -> ""
+    end
+  end
+
+  def update_positions(params) do
+    case post("/tasks/reorder", params) do
       {:ok, %{body: body}} -> body
       {_, %{body: body}} -> ""
     end

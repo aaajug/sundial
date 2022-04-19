@@ -2,54 +2,71 @@ defmodule SundialWeb.BoardLive.FormComponent do
   use SundialWeb, :live_component
 
   alias Sundial.Boards
+  alias Sundial.API.BoardAPI
 
   @impl true
   def update(%{board: board} = assigns, socket) do
-    changeset = Boards.change_board(board)
+    # changeset = Boards.change_board(board)
 
     {:ok,
      socket
      |> assign(assigns)
-     |> assign(:changeset, changeset)}
+    #  |> assign(:changeset, changeset)}
+    }
   end
+
+  # @impl true
+  # def handle_event("validate", %{"board" => board_params}, socket) do
+  #   changeset =
+  #     socket.assigns.board
+  #     |> Boards.change_board(board_params)
+  #     |> Map.put(:action, :validate)
+
+  #   {:noreply, assign(socket, :changeset, changeset)}
+  # end
 
   @impl true
-  def handle_event("validate", %{"board" => board_params}, socket) do
-    changeset =
-      socket.assigns.board
-      |> Boards.change_board(board_params)
-      |> Map.put(:action, :validate)
-
-    {:noreply, assign(socket, :changeset, changeset)}
-  end
-
   def handle_event("save", %{"board" => board_params}, socket) do
     save_board(socket, socket.assigns.action, board_params)
   end
 
   defp save_board(socket, :edit, board_params) do
-    case Boards.update_board(socket.assigns.board, board_params) do
-      {:ok, _board} ->
+
+    BoardAPI.update_board(socket.assigns.board.id, board_params)
         {:noreply,
          socket
          |> put_flash(:info, "Board updated successfully")
-         |> push_redirect(to: socket.assigns.return_to)}
+         |> push_redirect(to: "/boards")}
 
-      {:error, %Ecto.Changeset{} = changeset} ->
-        {:noreply, assign(socket, :changeset, changeset)}
-    end
+
+    # case Boards.update_board(socket.assigns.board, board_params) do
+    #   {:ok, _board} ->
+    #     {:noreply,
+    #      socket
+    #      |> put_flash(:info, "Board updated successfully")
+    #      |> push_redirect(to: socket.assigns.return_to)}
+
+    #   {:error, %Ecto.Changeset{} = changeset} ->
+    #     {:noreply, assign(socket, :changeset, changeset)}
+    # end
   end
 
   defp save_board(socket, :new, board_params) do
-    case Boards.create_board(board_params) do
-      {:ok, _board} ->
-        {:noreply,
+    BoardAPI.create_board(%{"data" => board_params})
+
+    {:noreply,
          socket
          |> put_flash(:info, "Board created successfully")
-         |> push_redirect(to: socket.assigns.return_to)}
+         |> push_redirect(to: "/boards")}
+    # case Boards.create_board(board_params) do
+    #   {:ok, _board} ->
+    #     {:noreply,
+    #      socket
+    #      |> put_flash(:info, "Board created successfully")
+    #      |> push_redirect(to: socket.assigns.return_to)}
 
-      {:error, %Ecto.Changeset{} = changeset} ->
-        {:noreply, assign(socket, changeset: changeset)}
-    end
+    #   {:error, %Ecto.Changeset{} = changeset} ->
+    #     {:noreply, assign(socket, changeset: changeset)}
+    # end
   end
 end

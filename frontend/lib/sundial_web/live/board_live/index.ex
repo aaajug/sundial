@@ -16,9 +16,12 @@ defmodule SundialWeb.BoardLive.Index do
   end
 
   defp apply_action(socket, :edit, %{"id" => id}) do
+    board = BoardAPI.get_board(%{id: id})
+    board = for {key, val} <- board, into: %{}, do: {String.to_atom(key), val}
+
     socket
     |> assign(:page_title, "Edit Board")
-    |> assign(:board, Boards.get_board!(id))
+    |> assign(:board, board)
   end
 
   defp apply_action(socket, :new, _params) do
@@ -37,13 +40,12 @@ defmodule SundialWeb.BoardLive.Index do
   def handle_event("delete", %{"id" => id}, socket) do
     # board = Boards.get_board!(id)
     # {:ok, _} = Boards.delete_board(board)
-    BoardAPI.delete(id)
+    BoardAPI.delete(%{id: id})
 
     {:noreply, assign(socket, :boards, list_boards())}
   end
 
   defp list_boards do
-    BoardAPI.get
-    # Boards.list_boards()
+    BoardAPI.get_boards
   end
 end

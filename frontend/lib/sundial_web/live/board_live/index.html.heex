@@ -1,4 +1,26 @@
-<h1>Listing Boards</h1>
+<style>
+  .sidebar {
+    background-color: #122329;
+    text-align: right;
+    height: 100vh;
+  }
+
+  li a {
+      color: white !important;
+    }
+
+  #new-board-button {
+    background-color: #122329;
+    color: white !important;
+  } 
+
+  .columns.with-border {
+    margin-left: -5rem;
+    border-top: solid;
+    border-top-width: 2px;
+    border-top-color: #374E56;
+  }
+</style>
 
 <%= if @live_action in [:new, :edit] do %>
   <.modal return_to={Routes.board_index_path(@socket, :index)}>
@@ -13,29 +35,31 @@
   </.modal>
 <% end %>
 
-<table>
-  <thead>
-    <tr>
-      <th>Title</th>
-      <th>User</th>
+<div class="columns mt-6 with-border">
+  <div class="column is-2 sidebar">
+    <aside class="menu">
+      <ul class="menu-list">
+        <li><a>My boards</a></li>
+        <li><a>Shared with me</a></li>
+      </ul>
+    </aside>
+  </div>
 
-      <th></th>
-    </tr>
-  </thead>
-  <tbody id="boards">
-    <%= for board <- @boards do %>
-      <tr id={"board-#{board.id}"}>
-        <td><%= board.title %></td>
-        <td><%= board.user_id %></td>
-
-        <td>
-          <span><%= live_redirect "Show", to: Routes.board_show_path(@socket, :show, board) %></span>
-          <span><%= live_patch "Edit", to: Routes.board_index_path(@socket, :edit, board) %></span>
-          <span><%= link "Delete", to: "#", phx_click: "delete", phx_value_id: board.id, data: [confirm: "Are you sure?"] %></span>
-        </td>
-      </tr>
+  <div class="column is-four-fifths ml-4 pt-5">
+    <%= live_patch to: Routes.board_index_path(@socket, :new) do %>
+      <button class="button is-small active" id="new-board-button">
+        <span class="icon is-small">
+          <ion-icon name="grid-outline"></ion-icon>
+        </span>
+        <span>New Board</span>
+      </button>
     <% end %>
-  </tbody>
-</table>
+    
+    <div class="columns pt-4">
+      <%= for board <- @boards do %>
+        <.live_component module={SundialWeb.Live.Board.BoardComponent} id={board["id"]} />
+      <% end %>
+    </div>
+  </div>
+</div>
 
-<span><%= live_patch "New Board", to: Routes.board_index_path(@socket, :new) %></span>

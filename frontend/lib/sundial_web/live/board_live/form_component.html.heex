@@ -1,24 +1,44 @@
 <div>
   <h2><%= @title %></h2>
 
-  <.form
+  <%
+    board_object = if Map.has_key?(assigns, :board) && @board.id do
+                      @board
+                    else
+                      %{title: nil, users: nil}
+                    end
+  %>
+
+  <%# <.form
     let={f}
     for={@changeset}
     id="board-form"
     phx-target={@myself}
     phx-change="validate"
+    phx-submit="save"> %>
+
+    <%# <form phx-target={@myself}
+    phx-change="validate"
+    phx-submit="save"> %>
+
+    <form phx-target={@myself}
     phx-submit="save">
   
-    <%= label f, :title %>
-    <%= text_input f, :title %>
-    <%= error_tag f, :title %>
-  
-    <%= label f, :user_id %>
-    <%= number_input f, :user_id %>
-    <%= error_tag f, :user_id %>
-  
-    <div>
-      <%= submit "Save", phx_disable_with: "Saving..." %>
+    <div class="field">
+      <label>Title</label>
+      <input id="board_title" name="board[title]" value={board_object.title} style="background-color: white;" required>
     </div>
-  </.form>
+    
+    <%= #label f, :title %>
+    <%= #text_input f, :title %>
+    <%= #error_tag f, :title %>
+  
+    <%= #label f, :user_id %>
+    <%= #number_input f, :user_id %>
+    <%= #error_tag f, :user_id %>
+  
+    <div class="field is-pulled-right pt-4">
+      <%= submit "Save", phx_disable_with: "Saving...", class: "button is-success is-active" %>
+    </div>
+  </form>
 </div>
