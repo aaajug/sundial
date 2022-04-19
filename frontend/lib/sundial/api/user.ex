@@ -6,7 +6,14 @@ defmodule Sundial.API.UserAPI do
   plug Tesla.Middleware.JSON
 
   def get_current_user() do
-    case get("/tasks/" <> params.id) do
+    # case get("/tasks/" <> params.id) do
+    #   {:ok, %{body: body}} -> body
+    #     {_, %{body: body}} -> ""
+    # end
+  end
+
+  def create_user(params) do
+    case post("/registration", params) do
       {:ok, %{body: body}} -> body
         {_, %{body: body}} -> ""
     end

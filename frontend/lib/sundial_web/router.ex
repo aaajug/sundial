@@ -15,6 +15,19 @@ defmodule SundialWeb.Router do
     plug :accepts, ["json"]
   end
 
+
+  # scope "/", Pow.Phoenix, as: "pow" do
+  #   pipe_through :browser
+
+  #   live "/sign_up", UserLive.Index, :new
+  #   # post "/sign_up", RegistrationController, :create
+
+  #   get "/login", UserLive.Index, :new_session
+  #   # post "/login", SessionController, :create
+
+  #   # logout
+  # end
+
   scope "/" do
     pipe_through :browser
 

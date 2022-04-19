@@ -14,7 +14,7 @@ defmodule BackendWeb.Router do
     plug :accepts, ["json","html"]
   end
 
-  scope "/" do
+  scope "/api" do
     pipe_through :browser
 
     pow_routes()
