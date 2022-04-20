@@ -5,6 +5,9 @@ defmodule Backend.Users.User do
   schema "users" do
     pow_user_fields()
 
+    field :first_name, :string
+    field :last_name, :string
+
     has_many :authored_tasks, {"authored_tasks", Backend.Tasks.Task}, foreign_key: :author_id
     has_many :assigned_tasks, {"assigned_tasks", Backend.Tasks.Task}, foreign_key: :assignee_id
     has_many :lists, Backend.Lists.List

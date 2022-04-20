@@ -102,8 +102,9 @@ defmodule SundialWeb.Router do
     live "/permissions/:id/show/edit", PermissionLive.Show, :edit
 
     live "/signup", UserLive.Registration, :index
-    live "/login", UserLive.Session, :index
-    live "/logout", UserLive.Session, :logout
+    # live "/signup/new", UserLive.Registration, :new
+    live "/login", UserLive.Registration, :new_session
+    live "/logout", UserLive.Registration, :destroy_session
   end
 
   # Other scopes may use custom stacks.

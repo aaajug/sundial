@@ -1,0 +1,67 @@
+<div>
+    <style>
+    
+    </style>
+
+    <%= #form_for @changeset, @action, [as: :user], fn f -> %>
+    <%= #if @changeset.action do %>
+        <%# <div class="alert alert-danger"> %>
+        <%# <p>Oops, something went wrong! Please check the errors below.</p> %>
+        <%# </div> %>
+    <% #end %>
+
+    <div class="text-container pr-6 mr-6 pt-6">
+    <% IO.inspect assigns[:error], label: "login assignserror"  %>
+
+      <article class="message is-danger"> 
+        <%= if Map.has_key?(assigns, :error) do %>
+          <div class="message-body">
+              <%= @error %>
+          </div>
+        <% end %>
+      </article>
+
+      <article class="message is-success"> 
+        <%= if Map.has_key?(assigns, :success_info) && @success_info do %>
+          <div class="message-body">
+              <%= @success_info %>
+          </div>
+        <% end %>
+      </article>
+
+    <h1>Login</h1>
+
+    <form phx-target={@myself}
+        phx-submit="save">
+
+        <div class="field">
+          <label>Email</label>
+          <input name="user[email]">
+        </div>
+
+        <div class="field is-horizontal">
+        <div class="field-body">
+            <div class="field">
+            <label>Password</label>
+            <input name="user[password]" type="password">
+            </div>
+        </div>
+        </div>
+
+        <%= #label f, :password %>
+        <%= #password_input f, :password %>
+        <%= #error_tag f, :password %>
+
+        <%= #label f, :password_confirmation %>
+        <%= #password_input f, :password_confirmation %>
+        <%= #error_tag f, :password_confirmation %>
+
+        <div class="field is-pulled-right pt-4" style="display: flex; align-items: baseline;">
+          <div class="mr-5"><%= link "Create an account", to: Routes.user_registration_path(@socket, :index), class: "has-text-white" %></div>
+          <%= submit "Login", phx_disable_with: "Logging you in...", class: "button is-success is-active" %>
+        </div>
+    <% #end %>
+    </form>
+    </div>
+</div>
+

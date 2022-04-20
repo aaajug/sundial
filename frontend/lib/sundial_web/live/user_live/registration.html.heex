@@ -1,2 +1,5 @@
-<div>
-</div>
+<%= if Map.has_key?(assigns, :show_login) && @show_login do %>
+  <.live_component module={SundialWeb.UserLive.LoginFormComponent} id={:new} />
+<%= else %>
+  <.live_component module={SundialWeb.UserLive.RegistrationFormComponent} id={:new} />
+<% end %>

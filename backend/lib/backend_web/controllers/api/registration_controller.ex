@@ -7,12 +7,13 @@ defmodule BackendWeb.API.RegistrationController do
   alias BackendWeb.ErrorHelpers
 
   @spec create(Conn.t(), map()) :: Conn.t()
-  def create(conn, %{"user" => user_params}) do
+  def create(conn, user_params) do
+    IO.inspect user_params, label: "userparamsdb"
     conn
     |> Plug.create_user(user_params)
     |> case do
       {:ok, _user, conn} ->
-        json(conn, %{data: %{access_token: conn.private.api_access_token, renewal_token: conn.private.api_renewal_token}})
+        json(conn, %{success_info: "Account successfully created. You may now login.", data: %{access_token: conn.private.api_access_token, renewal_token: conn.private.api_renewal_token}})
 
       {:error, changeset, conn} ->
         errors = Changeset.traverse_errors(changeset, &ErrorHelpers.translate_error/1)
