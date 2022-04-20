@@ -24,6 +24,26 @@ defmodule SundialWeb.UserLive.Registration do
       |> assign(:show_login, true)
   end
 
+  defp apply_action(socket, :destroy_session, _params) do
+    {
+      {:error, error},
+      {:success_info, success_info},
+      {:data, data}
+    } = UserAPI.destroy_session
+
+    if success_info do
+      socket
+        |> assign(:error, error)
+        |> put_flash(:info, success_info)
+        |> assign(:data, data)
+        |> push_redirect(to: "/")
+    else
+      socket
+        |> assign(:error, error)
+        |> assign(:data, data)
+    end
+  end
+
   defp apply_action(socket, :new, _params) do
     IO.inspect socket, label: "socket in new action 2"
     {:noreply, socket}

@@ -40,6 +40,6 @@ defmodule BackendWeb.API.SessionController do
   def delete(conn, _params) do
     conn
     |> Pow.Plug.delete()
-    |> json(%{data: %{}})
+    |> json(%{success_info: "Logged out.", data: %{}})
   end
 end

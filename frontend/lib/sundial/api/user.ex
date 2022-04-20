@@ -30,4 +30,11 @@ defmodule Sundial.API.UserAPI do
         {_, %{body: body}} -> ""
     end
   end
+
+  def destroy_session() do
+    case delete("/session") do
+      {:ok, %{body: body}} -> ResponseHelper.parse(body)
+        {_, %{body: body}} -> ""
+    end
+  end
 end

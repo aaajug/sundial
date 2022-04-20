@@ -42,7 +42,7 @@ defmodule SundialWeb.Router do
     # get "/", TaskController, :index
     # live "/", TaskViewLive
     # live "/", TaskLive.Index, :index
-    live "/", BoardLive.Index, :index
+    live "/", UserLive.Registration, :new_session
     live "/tasks/new", TaskLive.Index, :new
     live "/tasks/:id/edit", TaskLive.Index, :edit
 
