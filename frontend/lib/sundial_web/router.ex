@@ -13,20 +13,20 @@ defmodule SundialWeb.Router do
 
   pipeline :api do
     plug :accepts, ["json"]
-    plug SundialWeb.APIAuthPlug, otp_app: :sundial
+    # plug SundialWeb.APIAuthPlug, otp_app: :sundial
   end
 
-  pipeline :api_protected do
-    plug Pow.Plug.RequireAuthenticated, error_handler: SundialWeb.APIAuthErrorHandler
-  end
+  # pipeline :api_protected do
+  #   plug Pow.Plug.RequireAuthenticated, error_handler: SundialWeb.APIAuthErrorHandler
+  # end
 
-  scope "/api", SundialWeb.API, as: :api do
-    pipe_through :api
+  # scope "/api", SundialWeb.API, as: :api do
+  #   pipe_through :api
 
-    resources "/registration", RegistrationController, singleton: true, only: [:create]
-    resources "/session", SessionController, singleton: true, only: [:create, :delete]
-    post "/session/renew", SessionController, :renew
-  end
+  #   resources "/registration", RegistrationController, singleton: true, only: [:create]
+  #   resources "/session", SessionController, singleton: true, only: [:create, :delete]
+  #   post "/session/renew", SessionController, :renew
+  # end
 
   scope "/" do
     pipe_through :browser
@@ -100,6 +100,10 @@ defmodule SundialWeb.Router do
 
     live "/permissions/:id", PermissionLive.Show, :show
     live "/permissions/:id/show/edit", PermissionLive.Show, :edit
+
+    live "/signup", UserLive.Registration, :index
+    live "/login", UserLive.Session, :index
+    live "/logout", UserLive.Session, :logout
   end
 
   # Other scopes may use custom stacks.

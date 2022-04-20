@@ -18,8 +18,9 @@ defmodule BackendWeb.UserController do
     case Accounts.create_user(user_params) do
       {:ok, user} ->
         conn
-        |> put_flash(:info, "User created successfully.")
-        |> redirect(to: Routes.user_path(conn, :show, user))
+        # conn
+        # |> put_flash(:info, "User created successfully.")
+        # |> redirect(to: Routes.user_path(conn, :show, user))
 
       {:error, %Ecto.Changeset{} = changeset} ->
         render(conn, "new.html", changeset: changeset)
@@ -43,8 +44,8 @@ defmodule BackendWeb.UserController do
     case Accounts.update_user(user, user_params) do
       {:ok, user} ->
         conn
-        |> put_flash(:info, "User updated successfully.")
-        |> redirect(to: Routes.user_path(conn, :show, user))
+        # |> put_flash(:info, "User updated successfully.")
+        # |> redirect(to: Routes.user_path(conn, :show, user))
 
       {:error, %Ecto.Changeset{} = changeset} ->
         render(conn, "edit.html", user: user, changeset: changeset)
@@ -55,8 +56,8 @@ defmodule BackendWeb.UserController do
     user = Accounts.get_user!(id)
     {:ok, _user} = Accounts.delete_user(user)
 
-    conn
-    |> put_flash(:info, "User deleted successfully.")
-    |> redirect(to: Routes.user_path(conn, :index))
+    # conn
+    # |> put_flash(:info, "User deleted successfully.")
+    # |> redirect(to: Routes.user_path(conn, :index))
   end
 end

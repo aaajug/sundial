@@ -1,5 +1,4 @@
-# lib/my_app_web/api_auth_plug.ex
-defmodule SundialWeb.APIAuthPlug do
+defmodule BackendWeb.APIAuthPlug do
   @moduledoc false
   use Pow.Plug.Base
 

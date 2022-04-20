@@ -12,16 +12,33 @@ defmodule BackendWeb.Router do
 
   pipeline :api do
     plug :accepts, ["json","html"]
+    plug BackendWeb.APIAuthPlug, otp_app: :backend
   end
 
-  scope "/" do
-    pipe_through :browser
-
-    pow_routes()
+  pipeline :api_protected do
+    plug Pow.Plug.RequireAuthenticated, error_handler: BackendWeb.APIAuthErrorHandler
   end
+
+  # scope "/" do
+  #   pipe_through :browser
+
+  #   pow_routes()
+  # end
+
+  # scope "/api", BackendWeb.API, as: :api do
+  #   pipe_through :api
+
+  #   # resources "/registration", RegistrationController, singleton: true, only: [:create]
+  #   # resources "/session", SessionController, singleton: true, only: [:create, :delete]
+  #   # post "/session/renew", SessionController, :renew
+  # end
 
   scope "/api", BackendWeb do
     pipe_through :api
+
+    resources "/registration", API.RegistrationController, singleton: true, only: [:create]
+    resources "/session", API.SessionController, singleton: true, only: [:create, :delete]
+    post "/session/renew", API.SessionController, :renew
 
     get("/ping", PingController, :show)
 

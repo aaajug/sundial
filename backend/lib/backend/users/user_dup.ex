@@ -1,22 +1,15 @@
-defmodule Backend.Accounts.User do
+defmodule Backend.Users.User_dup do
   use Ecto.Schema
-  import Ecto.Changeset
+  use Pow.Ecto.Schema
 
-  # @primary_key {:id, :binary_id, autogenerate: true}
-  # @foreign_key_type :binary_id
-  schema "accounts" do
+  schema "users_dup" do
     has_many :authored_tasks, {"authored_tasks", Backend.Tasks.Task}, foreign_key: :author_id
     has_many :assigned_tasks, {"assigned_tasks", Backend.Tasks.Task}, foreign_key: :assignee_id
     has_many :lists, Backend.Lists.List
     has_many :boards, Backend.Boards.Board
 
-    timestamps()
-  end
+    pow_user_fields()
 
-  @doc false
-  def changeset(user, attrs) do
-    user
-    |> cast(attrs, [])
-    |> validate_required([])
+    timestamps()
   end
 end

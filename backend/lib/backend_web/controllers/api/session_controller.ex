@@ -1,7 +1,7 @@
-defmodule SundialWeb.API.SessionController do
-  use SundialWeb, :controller
+defmodule BackendWeb.API.SessionController do
+  use BackendWeb, :controller
 
-  alias SundialWeb.APIAuthPlug
+  alias BackendWeb.APIAuthPlug
   alias Plug.Conn
 
   @spec create(Conn.t(), map()) :: Conn.t()
