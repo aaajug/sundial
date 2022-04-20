@@ -19,20 +19,6 @@ defmodule BackendWeb.Router do
     plug Pow.Plug.RequireAuthenticated, error_handler: BackendWeb.APIAuthErrorHandler
   end
 
-  # scope "/" do
-  #   pipe_through :browser
-
-  #   pow_routes()
-  # end
-
-  # scope "/api", BackendWeb.API, as: :api do
-  #   pipe_through :api
-
-  #   # resources "/registration", RegistrationController, singleton: true, only: [:create]
-  #   # resources "/session", SessionController, singleton: true, only: [:create, :delete]
-  #   # post "/session/renew", SessionController, :renew
-  # end
-
   scope "/api", BackendWeb do
     pipe_through :api
 
@@ -41,14 +27,16 @@ defmodule BackendWeb.Router do
     post "/session/renew", API.SessionController, :renew
 
     get("/ping", PingController, :show)
+  end
+
+  scope "/api", BackendWeb do
+    pipe_through [:api, :api_protected]
 
     post "/tasks/reorder", TaskController, :update_positions
     patch "/tasks/:id/update/status", TaskController, :update_status
     get "/tasks/:id/changeset", TaskController, :changeset
     get("/tasks/default", TaskController, :list_tasks_by_default)
     get("/tasks", TaskController, :list_tasks)
-    # get("/tasks/new", TaskController, :new)
-    # post("/tasks/create", TaskController, :create)
     resources "/tasks", TaskController, except: [:index]
 
     # Boards API

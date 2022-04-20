@@ -13,6 +13,7 @@ import Config
 # Configures the endpoint
 config :sundial, SundialWeb.Endpoint,
   url: [host: "localhost"],
+  secret_key_base: "GUMzOM2DlUvUAlZ8D5oY4U4jrHRuRCKba+bQAmPhayqq455j7Zb57x3nYPwz55vo",
   render_errors: [view: SundialWeb.ErrorView, accepts: ~w(html json), layout: false],
   pubsub_server: Sundial.PubSub,
   live_view: [signing_salt: "y1BYNNTp9J/H02qkKGGboyjKnUV6uFQ"]

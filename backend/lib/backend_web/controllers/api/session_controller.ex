@@ -10,7 +10,7 @@ defmodule BackendWeb.API.SessionController do
     |> Pow.Plug.authenticate_user(user_params)
     |> case do
       {:ok, conn} ->
-        json(conn, %{success_info: "Welcome back!", data: %{access_token: conn.private.api_access_token, renewal_token: conn.private.api_renewal_token}})
+        json(conn, %{success_info: "Welcome back!", data: %{email: user_params["email"], access_token: conn.private.api_access_token, renewal_token: conn.private.api_renewal_token}})
 
       {:error, conn} ->
         conn

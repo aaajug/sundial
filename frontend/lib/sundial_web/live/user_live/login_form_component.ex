@@ -2,6 +2,7 @@ defmodule SundialWeb.UserLive.LoginFormComponent do
   use SundialWeb, :live_component
 
   alias Sundial.API.UserAPI
+  alias SundialWeb.SessionHandler
 
   @impl true
   def update(%{id: id} = assigns, socket) do
@@ -28,9 +29,9 @@ defmodule SundialWeb.UserLive.LoginFormComponent do
       {:data, data}
     } = UserAPI.create_session(user_params)
 
-    IO.inspect success_info, label: "success info"
-
     if success_info do
+      SessionHandler.set_current_user(socket, data)
+
       {:noreply,
       socket
         |> assign(:error, error)

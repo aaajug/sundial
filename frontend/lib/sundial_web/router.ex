@@ -102,7 +102,6 @@ defmodule SundialWeb.Router do
     live "/permissions/:id/show/edit", PermissionLive.Show, :edit
 
     live "/signup", UserLive.Registration, :index
-    # live "/signup/new", UserLive.Registration, :new
     live "/login", UserLive.Registration, :new_session
     live "/logout", UserLive.Registration, :destroy_session
   end
