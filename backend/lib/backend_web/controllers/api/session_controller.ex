@@ -5,8 +5,12 @@ defmodule BackendWeb.API.SessionController do
   alias Plug.Conn
 
   def get(conn, _params) do
-    IO.inspect Pow.Plug.current_user(conn)
-    text conn, "Completed"
+  IO.inspect Pow.Plug.current_user(conn), label: "current user is"
+  text conn, "Completed"
+  end
+
+  def is_authenticated(conn, _params) do
+    text conn, Pow.Plug.current_user(conn) != nil
   end
 
   @spec create(Conn.t(), map()) :: Conn.t()

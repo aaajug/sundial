@@ -56,8 +56,10 @@
     <% end %>
     
     <div class="columns pt-4">
-      <%= for board <- @boards do %>
-        <.live_component module={SundialWeb.Live.Board.BoardComponent} id={board["id"]} />
+      <%= if @boards do %>
+        <%= for board <- @boards do %>
+          <%# <.live_component module={SundialWeb.Live.Board.BoardComponent} id={board["id"]} /> %>
+        <% end %>
       <% end %>
     </div>
   </div>

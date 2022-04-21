@@ -20,7 +20,7 @@ defmodule SundialWeb.Router do
   end
 
   pipeline :protected do
-    plug SundialWeb.Redirect
+    plug SundialWeb.EnsureAuthenticated
   end
 
   pipeline :api do
@@ -47,7 +47,7 @@ defmodule SundialWeb.Router do
   end
 
   scope "/", SundialWeb do
-    pipe_through :protected
+    pipe_through [:browser, :protected]
 
     live "/boards", BoardLive.Index, :index
   end
@@ -100,6 +100,7 @@ defmodule SundialWeb.Router do
     # get "/attachments", AttachmentsController, :index
 
 
+    # live "/boards", BoardLive.Index, :index
     live "/boards/new", BoardLive.Index, :new
     live "/boards/:id/edit", BoardLive.Index, :edit
 

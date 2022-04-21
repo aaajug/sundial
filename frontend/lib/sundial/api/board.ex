@@ -12,15 +12,15 @@ defmodule Sundial.API.BoardAPI do
     end
   end
 
-  def get_boards, do: get_boards(nil)
-  def get_boards(params) do
+  def get_boards(client), do: get_boards(client, nil)
+  def get_boards(client, params) do
     url = if params do
       "/boards?ids=" <> format_ids(params)
     else
       "/boards"
     end
 
-    case get(url) do
+    case get(client, url) do
       {:ok, %{body: body}} -> body
         {_, %{body: body}} -> ""
         {:error, _} -> nil

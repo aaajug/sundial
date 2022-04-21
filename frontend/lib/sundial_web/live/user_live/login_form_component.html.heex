@@ -14,7 +14,7 @@
     <% IO.inspect assigns[:error], label: "login assignserror"  %>
 
       <article class="message is-danger"> 
-        <%= if Map.has_key?(assigns, :error) do %>
+        <%= if Map.has_key?(assigns, :error) && @error do %>
           <div class="message-body">
               <%= @error %>
           </div>

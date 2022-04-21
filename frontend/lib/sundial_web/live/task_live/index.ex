@@ -5,6 +5,7 @@ defmodule SundialWeb.TaskLive.Index do
   alias Sundial.Tasks.Task
   alias Sundial.Progress
   alias Sundial.API.TaskAPI
+  alias Sundial.API.BaseAPI
   alias SundialWeb.SessionHandler
 
   @impl true

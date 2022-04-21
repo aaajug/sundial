@@ -6,8 +6,10 @@ defmodule SundialWeb.Live.Board.BoardComponent do
   # alias Sundial.Progress.States
   alias Sundial.Boards
   alias Sundial.API.BoardAPI
+  alias SundialWeb.EnsureAuthenticated
 
   def mount(socket) do
+    IO.inspect EnsureAuthenticated.is_authenticated?, label: "ensureauthchekc"
     {:ok, socket}
   end
 

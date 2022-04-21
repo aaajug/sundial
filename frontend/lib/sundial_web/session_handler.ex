@@ -1,14 +1,18 @@
 defmodule SundialWeb.SessionHandler do
   use SundialWeb, :controller
-  import Phoenix.LiveView.Controller
+  # import Phoenix.LiveView.Controller
 
-  alias Plug.Conn
+  # alias Plug.Conn
   alias Sundial.API.UserAPI
 
-  def set_current_user(conn, user_params) do
+  def set_current_user(conn, %{"user" => user_params}) do
     # %{"email" => email, "access_token" => access_token}
     # Conn.put_session(conn, :current_user, user["access_token"])
     # IO.inspect conn, label: "sessionhandlerconn"
+
+    destroy_current_user(conn)
+
+    # IO.inspect "debugging session handler"
 
     {
       {:error, error},
@@ -27,7 +31,7 @@ defmodule SundialWeb.SessionHandler do
 
       conn
       |> put_session("success_info", success_info)
-      |> put_session("current_user_acces_token", data["access_token"])
+      |> put_session("current_user_access_token", data["access_token"])
       |> put_session("current_user_email", data["email"])
       |> redirect(to: "/boards")
     else
@@ -38,11 +42,16 @@ defmodule SundialWeb.SessionHandler do
     end
   end
 
-  def get_current_user(conn) do
-    Conn.get_session(conn, :current_user)
-  end
+  # def get_current_user(conn) do
+  #   %Conn.get_session(conn, :current_user)
+  # end
 
   def destroy_current_user(conn) do
-    Conn.delete_session(conn, :current_user)
+    conn
+      |> delete_session("current_user_acces_token")
+      |> delete_session("current_user_email")
+      |> delete_session("success_info")
+      |> delete_session("error")
+    # Conn.delete_session(conn, :current_user)
   end
 end
