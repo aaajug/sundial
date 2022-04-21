@@ -4,6 +4,11 @@ defmodule BackendWeb.API.SessionController do
   alias BackendWeb.APIAuthPlug
   alias Plug.Conn
 
+  def get(conn, _params) do
+    IO.inspect Pow.Plug.current_user(conn)
+    text conn, "Completed"
+  end
+
   @spec create(Conn.t(), map()) :: Conn.t()
   def create(conn, user_params) do
     conn

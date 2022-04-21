@@ -9,7 +9,6 @@ defmodule SundialWeb.TaskLive.Index do
 
   @impl true
   def mount(params, _session, socket) do
-    IO.inspect SessionHandler.get_current_user(socket), label: "Current user is"
     # TODO: Add list path /boards/:id/list/:id
     base_path = "/boards/" <> params["id"]
 

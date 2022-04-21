@@ -24,6 +24,7 @@ defmodule BackendWeb.Router do
 
     resources "/registration", API.RegistrationController, singleton: true, only: [:create]
     resources "/session", API.SessionController, singleton: true, only: [:create, :delete]
+    get "/session", API.SessionController, :get
     post "/session/renew", API.SessionController, :renew
 
     get("/ping", PingController, :show)

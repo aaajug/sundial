@@ -4,8 +4,11 @@ defmodule SundialWeb.UserLive.Registration do
   alias Sundial.API.UserAPI
 
   @impl true
-  def mount(params, _session, socket) do
-    {:ok, socket}
+  def mount(params, session, socket) do
+    {:ok,
+      socket
+        |> assign(:error, session["error"])
+    }
   end
 
   @impl true

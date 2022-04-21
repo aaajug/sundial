@@ -23,6 +23,9 @@ defmodule SundialWeb.UserLive.LoginFormComponent do
 
   @impl true
   def handle_event("save", %{"user" => user_params}, socket) do
+    # {:noreply,
+      # socket |> push_redirect(to: "/set_session")}
+
     {
       {:error, error},
       {:success_info, success_info},
@@ -30,19 +33,20 @@ defmodule SundialWeb.UserLive.LoginFormComponent do
     } = UserAPI.create_session(user_params)
 
     if success_info do
-      SessionHandler.set_current_user(socket, data)
+      # SessionHandler.set_current_user(socket, data)
 
       {:noreply,
       socket
         |> assign(:error, error)
         |> put_flash(:info, success_info)
-        |> assign(:data, data)
+        |> assign(:current_user, data)
+        # |> push_redirect(to: "/set_session")}
         |> push_redirect(to: "/boards")}
     else
       {:noreply,
       socket
         |> assign(:error, error)
-        |> assign(:data, data)}
+        |> assign(:current_user, nil)}
     end
   end
 

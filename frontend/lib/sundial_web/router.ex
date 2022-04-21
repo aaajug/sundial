@@ -11,6 +11,18 @@ defmodule SundialWeb.Router do
     plug :put_secure_browser_headers
   end
 
+  pipeline :browser_no_csrf do
+    plug :accepts, ["html"]
+    plug :fetch_session
+    plug :fetch_live_flash
+    plug :put_root_layout, {SundialWeb.LayoutView, :root}
+    plug :put_secure_browser_headers
+  end
+
+  pipeline :protected do
+    plug SundialWeb.Redirect
+  end
+
   pipeline :api do
     plug :accepts, ["json"]
     # plug SundialWeb.APIAuthPlug, otp_app: :sundial
@@ -35,9 +47,24 @@ defmodule SundialWeb.Router do
   end
 
   scope "/", SundialWeb do
+    pipe_through :protected
+
+    live "/boards", BoardLive.Index, :index
+  end
+
+  scope "/", SundialWeb do
+    pipe_through :browser_no_csrf
+
+    post "/set_session", SessionHandler, :set_current_user
+  end
+
+  scope "/", SundialWeb do
     pipe_through :browser
 
     get("/ping", PingController, :show)
+
+    # get "/set_session", SessionHandler, :set_current_user
+    # post "/set_session", SessionHandler, :set_current_user
 
     # get "/", TaskController, :index
     # live "/", TaskViewLive
@@ -72,7 +99,7 @@ defmodule SundialWeb.Router do
 
     # get "/attachments", AttachmentsController, :index
 
-    live "/boards", BoardLive.Index, :index
+
     live "/boards/new", BoardLive.Index, :new
     live "/boards/:id/edit", BoardLive.Index, :edit
 
