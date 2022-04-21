@@ -5,6 +5,11 @@ defmodule SundialWeb.SessionHandler do
   # alias Plug.Conn
   alias Sundial.API.UserAPI
 
+  def fetch_current_user_access_token(conn), do: fetch_current_user_access_token(conn, nil)
+  def fetch_current_user_access_token(conn, _params) do
+    get_session(conn, "current_user_access_token")
+  end
+
   def set_current_user(conn, %{"user" => user_params}) do
     # %{"email" => email, "access_token" => access_token}
     # Conn.put_session(conn, :current_user, user["access_token"])
@@ -41,10 +46,6 @@ defmodule SundialWeb.SessionHandler do
       # |> live_render(SundialWeb.UserLive.Registration, session: session)
     end
   end
-
-  # def get_current_user(conn) do
-  #   %Conn.get_session(conn, :current_user)
-  # end
 
   def destroy_current_user(conn) do
     conn

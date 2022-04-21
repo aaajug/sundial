@@ -21,8 +21,11 @@
     phx-change="validate"
     phx-submit="save"> %>
 
-    <form phx-target={@myself}
-    phx-submit="save">
+    <%# <form phx-target={@myself}
+    phx-submit="save"> %>
+
+    <form action="/boards"
+    method="post">
   
     <div class="field">
       <label>Title</label>
@@ -38,7 +41,8 @@
     <%= #error_tag f, :user_id %>
   
     <div class="field is-pulled-right pt-4">
-      <%= submit "Save", phx_disable_with: "Saving...", class: "button is-success is-active" %>
+      <%# <%= submit "Create board", phx_disable_with: "Saving...", class: "button is-success is-active" %> %>
+      <%= submit "Create board", class: "button is-success is-active" %>
     </div>
   </form>
 </div>

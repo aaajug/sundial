@@ -19,16 +19,14 @@ defmodule SundialWeb.EnsureAuthenticated do
     conn
   end
 
-  def is_authenticated?(conn) do
+  defp is_authenticated?(conn) do
     current_user_access_token = Conn.get_session(conn, :current_user_access_token)
 
     client = ClientAPI.client(current_user_access_token)
-    IO.inspect client, label: "client1"
-
+    # IO.inspect client, label: "client1"
     # IO.inspect current_user_access_token, label: "current_user_access_tokendb2"
     # IO.inspect client, label: "clientdb"
-
-    IO.inspect UserAPI.check_authentication(client), label: "label:checkauthtrues"
+    # IO.inspect UserAPI.check_authentication(client), label: "label:checkauthtrues"
 
     UserAPI.check_authentication(client) == "true"
   end

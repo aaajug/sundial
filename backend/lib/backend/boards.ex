@@ -8,6 +8,7 @@ defmodule Backend.Boards do
 
   alias Backend.Boards.Board
   alias Backend.Boards.SerialBoard
+  alias Backend.Users.User
 
   @doc """
   Returns the list of boards.
@@ -18,8 +19,26 @@ defmodule Backend.Boards do
       [%Board{}, ...]
 
   """
-  def list_boards do
-    Repo.all(Board)
+  def list_boards(user_id) do
+
+    load = (from user in User, where: user.id == ^user_id)
+            |> Repo.all
+            |> Repo.preload(:boards)
+
+          # Repo.all(User) |> Repo.preload(:boards)
+
+    # IO.inspect load, label: "loadprint"
+
+    # IO.inspect(IEx.Info.info load)
+    # IO.inspect Enum.at(load, 0), label: "first element"
+    # i load
+
+    # IO.inspect user_id, label: "useriddebug"
+    # t = from(board in Board, where: board.user_id == ^user_id)
+    #   |> Repo.all(User)
+    #   |> Repo.preload(:boards)
+
+    # Repo.all(Board)
   end
 
   @doc """
@@ -50,15 +69,26 @@ defmodule Backend.Boards do
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_board(attrs \\ %{}) do
-    attrs = if attrs do
-      Map.put(attrs, "user_id", attrs["user_id"])
-    end
+  # def create_board(attrs \\ %{}) do
+  def create_board(board) do
+    # attrs = if attrs do
+    #   Map.put(attrs, "user_id", attrs["user_id"])
+    # end
 
-    IO.inspect(attrs, label: "attrsdb3")
-    %Board{}
-    |> Board.changeset(attrs)
-    |> Repo.insert()
+    # IO.inspect(attrs, label: "attrsdb5")
+
+    # IO.inspect %Board{} |> Board.changeset(attrs), label: "changsetboard8"
+
+    # %Board{}
+    # |> Board.changeset(attrs)
+    # |> Repo.insert()
+
+    # %Board
+    Repo.insert!(board)
+
+    # %Board{}
+    # |> attrs
+    # |> Repo.insert()
   end
 
   @doc """

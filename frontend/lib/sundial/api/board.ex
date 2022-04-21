@@ -27,8 +27,9 @@ defmodule Sundial.API.BoardAPI do
     end
   end
 
-  def create_board(params) do
-    case post("/boards", params) do
+  def create_board(client, params) do
+    IO.inspect params, label: "paramsdbcre"
+    case post(client, "/boards", params) do
       {:ok, %{body: body}} -> body
         {_, %{body: body}} -> ""
     end

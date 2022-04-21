@@ -53,10 +53,17 @@ defmodule SundialWeb.Router do
   end
 
   scope "/", SundialWeb do
+    pipe_through [:browser_no_csrf, :protected]
+
+    post "/boards", BoardController, :create
+  end
+
+  scope "/", SundialWeb do
     pipe_through :browser_no_csrf
 
     post "/set_session", SessionHandler, :set_current_user
   end
+
 
   scope "/", SundialWeb do
     pipe_through :browser
