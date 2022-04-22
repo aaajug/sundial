@@ -5,9 +5,11 @@ defmodule Backend.Lists do
 
   import Ecto.Query, warn: false
   alias Backend.Repo
+  alias Backend.Boards.Board
 
   alias Backend.Lists.List
   alias Backend.Lists.SerialList
+  alias Backend.Users.User
 
   @doc """
   Returns the list of lists.
@@ -50,12 +52,58 @@ defmodule Backend.Lists do
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_list(attrs \\ %{}) do
-    IO.inspect %List{} |> List.changeset(attrs), label: "changesetdb"
+  def create_list(user, board_id, attrs \\ %{}) do
+    # IO.inspect %List{} |> List.changeset(attrs), label: "changesetdb"
 
-    %List{}
+    # board = (from board in Board, where: board.is == ^board.id)
+    #   |> Repo.all
+
+    # get owned boards of user
+    # get shared boards of user with manage or write permissions
+    # get specific board using board_id
+    # build list assoc of specific board
+    # create list changeset
+
+    # user_id = user.id
+
+    # user_boards = (from user in User,
+    #   where: user.id == ^user_id,
+    #   preload: [:boards])
+    #     |> Repo.all
+
+    # IO.inspect user_boards, label: "debuguserboards2"
+
+    # user_query = (from user in User,
+    #   where: user.id == ^user_id)
+
+    # IO.inspect user_query, label: "userquery"
+    # IO.inspect user, label: "userobject"
+    # IO.inspect Repo.preload(user, :boards), label: "preloadingcast"
+
+    user_board = user
+      |> Repo.preload([boards: from(board in Board, where: board.id == ^board_id)])
+
+    target_board = user_board.boards |> Enum.at(0)
+    IO.inspect target_board, label: "targetboarddebug2"
+
+
+    # user_boards = user_boards
+    #   |> Ecto.build_assoc(:shared_boards)
+
+    # IO.inspect user_boards, label: "debuguserboardswithsharedboards"
+
+
+    changeset = target_board
+    |> Ecto.build_assoc(:lists)
     |> List.changeset(attrs)
-    |> Repo.insert()
+
+    IO.inspect changeset, label: "listcreatedb2"
+
+    Repo.insert(changeset)
+
+    # %List{}
+    # |> List.changeset(attrs)
+    # |> Repo.insert()
   end
 
   @doc """

@@ -21,14 +21,15 @@ defmodule SundialWeb.ListLive.Index do
   end
 
   defp apply_action(socket, :new, %{"id" => id}) do
-    return_to = "/boards/" <> id
+    # TODO: use dynamic return_to
+    return_to = "/boards/1"
 
     # TODO: add user id
-    params = %{list: %{board_id: id, user_id: 1}}
+    params = %{list: %{list_id: id, user_id: 1}}
     ListAPI.create_list(params)
 
     socket
-      |> put_flash(:info, "Board created successfully")
+      |> put_flash(:info, "List created successfully")
       |> push_redirect(to: return_to)
   # }
 

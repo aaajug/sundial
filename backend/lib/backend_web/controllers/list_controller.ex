@@ -2,6 +2,7 @@ defmodule BackendWeb.ListController do
   use BackendWeb, :controller
 
   alias Backend.Lists
+  alias Backend.Boards
   alias Backend.Lists.List
 
   def index(conn, _params) do
@@ -17,9 +18,12 @@ defmodule BackendWeb.ListController do
     render(conn, "new.html", changeset: changeset)
   end
 
-  def create(conn, %{"list" => list_params}) do
-    IO.inspect list_params, label: "listcreateparams"
-    case Lists.create_list(list_params) do
+  def create(conn, %{"id" => board_id, "list" => list_params}) do
+    list_params = for {key, val} <- list_params, into: %{}, do: {String.to_atom(key), val}
+    user = Pow.Plug.current_user(conn)
+    board = Boards.get_board!(board_id)
+
+    case Lists.create_list(user, board_id, list_params) do
       {:ok, list} ->
         json conn, Lists.serialize(list)
         # conn

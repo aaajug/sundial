@@ -10,8 +10,9 @@ defmodule Backend.Users.User do
 
     has_many :authored_tasks, {"tasks", Backend.Tasks.Task}, foreign_key: :author_id
     has_many :assigned_tasks, {"tasks", Backend.Tasks.Task}, foreign_key: :assignee_id
-    has_many :lists, Backend.Lists.List
-    has_many :boards, Backend.Boards.Board
+    has_many :lists, Backend.Lists.List, foreign_key: :user_id
+    has_many :boards, Backend.Boards.Board, foreign_key: :user_id
+    many_to_many :shared_boards, {"tasks",Backend.Boards.Board}, join_through: "permissions"
 
     timestamps()
   end

@@ -45,6 +45,9 @@ defmodule BackendWeb.Router do
     get "/boards/:id/tasks", BoardController, :get_tasks
     resources "/boards", BoardController
     resources "/lists", ListController
+
+    # List API
+    post "/boards/:id/lists", ListController, :create
   end
 
   # Enables LiveDashboard only for development

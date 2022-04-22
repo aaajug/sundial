@@ -27,8 +27,8 @@ defmodule Sundial.API.ListAPI do
     end
   end
 
-  def create_list(params) do
-    case post("/lists", params) do
+  def create_list(client, board_id, params) do
+    case post("/boards/"<> board_id <> "/lists", params) do
       {:ok, %{body: body}} -> body
         {_, %{body: body}} -> ""
         {:error, error} -> error

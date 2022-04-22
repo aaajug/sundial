@@ -47,7 +47,9 @@ defmodule BackendWeb.BoardController do
   end
 
   def show(conn, %{"id" => id}) do
-    board = Boards.get_board!(id)
+    user = Pow.Plug.current_user(conn)
+
+    board = Boards.get_board!(user, id)
 
     json conn, Boards.serialize(board)
     # render(conn, "show.html", board: board)

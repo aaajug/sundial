@@ -56,6 +56,10 @@ defmodule Backend.Boards do
 
   """
   def get_board!(id), do: Repo.get!(Board, id)
+  # def get_board(user, id) do
+  #   (from board in Board,
+  #     where: board.user_id == ^user.id and borad)
+  # end
 
   @doc """
   Creates a board.

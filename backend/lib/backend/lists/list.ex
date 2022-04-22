@@ -21,6 +21,6 @@ defmodule Backend.Lists.List do
   def changeset(list, attrs) do
     list
     |> cast(attrs, [:title, :user_id, :board_id, :position])
-    |> validate_required([:user_id, :board_id])
+    |> validate_required([:title])
   end
 end

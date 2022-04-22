@@ -67,6 +67,7 @@ defmodule SundialWeb.Router do
 
     post "/boards", BoardController, :create
     post "/tasks", TaskController, :create
+    post "/boards/:id/lists/", ListController, :create
   end
 
   scope "/", SundialWeb do
