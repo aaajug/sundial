@@ -5,11 +5,11 @@ defmodule SundialWeb.TaskLive.Index do
   alias Sundial.Tasks.Task
   alias Sundial.Progress
   alias Sundial.API.TaskAPI
-  alias Sundial.API.BaseAPI
+  alias Sundial.API.ClientAPI
   alias SundialWeb.SessionHandler
 
   @impl true
-  def mount(params, _session, socket) do
+  def mount(params, session, socket) do
     # TODO: Add list path /boards/:id/list/:id
     base_path = "/boards/" <> (params["id"] || "")
 
@@ -23,7 +23,7 @@ defmodule SundialWeb.TaskLive.Index do
           |> assign(:return_target, base_path <> "/?sort=default")
           |> assign(:drag_hook, "None")
           |> assign(:sort_label, "Disable")
-          |> assign(:tasks, list_tasks_by_default(%{board_id: params["id"]}))
+          |> assign(:tasks, list_tasks_by_default(session, %{board_id: params["id"]}))
 
       _ ->
         socket
@@ -32,7 +32,7 @@ defmodule SundialWeb.TaskLive.Index do
           |> assign(:return_target, base_path)
           |> assign(:drag_hook, "Drag")
           |> assign(:sort_label, "Enable")
-          |> assign(:tasks, list_tasks(%{board_id: params["id"]}))
+          |> assign(:tasks, list_tasks(session, %{board_id: params["id"]}))
     end
 
     {:ok, assign(socket, :show_manage_header, true)}
@@ -111,14 +111,20 @@ defmodule SundialWeb.TaskLive.Index do
   end
 
   # TODO: Move to backend
-  defp list_tasks(params) do
+  defp list_tasks(session, params) do
     # Tasks.list_tasks_by_position
-    TaskAPI.get_tasks(params)
+    client = ClientAPI.client(session["current_user_access_token"])
+
+    client
+      |> TaskAPI.get_tasks(params)
   end
 
   # TODO: Move to backend
-  defp list_tasks_by_default(params) do
+  defp list_tasks_by_default(session, params) do
     # Tasks.list_tasks
-    TaskAPI.get_tasks_default_sorting(params)
+    client = ClientAPI.client(session["current_user_access_token"])
+
+    client |>
+      TaskAPI.get_tasks_default_sorting(params)
   end
 end

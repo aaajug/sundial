@@ -6,11 +6,8 @@ defmodule SundialWeb.Live.Board.BoardComponent do
   alias Sundial.Boards
   alias Sundial.API.BoardAPI
   alias SundialWeb.EnsureAuthenticated
-  # alias Sundial.Boards.SerialBoard
-  # alias SundialWeb.Router.Helpers, as: Routes
 
   def mount(socket) do
-    IO.inspect socket, label: "socketinmountboard"
     {:ok, socket}
   end
 
@@ -34,8 +31,6 @@ defmodule SundialWeb.Live.Board.BoardComponent do
   end
 
   def handle_event("delete", %{"id" => id}, socket) do
-    IO.inspect(id, label: "inboard delete event")
-
     BoardAPI.delete_board(%{id: id})
 
     {:noreply,
