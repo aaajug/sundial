@@ -19,8 +19,8 @@
 <% end %>
 
 <button class="button is-warning is-rounded ml-5 mt-3">
-  <%= if Pow.Plug.current_user(@conn) do %>
-    <%= link to: Routes.pow_session_path(@conn, :delete), method: :delete, class: "navbar-item" do %>
+  <%= if has_current_user(@conn) do %>
+    <%= link to: Routes.user_registration_path(@conn, :destroy_session), method: :get, class: "navbar-item" do %>
       <span class="is-text-blue-whale"> Logout </span>
     <% end %>
   <% else %>

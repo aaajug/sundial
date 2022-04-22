@@ -36,9 +36,9 @@ defmodule SundialWeb.UserLive.Registration do
 
     if success_info do
       socket
-        |> assign(:error, error)
+        |> assign(:error, nil)
         |> put_flash(:info, success_info)
-        |> assign(:data, data)
+        |> assign(:data, nil)
         |> push_redirect(to: "/")
     else
       socket

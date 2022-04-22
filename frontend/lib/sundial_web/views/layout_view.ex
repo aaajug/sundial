@@ -1,5 +1,6 @@
 defmodule SundialWeb.LayoutView do
   use SundialWeb, :view
+  alias SundialWeb.SessionHandler
   # use Phoenix.LiveView, layout: {SundialWeb, "live.html"}
 
   # Phoenix LiveDashboard is available only in development by default,
@@ -13,9 +14,10 @@ defmodule SundialWeb.LayoutView do
   #   """
   # end
 
-  # def render(con, assigns) do
-  #   ~H"""
-  #   <%= assigns %>
-  #   """
+  # def render(conn, assigns) do
   # end
+
+  def has_current_user(conn) do
+    SessionHandler.fetch_current_user_access_token(conn)
+  end
 end

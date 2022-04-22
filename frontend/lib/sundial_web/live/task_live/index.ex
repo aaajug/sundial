@@ -11,7 +11,7 @@ defmodule SundialWeb.TaskLive.Index do
   @impl true
   def mount(params, _session, socket) do
     # TODO: Add list path /boards/:id/list/:id
-    base_path = "/boards/" <> params["id"]
+    base_path = "/boards/" <> (params["id"] || "")
 
     sort = if Map.has_key?(params, "sort"), do: params["sort"], else: nil
 

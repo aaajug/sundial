@@ -43,6 +43,11 @@ defmodule SundialWeb.BoardLive.Index do
   end
 
   @impl true
+  def handle_event("refresh", _params, socket) do
+    {:noreply, push_redirect(socket, to: "/boards")}
+  end
+
+  @impl true
   def handle_event("delete", %{"id" => id}, socket) do
     # board = Boards.get_board!(id)
     # {:ok, _} = Boards.delete_board(board)

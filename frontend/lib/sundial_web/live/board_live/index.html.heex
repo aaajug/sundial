@@ -54,6 +54,10 @@
         <span>New Board</span>
       </button>
     <% end %>
+
+    <button class="button is-small" phx-click="refresh">
+      refresh
+    </button>
     
     <div class="columns pt-4">
       <%= if @boards do %>

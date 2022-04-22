@@ -6,6 +6,8 @@ defmodule SundialWeb.Live.Board.BoardComponent do
   alias Sundial.Boards
   alias Sundial.API.BoardAPI
   alias SundialWeb.EnsureAuthenticated
+  # alias Sundial.Boards.SerialBoard
+  # alias SundialWeb.Router.Helpers, as: Routes
 
   def mount(socket) do
     IO.inspect socket, label: "socketinmountboard"

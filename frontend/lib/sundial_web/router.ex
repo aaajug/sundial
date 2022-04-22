@@ -23,6 +23,10 @@ defmodule SundialWeb.Router do
     plug SundialWeb.EnsureAuthenticated
   end
 
+  pipeline :destroy_session do
+    plug SundialWeb.DestroySessionPlug
+  end
+
   pipeline :api do
     plug :accepts, ["json"]
     # plug SundialWeb.APIAuthPlug, otp_app: :sundial
@@ -39,6 +43,12 @@ defmodule SundialWeb.Router do
   #   resources "/session", SessionController, singleton: true, only: [:create, :delete]
   #   post "/session/renew", SessionController, :renew
   # end
+
+  scope "/", SundialWeb do
+    pipe_through [:browser, :destroy_session]
+
+    live "/logout", UserLive.Registration, :destroy_session
+  end
 
   scope "/" do
     pipe_through :browser
