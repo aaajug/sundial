@@ -12,7 +12,7 @@ defmodule SundialWeb.DestroySessionPlug do
 
   def call(conn, _params) do
     conn
-    |> delete_session("current_user_acces_token")
+    |> delete_session("current_user_access_token")
     |> delete_session("current_user_email")
     |> delete_session("success_info")
     |> delete_session("error")
