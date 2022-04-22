@@ -36,8 +36,8 @@ defmodule Sundial.API.TaskAPI do
     end
   end
 
-  def create_task(params) do
-    case post("/tasks", params) do
+  def create_task(client, params) do
+    case post(client, "/tasks", params) do
       {:ok, %{body: body}} -> body
         {_, %{body: body}} -> ""
     end

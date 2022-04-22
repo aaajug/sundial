@@ -66,6 +66,7 @@ defmodule SundialWeb.Router do
     pipe_through [:browser_no_csrf, :protected]
 
     post "/boards", BoardController, :create
+    post "/tasks", TaskController, :create
   end
 
   scope "/", SundialWeb do

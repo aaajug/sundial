@@ -28,13 +28,15 @@
   </button>
 </div>
 
+<% status_id = 2 %>
 <%= if @tasks do %>
 <div class="columns pt-4" id="task-grid" phx-hook={@drag_hook}>
-  <%= for status_id <- [1,2,3,4] do %>
-    <% group = Enum.filter(@tasks, fn task -> task["status_id"] == status_id end) |> Enum.with_index %>
+  <%= for list <- [1] do %>
+    <% #group = Enum.filter(@tasks, fn task -> task["status_id"] == status_id end) |> Enum.with_index %>
+    <% group = Enum.with_index(@tasks) %>
     <div class="content column pane is-one-fourth mr-3 relative">
       <div class="is-size-6 has-text-weight-very-light pb-1">
-        <%= status_labels[status_id] %> (<%= Enum.count(group) %>)
+        <%= #status_labels[status_id] %> (<%= #Enum.count(group) %>)
       </div>
 
       <div class="task-list" id={"task-list-" <> Integer.to_string(status_id)}>

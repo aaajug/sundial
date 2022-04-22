@@ -20,8 +20,12 @@
   phx-submit="save"
   class="task-form-container"> %>
 
-<form phx-target={@myself}
+<%# <form phx-target={@myself}
   phx-submit="save"
+  class="task-form-container"> %>
+
+  <form action="/tasks" 
+  method="post"
   class="task-form-container">
 
   <% #IO.inspect("form debug: ", f)  %>

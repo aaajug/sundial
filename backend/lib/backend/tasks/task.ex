@@ -26,6 +26,6 @@ defmodule Backend.Tasks.Task do
   def changeset(task, attrs) do
     task
     |> cast(attrs, [:description, :details, :details_plaintext, :deadline, :status, :completed_on, :list_id, :board_id, :position])
-    |> validate_required([:description, :board_id, :list_id])
+    |> validate_required([:description])
   end
 end

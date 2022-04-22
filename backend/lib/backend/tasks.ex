@@ -235,10 +235,22 @@ defmodule Backend.Tasks do
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_task(attrs \\ %{}) do
-    %Task{}
-    |> Task.changeset(attrs)
-    |> Repo.insert()
+  # def create_task(attrs \\ %{}) do
+  def create_task(user, attrs) do
+    # Repo.insert!(task)
+    # %Task{}
+    # |> Task.changeset(attrs)
+    # |> Repo.insert()
+
+    # task = Ecto.build_assoc(user, :authored_tasks, task_params)
+
+    changeset = user
+      |> Ecto.build_assoc(:authored_tasks)
+      |> Task.changeset(attrs)
+
+      IO.inspect changeset, label: "taskchangesetdb"
+
+      Repo.insert(changeset)
   end
 
   @doc """
