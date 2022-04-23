@@ -192,7 +192,7 @@ defmodule Backend.Tasks do
         fn obj ->
           task = get_task!(obj.id)
 
-          update_task(task, obj.attr)
+          update_task(task, nil, obj.attr)
         end
       )
   end
@@ -285,7 +285,7 @@ defmodule Backend.Tasks do
       {:error, %Ecto.Changeset{}}
 
   """
-  def update_task(%Task{} = task, attrs) do
+  def update_task(%Task{} = task, assignee, attrs) do
     attrs = cond do
               Map.has_key?(attrs, "status") && (attrs["status"] != "4" && attrs["status"] != 4 ) ->
                 IO.inspect "first cond"
@@ -306,12 +306,24 @@ defmodule Backend.Tasks do
               true -> attrs
             end
 
-    IO.inspect "attrs"
-    IO.inspect attrs
+    # assignee
+    # |> Repo.preload(:assigned_tasks)
+    # |> Map.fetch(:assignee)
+    # |> Enum.at(0)
+    # |> Task.changeset(attrs)
+    # |> Ecto.Changeset.put_assoc(:assignee, assignee)
+    # |> Repo.update
 
     task
+    |> Repo.preload(:assignee)
     |> Task.changeset(attrs)
-    |> Repo.update()
+    |> Ecto.Changeset.put_assoc(:assignee, assignee)
+    |> Repo.update
+
+    # task
+    # |> Task.changeset(attrs)
+    # |> Ecto.Changeset.put_assoc(:assignee, assignee)
+    # |> Repo.update
   end
 
   @doc """
@@ -386,10 +398,21 @@ defmodule Backend.Tasks do
     deadline = format_datetime(task.deadline)
     [deadline_date, deadline_time, deadline_time_hour, deadline_time_minute] = parse_date(task.deadline)
 
+    task_assignee = task
+      |> Repo.preload(:assignee)
+
+    assignee = if task_assignee.assignee do
+      task_assignee.assignee.email
+    else
+      "Unassigned"
+    end
+
     %SerialTask{
       id: task.id,
       board_id: task.board_id,
       list_id: task.list_id,
+      author: "",
+      assignee: assignee,
       description: task.description,
       details: task.details,
       details_plaintext: task.details_plaintext,

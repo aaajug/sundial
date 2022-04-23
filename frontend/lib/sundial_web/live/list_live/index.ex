@@ -16,7 +16,7 @@ defmodule SundialWeb.ListLive.Index do
     {:ok, socket
     |> assign(:current_user_access_token, session["current_user_access_token"])
     |> assign(:lists, list_lists(session, board_id))
-    |> assign(:drag_hook, "Dragger")
+    |> assign(:drag_hook, "Drag")
     |> assign(:board_id, board_id)
     |> assign(:return_target, base_path)
     |> assign(:show_manage_header, true)}

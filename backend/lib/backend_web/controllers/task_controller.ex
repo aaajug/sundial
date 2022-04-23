@@ -3,6 +3,7 @@ defmodule BackendWeb.TaskController do
 
   alias Backend.Progress
   alias Backend.Tasks
+  alias Backend.Users
   alias Backend.Tasks.Task
 
   def changeset(conn, %{"id" => id}) do
@@ -55,16 +56,38 @@ defmodule BackendWeb.TaskController do
     id = String.to_integer(params["id"])
     task = Tasks.get_task!(id)
 
-    task_params = Map.delete(params, "id")
-
-    case Tasks.update_task(task, task_params) do
-            {:ok, _task} ->
-              data = Tasks.serialize(Tasks.get_task!(id))
-              json conn, data
-
-            {:error, %Ecto.Changeset{} = changeset} ->
-              text(conn, "error updating task")
+    assignee = if Map.has_key?(params, "assignee") do
+      if params["assignee"] == "" || params["assignee"] == nil do
+        nil
+      else
+        assigned_user = Users.get_user_by_email(params["assignee"])
+        if assigned_user do
+          assigned_user
+        else
+          :error
+        end
+      end
     end
+
+    IO.inspect assignee, label: "assigneeprintinc"
+
+    cond do
+      assignee == :error -> json conn, %{error: %{errors: %{assignee: ["doesn't exist"]}}}
+      true ->
+        task_params = Map.delete(params, "id")
+
+        case Tasks.update_task(task, assignee, task_params) do
+                {:ok, task} ->
+                  IO.inspect "okupdatedtask"
+                  data = Tasks.serialize(task)
+                  json conn, data
+
+                {:error, %Ecto.Changeset{} = changeset} ->
+                  text(conn, "error updating task")
+        end
+    end
+
+    # IO.inspect assignee, label: "taskassigneeinsp"
   end
 
   # def list_tasks(conn, params) do
@@ -136,7 +159,7 @@ defmodule BackendWeb.TaskController do
     task_params = Map.put(task_params, "status", String.to_integer(params["status"]))
     task_params = Map.put(task_params, "completed_on", NaiveDateTime.local_now)
 
-    case Tasks.update_task(task, task_params) do
+    case Tasks.update_task(task, nil, task_params) do
       {:ok, _task} ->
         data = Tasks.serialize(Tasks.get_task!(id))
         json conn, data

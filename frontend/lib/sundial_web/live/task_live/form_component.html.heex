@@ -1,4 +1,4 @@
-<div class="mt-6 task-form">
+<div class="task-form">
   <p class="is-size-3 mb-3 has-text-weight-bold">
   <%= @title %>
   </p>
@@ -6,7 +6,7 @@
   task_object = if Map.has_key?(assigns, :task) && @task.id do
                   @serial_task
                 else 
-                  %{deadline: nil, completed_on: nil, description: nil, deadline_parsed: %{time: nil, date: nil}, completed_on_parsed: %{time: nil, date: nil}, details: nil, status_id: 1}
+                  %{assignee: nil, deadline: nil, completed_on: nil, description: nil, deadline_parsed: %{time: nil, date: nil}, completed_on_parsed: %{time: nil, date: nil}, details: nil, status_id: 1}
                 end
 
   is_deadline_disabled = if task_object.deadline, do: false, else: true
@@ -123,15 +123,25 @@
   </div>
 
     <label>Want to add more details?</label>
-    <div id="editor">
-      <%= raw task_object.details %>
-    </div>
+    <%# <div id="editor"> %>
+      <%= #raw task_object.details %>
+    <%# </div> %>
 
    <div>
       <div id="editor" phx-hook="QuillEditor" data-quill-input-id="read-only-quill" class="content is-small">
         <%= raw task_object.details %>
       </div>
     </div>
+
+  <div class="field pt-5"> 
+    <span>Assign task to: </span> 
+    <div class="mb-2" style="display:inline-block;float:right;">
+      <span class="is-underlined mr-3" id="assign_self" style="cursor: pointer;">assign to myself</span> 
+      <span class="is-underlined" id="assign_self" style="cursor: pointer;">unassign</span> 
+    </div>
+
+    <input class="mb-1">
+  </div>
 
   <div class="field is-pulled-right pt-4">
     <%= submit "Save", phx_disable_with: "Saving...", class: "button is-success is-active" %>
