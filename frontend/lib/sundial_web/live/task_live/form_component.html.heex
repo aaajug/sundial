@@ -93,7 +93,7 @@
     <div class="column">
     <label>What's the task?</label>
       <div class="field is-horizontal">
-        <input id="task_description" name="task[description]" value={task_object.description} required>
+        <input id="task_description" name="task[description]" placeholder="Something cool" value={task_object.description} required>
         <%= #error_tag f, :description %>
       </div>
     </div>
@@ -136,11 +136,11 @@
   <div class="field pt-5"> 
     <span>Assign task to: </span> 
     <div class="mb-2" style="display:inline-block;float:right;">
-      <span class="is-underlined mr-3" id="assign_self" style="cursor: pointer;">assign to myself</span> 
-      <span class="is-underlined" id="assign_self" style="cursor: pointer;">unassign</span> 
+      <span class="is-underlined mr-3" id="assign_self" style="cursor: pointer;" phx-hook="TaskAssignee">assign to myself</span> 
+      <span class="is-underlined" id="assign_none" style="cursor: pointer;" phx-hook="TaskAssignee">unassign</span> 
     </div>
 
-    <input class="mb-1">
+    <input class="mb-1" id="assignee_field" name="task[assignee]" placeholder="user@provider.com" value={task_object.assignee} phx-hook="TaskAssignee">
   </div>
 
   <div class="field is-pulled-right pt-4">

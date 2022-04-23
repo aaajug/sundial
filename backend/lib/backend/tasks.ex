@@ -238,7 +238,7 @@ defmodule Backend.Tasks do
 
   """
   # def create_task(attrs \\ %{}) do
-  def create_task(user, attrs, list_id, board_id) do
+  def create_task(user, assignee, attrs, list_id, board_id) do
     # Repo.insert!(task)
     # %Task{}
     # |> Task.changeset(attrs)
@@ -257,6 +257,7 @@ defmodule Backend.Tasks do
     |> Ecto.build_assoc(:tasks)
     |> Task.changeset(attrs)
     |> Ecto.Changeset.put_assoc(:author, user)
+    |> Ecto.Changeset.put_assoc(:assignee, assignee)
     |> Repo.insert
     # |> Task.Changeset.put_assoc(:assignee, assignee)
 
@@ -404,7 +405,7 @@ defmodule Backend.Tasks do
     assignee = if task_assignee.assignee do
       task_assignee.assignee.email
     else
-      "Unassigned"
+      ""
     end
 
     %SerialTask{

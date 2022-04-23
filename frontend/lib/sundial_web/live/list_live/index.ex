@@ -10,8 +10,8 @@ defmodule SundialWeb.ListLive.Index do
 
   @impl true
   def mount(params, session, socket) do
-    board_id = params["id"]
-    base_path = "/boards/" <> (board_id || "")
+    board_id = params["id"] || params["board_id"]
+    base_path = "/boards/" <> board_id
 
     {:ok, socket
     |> assign(:current_user_access_token, session["current_user_access_token"])

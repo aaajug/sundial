@@ -30,11 +30,12 @@ import "./scroll.js"
 import Drag from './drag_hook';
 import {QuillEditor} from './quill_hook'
 import {TimestampCheckbox, DeadlineTimeSelect, CompletedOnTimeSelect, 
-        StatusSelect, DeadlineDate, CompletedOnDate}  from "./task_form_hook";
+        StatusSelect, DeadlineDate, CompletedOnDate, TaskAssignee}  from "./task_form_hook";
         
 let Hooks = {
     None, QuillEditor, Drag, TimestampCheckbox, DeadlineTimeSelect, 
-    CompletedOnTimeSelect, StatusSelect, DeadlineDate, CompletedOnDate
+    CompletedOnTimeSelect, StatusSelect, DeadlineDate, CompletedOnDate,
+    TaskAssignee
 }
 
 let csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content")

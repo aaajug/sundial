@@ -37,6 +37,7 @@ defmodule Sundial.API.TaskAPI do
   end
 
   def create_task(client, params, list_id, board_id) do
+    IO.inspect "createnewtask"
     case post(client, "/boards/"<>board_id<>"/lists/"<>list_id<>"/tasks", params) do
       {:ok, %{body: body}} -> body
         {_, %{body: body}} -> ""

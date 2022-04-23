@@ -34,7 +34,11 @@ defmodule BackendWeb.TaskController do
     task_params = for {key, val} <- task_params, into: %{}, do: {String.to_atom(key), val}
     user = Pow.Plug.current_user(conn)
 
-    case Tasks.create_task(user, task_params, list_id, board_id) do
+    assignee = get_assignee(task_params, user)
+
+    IO.inspect assignee, label: "assigneeprintinc"
+
+    case Tasks.create_task(user, assignee, task_params, list_id, board_id) do
             {:ok, task} ->
               data = Tasks.serialize(task)
               # Jason.encode(data)
@@ -56,18 +60,9 @@ defmodule BackendWeb.TaskController do
     id = String.to_integer(params["id"])
     task = Tasks.get_task!(id)
 
-    assignee = if Map.has_key?(params, "assignee") do
-      if params["assignee"] == "" || params["assignee"] == nil do
-        nil
-      else
-        assigned_user = Users.get_user_by_email(params["assignee"])
-        if assigned_user do
-          assigned_user
-        else
-          :error
-        end
-      end
-    end
+    user = Pow.Plug.current_user(conn)
+    assignee = get_assignee(params, user)
+
 
     IO.inspect assignee, label: "assigneeprintinc"
 
@@ -192,6 +187,29 @@ defmodule BackendWeb.TaskController do
       Tasks.list_tasks(ids)
     else
       Tasks.list_tasks_by_position
+    end
+  end
+
+  defp get_assignee(params, user) do
+    if Map.has_key?(params, "assignee") do
+      if params["assignee"] == "" || params["assignee"] == nil do
+        nil
+      else
+        assignee_param = params["assignee"]
+        assigned_user = if String.trim(assignee_param) == "myself" do
+                          user
+                         else
+                          Users.get_user_by_email(assignee_param)
+                         end
+
+        if assigned_user do
+          assigned_user
+        else
+          :error
+        end
+      end
+    else
+      nil
     end
   end
 end

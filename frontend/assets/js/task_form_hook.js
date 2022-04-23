@@ -184,3 +184,16 @@ export const CompletedOnDate = {
     });  
   }
 };
+
+export const TaskAssignee = {
+  mounted() {
+    // const selector = "#" + this.el.id;
+    $("#assign_self").click(function(e) {
+      $("#assignee_field").val("myself");
+    });
+
+    $("#assign_none").click(function(e) {
+      $("#assignee_field").val("");
+    });
+  }
+};
