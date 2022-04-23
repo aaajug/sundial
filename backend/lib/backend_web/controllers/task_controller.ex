@@ -27,13 +27,13 @@ defmodule BackendWeb.TaskController do
     serial_task = nil
   end
 
-  def create(conn, %{"data" => task_params})do
+  def create(conn, %{"board_id" => board_id, "list_id" => list_id, "data" => task_params})do
   # def create(conn, _params)do
     # text(conn, "Posted create task")
     task_params = for {key, val} <- task_params, into: %{}, do: {String.to_atom(key), val}
     user = Pow.Plug.current_user(conn)
 
-    case Tasks.create_task(user, task_params) do
+    case Tasks.create_task(user, task_params, list_id, board_id) do
             {:ok, task} ->
               data = Tasks.serialize(task)
               # Jason.encode(data)

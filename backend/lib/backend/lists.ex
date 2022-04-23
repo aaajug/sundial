@@ -10,6 +10,7 @@ defmodule Backend.Lists do
   alias Backend.Lists.List
   alias Backend.Lists.SerialList
   alias Backend.Users.User
+  alias Backend.Tasks
 
   @doc """
   Returns the list of lists.
@@ -20,8 +21,36 @@ defmodule Backend.Lists do
       [%List{}, ...]
 
   """
-  def list_lists do
-    Repo.all(List)
+  def list_lists(user, board_id) do
+    # TODO: clean pipes
+    # TODO: create private function for getting target board
+    user_board = user
+      |> Repo.preload([boards: from(board in Board, where: board.id == ^board_id)])
+
+    target_board = user_board.boards |> Enum.at(0)
+
+    # IO.inspect target_board |> Repo.preload(:lists) , label: "targetboardlists2"
+    board_lists = target_board
+    |> Repo.preload(lists: :tasks)
+
+    t = board_lists.lists |> Enum.at(0)
+    IO.inspect t |> Repo.preload(:tasks), label: "firslistpreload"
+
+    IO.inspect board_lists, label: "boardlists3"
+
+    board_lists.lists
+    # target_board
+    # |> Ecto.build_assoc(:lists)
+    # |> List.changeset(attrs)
+    # |> Ecto.Changeset.put_assoc(:user, user)
+    # |> Repo.insert
+
+    # (from user in User, where: user.id == ^user_id)
+    #         |> Repo.all
+    #         |> Repo.preload(:boards)
+
+
+    # Repo.all(List)
   end
 
   @doc """
@@ -92,14 +121,15 @@ defmodule Backend.Lists do
 
     # IO.inspect user_boards, label: "debuguserboardswithsharedboards"
 
+    #  Ecto.build_assoc(user, :lists, attrs)
 
-    changeset = target_board
+    target_board
     |> Ecto.build_assoc(:lists)
     |> List.changeset(attrs)
+    |> Ecto.Changeset.put_assoc(:user, user)
+    |> Repo.insert
 
-    IO.inspect changeset, label: "listcreatedb2"
-
-    Repo.insert(changeset)
+    # Ecto.build_assoc(user, :lists, )
 
     # %List{}
     # |> List.changeset(attrs)
@@ -141,12 +171,19 @@ defmodule Backend.Lists do
   end
 
   def serialize(%List{} = list) do
+    tasks = Enum.map(list.tasks,
+      fn task ->
+        Tasks.serialize(task)
+      end)
+
     %SerialList{
       id: list.id,
       board_id: list.board_id,
       position: list.position,
       title: list.title,
-      owner_id: list.user_id
+      owner_id: list.user_id,
+      # tasks: list.tasks
+      tasks: tasks
     }
   end
 

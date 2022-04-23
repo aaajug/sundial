@@ -24,7 +24,7 @@
   phx-submit="save"
   class="task-form-container"> %>
 
-  <form action="/tasks" 
+<form action={"/boards/"<>@board_id<>"/lists/"<>@list_id<>"/tasks"} 
   method="post"
   class="task-form-container">
 

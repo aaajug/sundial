@@ -6,20 +6,20 @@
 
   <%= #link to: "/tasks/new", class: "navbar-item" do %>
   <%= #link to: "/tasks/new", "phx-click": "add_new_task", "data-phx-link": "patch", "data-phx-link-state": "push", class: "navbar-item", id: "new-task-link" do %>
-  <a href="/tasks/new" class="navbar-item" id="new-task-link" data-phx-link="patch" data-phx-link-state="push">
+  <%# <a href="/tasks/new" class="navbar-item" id="new-task-link" data-phx-link="patch" data-phx-link-state="push">
     <ion-icon name="add-outline"></ion-icon> 
     Add task
-  </a>
+  </a> %>
   <% #end %>
   
   <form action={@conn.assigns.return_target  <> "/lists"} method="post">
-    <%= submit "Add list" %>
+    <%= submit "Add list", class: "navbar-item", id: "new-list-link" %>
   </form>
 
-  <a href={@conn.assigns.return_target  <> "/lists/new"} class="navbar-item" id="new-list-link" data-phx-link="patch" data-phx-link-state="push" phx-value-path={assigns.conn.path_info}>
+  <%# <a href={@conn.assigns.return_target  <> "/lists/new"} class="navbar-item" id="new-list-link" data-phx-link="patch" data-phx-link-state="push" phx-value-path={assigns.conn.path_info}>
     <ion-icon name="add-outline"></ion-icon> 
     Add list
-  </a>
+  </a> %>
 <% end %>
 
 <button class="button is-warning is-rounded ml-5 mt-3">

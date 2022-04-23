@@ -38,11 +38,11 @@ defmodule SundialWeb.TaskController do
   #   render(conn, "new.html", status: status, changeset: changeset)
   # end
 
-  def create(conn, %{"task" => task_params}) do
+  def create(conn, %{"board_id" => board_id, "list_id" => list_id, "task" => task_params}) do
     access_token = SessionHandler.fetch_current_user_access_token(conn)
     client = ClientAPI.client(access_token)
 
-    response = TaskAPI.create_task(client, %{"data" => task_params})
+    response = TaskAPI.create_task(client, %{"data" => task_params}, list_id, board_id)
 
     IO.inspect response, label: "createtaskdb"
 

@@ -5,7 +5,7 @@ defmodule Backend.Lists.List do
   # @primary_key {:id, :binary_id, autogenerate: true}
   # @foreign_key_type :binary_id
   schema "lists" do
-    field :title, :string, null: false, default: ""
+    field :title, :string, null: false, default: "Unnamed list"
     # field :user_id, :integer, default: 0
     # field :board_id, :integer, default: 0
     field :position, :integer, default: 0

@@ -12,15 +12,17 @@ defmodule Sundial.API.ListAPI do
     end
   end
 
-  def get_lists, do: get_lists(nil)
-  def get_lists(params) do
-    url = if params do
-      "/lists?ids=" <> format_ids(params)
-    else
-      "/lists"
-    end
+  # def get_lists(client, board_id), do: get_lists(client, nil)
+  def get_lists(client, board_id) do
+    # url = if params do
+    #   "/lists?ids=" <> format_ids(params)
+    # else
+    #   "/lists"
+    # end
 
-    case get(url) do
+    url = "/boards/" <> board_id <> "/lists"
+
+    case get(client, url) do
       {:ok, %{body: body}} -> body
         {_, %{body: body}} -> ""
         {:error, _} -> nil
@@ -28,7 +30,7 @@ defmodule Sundial.API.ListAPI do
   end
 
   def create_list(client, board_id, params) do
-    case post("/boards/"<> board_id <> "/lists", params) do
+    case post(client, "/boards/"<> board_id <> "/lists", params) do
       {:ok, %{body: body}} -> body
         {_, %{body: body}} -> ""
         {:error, error} -> error

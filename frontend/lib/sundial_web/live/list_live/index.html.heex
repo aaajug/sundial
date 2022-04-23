@@ -1,45 +1,41 @@
-<h1>Listing Lists</h1>
-
-<%= if @live_action in [:new, :edit] do %>
-  <.modal return_to={Routes.list_index_path(@socket, :index)}>
+<%= if @live_action in [:new_task, :edit] do %>
+  <.modal return_to={@return_target}>
     <.live_component
-      module={SundialWeb.ListLive.FormComponent}
-      id={@list.id || :new}
+      module={SundialWeb.TaskLive.FormComponent}
+      id={@task.id || :new}
       title={@page_title}
       action={@live_action}
-      list={@list}
-      return_to={Routes.list_index_path(@socket, :index)}
+      task={@task}
+      list_id={@list_id}
+      board_id={@board_id}
+      status={@status}
+      serial_task={@serial_task}
+      return_to={@return_target}
     />
   </.modal>
 <% end %>
 
-<table>
-  <thead>
-    <tr>
-      <th>Title</th>
-      <th>User</th>
-      <th>Board</th>
-      <th>Position</th>
+<%= if @lists do %>
+<div class="columns pt-4" id="task-grid" phx-hook={@drag_hook}>
+  <%= for list <- @lists do %>
+    <% #group = Enum.filter(@tasks, fn task -> task["status_id"] == status_id end) |> Enum.with_index %>
+    <div class="content column pane is-one-fourth mr-3 relative">
+      <div class="is-size-6 has-text-weight-very-light pb-1">
+        <%= list["title"] %> (<%= Enum.count(list["tasks"]) %>)
+      </div>
 
-      <th></th>
-    </tr>
-  </thead>
-  <tbody id="lists">
-    <%= for list <- @lists do %>
-      <tr id={"list-#{list.id}"}>
-        <td><%= list.title %></td>
-        <td><%= list.user_id %></td>
-        <td><%= list.board_id %></td>
-        <td><%= list.position %></td>
-
-        <td>
-          <span><%= live_redirect "Show", to: Routes.list_show_path(@socket, :show, list) %></span>
-          <span><%= live_patch "Edit", to: Routes.list_index_path(@socket, :edit, list) %></span>
-          <span><%= link "Delete", to: "#", phx_click: "delete", phx_value_id: list.id, data: [confirm: "Are you sure?"] %></span>
-        </td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
-
-<span><%= live_patch "New List", to: Routes.list_index_path(@socket, :new) %></span>
+      <div class="list-column" id={"list-column-" <> Integer.to_string(list["id"])}>
+        <a href={"/boards/"<>@board_id<>"/lists/"<>Integer.to_string(list["id"])<>"/tasks/new"} class="navbar-item" id="new-task-link" data-phx-link="patch" data-phx-link-state="push">
+          <ion-icon name="add-outline"></ion-icon> 
+          Add task
+        </a>
+        <%= for {task, index} <- Enum.with_index(list["tasks"]) do %>
+          <div class="list-column-component" data-drag_hook={@drag_hook}>
+            <.live_component module={SundialWeb.Live.Task.TaskComponent} id={task["id"]} task={task} drag_hook={@drag_hook} return_to={@return_target} card_index={index} />
+          </div>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+</div>
+<% end %>

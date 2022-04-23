@@ -5,8 +5,9 @@ defmodule BackendWeb.ListController do
   alias Backend.Boards
   alias Backend.Lists.List
 
-  def index(conn, _params) do
-    lists = Lists.list_lists()
+  def index(conn, %{"id" => board_id}) do
+    user = Pow.Plug.current_user(conn)
+    lists = Lists.list_lists(user, board_id)
     serialized_lists = Lists.serialize(lists)
 
     json conn, serialized_lists
@@ -19,12 +20,17 @@ defmodule BackendWeb.ListController do
   end
 
   def create(conn, %{"id" => board_id, "list" => list_params}) do
-    list_params = for {key, val} <- list_params, into: %{}, do: {String.to_atom(key), val}
+    # list_params = for {key, val} <- list_params, into: %{}, do: {String.to_atom(key), val}
+    list_params = if list_params == %{} do
+      Map.put(list_params, :title, "Unnamed list")
+    end
+
     user = Pow.Plug.current_user(conn)
     board = Boards.get_board!(board_id)
 
     case Lists.create_list(user, board_id, list_params) do
       {:ok, list} ->
+        IO.inspect "List Created"
         json conn, Lists.serialize(list)
         # conn
         # |> put_flash(:info, "List created successfully.")

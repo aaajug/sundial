@@ -63,11 +63,11 @@ defmodule SundialWeb.Router do
   end
 
   scope "/", SundialWeb do
-    pipe_through [:browser_no_csrf, :protected]
+    pipe_through [:browser_no_csrf]
 
     post "/boards", BoardController, :create
-    post "/tasks", TaskController, :create
-    post "/boards/:id/lists/", ListController, :create
+    post "/boards/:board_id/lists/:list_id/tasks", TaskController, :create
+    post "/boards/:id/lists", ListController, :create
   end
 
   scope "/", SundialWeb do
@@ -89,7 +89,8 @@ defmodule SundialWeb.Router do
     # live "/", TaskViewLive
     # live "/", TaskLive.Index, :index
     live "/", UserLive.Registration, :new_session
-    live "/tasks/new", TaskLive.Index, :new
+    # live "/tasks/new", TaskLive.Index, :new
+    live "/boards/:board_id/lists/:list_id/tasks/new", ListLive.Index, :new_task
     live "/tasks/:id/edit", TaskLive.Index, :edit
 
 
@@ -124,7 +125,7 @@ defmodule SundialWeb.Router do
     live "/boards/:id/edit", BoardLive.Index, :edit
 
     # live "/boards/:id", BoardLive.Show, :show
-    live "/boards/:id", TaskLive.Index, :index
+    live "/boards/:id", ListLive.Index, :index
     live "/boards/:id/show/edit", BoardLive.Show, :edit
 
     live "/lists", ListLive.Index, :index
@@ -150,7 +151,7 @@ defmodule SundialWeb.Router do
 
     live "/signup", UserLive.Registration, :index
     live "/login", UserLive.Registration, :new_session
-    live "/logout", UserLive.Registration, :destroy_session
+    # live "/logout", UserLive.Registration, :destroy_session
   end
 
   # Other scopes may use custom stacks.

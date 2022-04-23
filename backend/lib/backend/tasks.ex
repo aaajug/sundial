@@ -8,6 +8,8 @@ defmodule Backend.Tasks do
   alias Backend.Repo
 
   alias Backend.Tasks.Task
+  alias Backend.Lists.List
+  alias Backend.Boards.Board
   alias Backend.Tasks.SerialTask
   # alias Backend.Progress.Status
   alias Backend.Progress
@@ -236,7 +238,7 @@ defmodule Backend.Tasks do
 
   """
   # def create_task(attrs \\ %{}) do
-  def create_task(user, attrs) do
+  def create_task(user, attrs, list_id, board_id) do
     # Repo.insert!(task)
     # %Task{}
     # |> Task.changeset(attrs)
@@ -244,13 +246,31 @@ defmodule Backend.Tasks do
 
     # task = Ecto.build_assoc(user, :authored_tasks, task_params)
 
-    changeset = user
-      |> Ecto.build_assoc(:authored_tasks)
-      |> Task.changeset(attrs)
+    # TODO: add assignee
+    user
+    |> Repo.preload([boards: from(board in Board, where: board.id == ^board_id)])
+    |> Map.fetch!(:boards)
+    |> Enum.at(0)
+    |> Repo.preload([lists: from(list in List, where: list.id == ^list_id)])
+    |> Map.fetch!(:lists)
+    |> Enum.at(0)
+    |> Ecto.build_assoc(:tasks)
+    |> Task.changeset(attrs)
+    |> Ecto.Changeset.put_assoc(:author, user)
+    |> Repo.insert
+    # |> Task.Changeset.put_assoc(:assignee, assignee)
 
-      IO.inspect changeset, label: "taskchangesetdb"
+    # user_board.boards
+    # |> Enum.at(0)
+    # |> Repo.preload()
 
-      Repo.insert(changeset)
+    # changeset = user
+    #   |> Ecto.build_assoc(:authored_tasks)
+    #   |> Task.changeset(attrs)
+
+    #   IO.inspect changeset, label: "taskchangesetdb"
+
+      # Repo.insert(changeset)
   end
 
   @doc """
@@ -345,7 +365,7 @@ defmodule Backend.Tasks do
                 end
 
     # [{status_name, status_description}] = Repo.all(from s in "status", where: s.id == ^status_id, select: {s.name, s.description})
-    task_status = Progress.list_status() |> Enum.filter(fn status -> status.id == status_id end) |> List.first
+    task_status = Progress.list_status() |> Enum.filter(fn status -> status.id == status_id end) |> Enum.at(0)
 
     is_overdue = if task.deadline && (task.completed_on == nil || (task.completed_on != nil && task.status != 4)) && task.status != 3 do
                    NaiveDateTime.compare(NaiveDateTime.local_now, task.deadline) == :gt

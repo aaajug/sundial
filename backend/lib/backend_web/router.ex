@@ -39,12 +39,14 @@ defmodule BackendWeb.Router do
     get "/tasks/:id/changeset", TaskController, :changeset
     get("/tasks/default", TaskController, :list_tasks_by_default)
     get("/tasks", TaskController, :list_tasks)
-    resources "/tasks", TaskController, except: [:index]
+    post "/boards/:board_id/lists/:list_id/tasks", TaskController, :create
+    resources "/tasks", TaskController, except: [:index, :create]
 
     # Boards API
     get "/boards/:id/tasks", BoardController, :get_tasks
     resources "/boards", BoardController
-    resources "/lists", ListController
+    get "/boards/:id/lists", ListController, :index
+    resources "/lists", ListController, except: [:index]
 
     # List API
     post "/boards/:id/lists", ListController, :create
