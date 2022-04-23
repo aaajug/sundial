@@ -11,6 +11,7 @@ defmodule SundialWeb.EnsureAuthenticated do
   def init(config), do: config
 
   def call(conn, _params) do
+    IO.inspect conn, label: "connensureauth"
   # def call(access_token) do
     if !is_authenticated?(conn) do
       redirect(conn, to: "/login")

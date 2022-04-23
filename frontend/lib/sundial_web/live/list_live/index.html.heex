@@ -1,4 +1,4 @@
-<%= if @live_action in [:new_task, :edit] do %>
+<%= if @live_action in [:new_task, :edit_task] do %>
   <.modal return_to={@return_target}>
     <.live_component
       module={SundialWeb.TaskLive.FormComponent}
@@ -7,19 +7,27 @@
       action={@live_action}
       task={@task}
       list_id={@list_id}
+      current_user_access_token={@current_user_access_token} 
       board_id={@board_id}
       status={@status}
       serial_task={@serial_task}
       return_to={@return_target}
+      form_target={@form_target}
     />
   </.modal>
 <% end %>
 
+
 <%= if @lists do %>
+<div class="pt-4">
+  <button class="button is-small" phx-click="refresh" phx-value-return_to={"/boards/" <> @board_id}>
+    refresh
+  </button>
+</div>
 <div class="columns pt-4" id="task-grid" phx-hook={@drag_hook}>
   <%= for list <- @lists do %>
     <% #group = Enum.filter(@tasks, fn task -> task["status_id"] == status_id end) |> Enum.with_index %>
-    <div class="content column pane is-one-fourth mr-3 relative">
+    <div class="content column pane is-3 mr-3 relative">
       <div class="is-size-6 has-text-weight-very-light pb-1">
         <%= list["title"] %> (<%= Enum.count(list["tasks"]) %>)
       </div>
@@ -31,7 +39,7 @@
         </a>
         <%= for {task, index} <- Enum.with_index(list["tasks"]) do %>
           <div class="list-column-component" data-drag_hook={@drag_hook}>
-            <.live_component module={SundialWeb.Live.Task.TaskComponent} id={task["id"]} task={task} drag_hook={@drag_hook} return_to={@return_target} card_index={index} />
+            <.live_component module={SundialWeb.Live.Task.TaskComponent} id={task["id"]} task={task} drag_hook={@drag_hook} return_to={@return_target} card_index={index} current_user_access_token={@current_user_access_token}/>
           </div>
         <% end %>
       </div>

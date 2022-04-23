@@ -22,9 +22,11 @@ defmodule SundialWeb.UserLive.LoginFormComponent do
   # end
 
   @impl true
-  def handle_event("save", %{"user" => user_params}, socket) do
+  def handle_event("login", %{"user" => user_params}, socket) do
     # {:noreply,
       # socket |> push_redirect(to: "/set_session")}
+
+      IO.inspect "loginhandleevent"
 
     {
       {:error, error},
@@ -34,14 +36,18 @@ defmodule SundialWeb.UserLive.LoginFormComponent do
 
     if success_info do
       # SessionHandler.set_current_user(socket, data)
+      IO.inspect "currentusersavedinsocket"
 
+      socket = socket
+      |> assign(:error, error)
+      |> put_flash(:info, success_info)
+      |> assign(:current_user, data)
+      |> push_redirect(to: "/set_session")
+      # |> push_redirect(to: "/boards")
+
+      IO.inspect socket, label: "socketinloginformcomp3"
       {:noreply,
-      socket
-        |> assign(:error, error)
-        |> put_flash(:info, success_info)
-        |> assign(:current_user, data)
-        # |> push_redirect(to: "/set_session")}
-        |> push_redirect(to: "/boards")}
+      socket}
     else
       {:noreply,
       socket

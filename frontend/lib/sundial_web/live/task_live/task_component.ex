@@ -6,8 +6,11 @@ defmodule SundialWeb.Live.Task.TaskComponent do
   alias Sundial.Progress.States
   alias Sundial.Tasks
   alias Sundial.API.TaskAPI
+  alias Sundial.API.ClientAPI
 
   def mount(socket) do
+
+    IO.inspect socket, label: "taskcomponentsocketinmount"
     {:ok, assign(socket, %{status: States.get()})}
   end
 
@@ -40,7 +43,9 @@ defmodule SundialWeb.Live.Task.TaskComponent do
   end
 
   def handle_event("update_status", params, socket) do
-    TaskAPI.update_task_status(socket.assigns.task["id"], %{"status" =>  params["status"]})
+    client = ClientAPI.client(socket.assigns.current_user_access_token)
+    client
+    |> TaskAPI.update_task_status(socket.assigns.task["id"], %{"status" =>  params["status"]})
 
     {:noreply,
          socket

@@ -388,6 +388,8 @@ defmodule Backend.Tasks do
 
     %SerialTask{
       id: task.id,
+      board_id: task.board_id,
+      list_id: task.list_id,
       description: task.description,
       details: task.details,
       details_plaintext: task.details_plaintext,

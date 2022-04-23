@@ -40,7 +40,7 @@ defmodule SundialWeb.DestroySessionPlug do
   defp maybe_halt(_any, conn) do
     conn
     |> Controller.put_flash(:error, "Unauthorized access")
-    |> Controller.redirect(to: Routes.page_path(conn, :index))
+    |> Controller.redirect(to: "/login")
     |> halt()
   end
 

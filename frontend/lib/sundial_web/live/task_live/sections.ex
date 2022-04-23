@@ -65,7 +65,7 @@ defmodule SundialWeb.TaskLive.Sections do
     # IO.inspect assigns
     ~H"""
     <div class="">
-      <%= live_patch to: Routes.task_index_path(@socket, :edit, %SerialTask{id: assigns.task["id"]}, %{return_to: @return_to}), id: "edit-task" do %>
+      <%= live_patch to: Routes.list_index_path(@socket, :edit_task, %SerialTask{id: assigns.task["id"]}, %{return_to: @return_to}), id: "edit-task" do %>
       <%= #link to: "/" do %>
         <ion-icon name="pencil-outline" class="is-clickable action-button"></ion-icon>
       <% end %>

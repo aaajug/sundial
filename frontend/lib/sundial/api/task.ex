@@ -6,8 +6,8 @@ defmodule Sundial.API.TaskAPI do
   plug Tesla.Middleware.JSON
 
   # TODO: Refactor to reuse repeating code blocks (inside do block)
-  def get_task(params) do
-    case get("/tasks/" <> params.id) do
+  def get_task(client, params) do
+    case get(client, "/tasks/" <> params.id) do
       {:ok, %{body: body}} -> body
         {_, %{body: body}} -> ""
     end
@@ -28,8 +28,8 @@ defmodule Sundial.API.TaskAPI do
     end
   end
 
-  def get_tasks_default_sorting() do
-    case get("/tasks/default") do
+  def get_tasks_default_sorting(client) do
+    case get(client, "/tasks/default") do
       {:ok, %{body: body}} -> body
         {_, %{body: body}} -> ""
         {:error, _} -> nil
@@ -43,22 +43,22 @@ defmodule Sundial.API.TaskAPI do
     end
   end
 
-  def edit_task(params) do
-    case get("/tasks/:id/edit", params) do
+  def edit_task(client, params) do
+    case get(client, "/tasks/:id/edit", params) do
       {:ok, %{body: body}} -> body
         {_, %{body: body}} -> ""
     end
   end
 
-  def update_task(id, params) do
-    case patch("/tasks/" <> Integer.to_string(id), params) do
+  def update_task(client, id, params) do
+    case patch(client, "/tasks/" <> Integer.to_string(id), params) do
       {:ok, %{body: body}} -> body
         {_, %{body: body}} -> ""
     end
   end
 
-  def update_task_status(id, params) do
-    case patch("/tasks/" <> Integer.to_string(id) <> "/update/status", params) do
+  def update_task_status(client, id, params) do
+    case patch(client, "/tasks/" <> Integer.to_string(id) <> "/update/status", params) do
       {:ok, %{body: body}} -> body
       {_, %{body: body}} -> ""
     end

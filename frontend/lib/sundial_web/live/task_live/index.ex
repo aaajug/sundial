@@ -15,6 +15,9 @@ defmodule SundialWeb.TaskLive.Index do
 
     sort = if Map.has_key?(params, "sort"), do: params["sort"], else: nil
 
+    socket = socket
+    |> assign(:current_user_access_token, session["current_user_access_token"])
+
     socket = case sort do
       "default" ->
         socket
@@ -94,11 +97,16 @@ defmodule SundialWeb.TaskLive.Index do
    # TODO: Move to backend
   defp apply_action(socket, :edit, %{"id" => id, "return_to" => return_to}) do
     # task = Tasks.get_task!(id)
-    task = TaskAPI.get_task(%{id: id})
+    client = ClientAPI.client(socket.assigns.current_user_access_token)
+    task = TaskAPI.get_task(client, %{id: id})
     task = for {key, val} <- task, into: %{}, do: {String.to_atom(key), val}
 
+    IO.inspect task, label: "taskobjectprint2"
     socket
     |> assign(:page_title, "Edit Task")
+    |> assign(:list_id, "")
+    |> assign(:board_id, "")
+    |> assign(:form_target, "/tasks/" <> Integer.to_string(task.id))
     |> assign(:status, Progress.list_status_options())
     |> assign(:task, task)
     |> assign(:serial_task, task)
@@ -125,6 +133,6 @@ defmodule SundialWeb.TaskLive.Index do
     client = ClientAPI.client(session["current_user_access_token"])
 
     client |>
-      TaskAPI.get_tasks_default_sorting(params)
+      TaskAPI.get_tasks_default_sorting
   end
 end

@@ -57,7 +57,8 @@ defmodule SundialWeb.Router do
   end
 
   scope "/", SundialWeb do
-    pipe_through [:browser, :protected]
+    # pipe_through [:browser, :protected]
+    pipe_through [:browser]
 
     live "/boards", BoardLive.Index, :index
   end
@@ -73,7 +74,7 @@ defmodule SundialWeb.Router do
   scope "/", SundialWeb do
     pipe_through :browser_no_csrf
 
-    post "/set_session", SessionHandler, :set_current_user
+    post "/login", SessionHandler, :set_current_user
   end
 
 
@@ -91,7 +92,7 @@ defmodule SundialWeb.Router do
     live "/", UserLive.Registration, :new_session
     # live "/tasks/new", TaskLive.Index, :new
     live "/boards/:board_id/lists/:list_id/tasks/new", ListLive.Index, :new_task
-    live "/tasks/:id/edit", TaskLive.Index, :edit
+    live "/tasks/:id/edit", ListLive.Index, :edit_task
 
 
     # resources "/users", UsersController, only: [:create, :update, :delete]

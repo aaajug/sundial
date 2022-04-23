@@ -15,7 +15,7 @@ defmodule SundialWeb.SessionHandler do
     # Conn.put_session(conn, :current_user, user["access_token"])
     # IO.inspect conn, label: "sessionhandlerconn"
 
-    destroy_current_user(conn)
+    conn = destroy_current_user(conn)
 
     # IO.inspect "debugging session handler"
 

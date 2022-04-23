@@ -13,7 +13,9 @@ defmodule SundialWeb.BoardLive.Index do
   def mount(_params, session, socket) do
     boards = list_boards(session)
 
-    {:ok, assign(socket, :boards, boards)}
+    {:ok, socket
+      |> assign(:current_user_access_token, session["current_user_access_token"])
+      |> assign(:boards, boards)}
   end
 
   @impl true

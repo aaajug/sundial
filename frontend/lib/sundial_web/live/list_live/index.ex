@@ -5,6 +5,7 @@ defmodule SundialWeb.ListLive.Index do
   alias Sundial.Progress
   alias Sundial.Tasks.Task
   alias Sundial.API.ListAPI
+  alias Sundial.API.TaskAPI
   alias Sundial.API.ClientAPI
 
   @impl true
@@ -13,12 +14,20 @@ defmodule SundialWeb.ListLive.Index do
     base_path = "/boards/" <> (board_id || "")
 
     {:ok, socket
+    |> assign(:current_user_access_token, session["current_user_access_token"])
     |> assign(:lists, list_lists(session, board_id))
-    |> assign(:drag_hook, "Drag")
+    |> assign(:drag_hook, "Dragger")
     |> assign(:board_id, board_id)
     |> assign(:return_target, base_path)
     |> assign(:show_manage_header, true)}
   end
+
+  @impl true
+  def handle_event("refresh", %{"return_to" => return_to}, socket) do
+    # IO.inspect params, label: "refreeshtasksa"
+    {:noreply, push_redirect(socket, to: return_to)}
+  end
+
 
   @impl true
   def handle_params(params, _url, socket) do
@@ -59,6 +68,25 @@ defmodule SundialWeb.ListLive.Index do
     |> assign(:serial_task, nil)
     |> assign(:list_id, list_id)
     |> assign(:board_id, board_id)
+    |> assign(:form_target, "/boards/"<>board_id<>"/lists/"<>list_id<>"/tasks")
+  end
+
+  defp apply_action(socket, :edit_task, %{"id" => id, "return_to" => return_to}) do
+    # task = Tasks.get_task!(id)
+    client = ClientAPI.client(socket.assigns.current_user_access_token)
+    task = TaskAPI.get_task(client, %{id: id})
+    task = for {key, val} <- task, into: %{}, do: {String.to_atom(key), val}
+
+    IO.inspect task, label: "taskobjectprint2"
+    socket
+    |> assign(:page_title, "Edit Task")
+    |> assign(:list_id, "")
+    |> assign(:board_id, "")
+    |> assign(:form_target, "/tasks/" <> Integer.to_string(task.id))
+    |> assign(:status, Progress.list_status_options())
+    |> assign(:task, task)
+    |> assign(:serial_task, task)
+    |> assign(:return_to, return_to)
   end
 
   defp apply_action(socket, :index, _params) do
