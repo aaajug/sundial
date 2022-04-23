@@ -1,0 +1,98 @@
+<div>
+    <style>
+    
+    </style>
+
+    <%= #form_for @changeset, @action, [as: :user], fn f -> %>
+    <%= #if @changeset.action do %>
+        <%# <div class="alert alert-danger"> %>
+        <%# <p>Oops, something went wrong! Please check the errors below.</p> %>
+        <%# </div> %>
+    <% #end %>
+
+    <div class="text-container pr-6 mr-6 pt-6">
+    <% IO.inspect assigns[:error], label: "assignserror"  %>
+
+      <article class="message is-danger"> 
+        <%= if Map.has_key?(assigns, :error) && @error do %>
+          <div class="message-body">
+              Oops, something went wrong! Please check the errors below.
+          </div>
+        <% end %>
+      </article>
+
+    <h1>Create a new account</h1>
+
+    <form phx-target={@myself}
+        phx-submit="save">
+
+        <div class="field is-horizontal">
+        <div class="field-body">
+            <div class="field">
+            <label>First name</label>
+            <input name="user[first_name]">
+            </div>
+            <div class="field">
+            <label>Last name</label>
+            <input name="user[last_name]">
+            </div>
+        </div>
+        </div>
+
+        <%= #label f, :first_name %>
+        <%= #text_input f, :first_name %>
+        <%= #error_tag f, :first_name %>
+
+        <%= #label f, :last_name %>
+        <%= #text_input f, :last_name %>
+        <%= #error_tag f, :last_name %>
+
+        <div class="field">
+          <label>Email address</label>
+          <input name="user[email]">
+          <article class="message is-small is-info mt-2"> 
+            <%= error_tag assigns[:error], "email" %>
+          </article>
+          <%# <span class="invalid-feedback" phx-feedback-for="">can't be blank</span> %>
+        </div>
+        <%= #label f, Pow.Ecto.Schema.user_id_field(@changeset) %>
+        <%= #text_input f, Pow.Ecto.Schema.user_id_field(@changeset) %>
+        <%= #error_tag f, Pow.Ecto.Schema.user_id_field(@changeset) %>
+
+
+        <div class="field is-horizontal">
+        <div class="field-body">
+            <div class="field">
+            <label>Password</label>
+            <input name="user[password]" type="password">
+            <article class="message is-small is-info mt-2"> 
+              <%= error_tag assigns[:error], "password" %>
+            </article>
+            </div>
+            <div class="field">
+            <label>Repeat password</label>
+            <input name="user[password_confirmation]" type="password">
+            <article class="message is-small is-info mt-2"> 
+              <%= error_tag assigns[:error], "password_confirmation" %>
+            </article>
+            </div>
+        </div>
+        </div>
+
+        <%= #label f, :password %>
+        <%= #password_input f, :password %>
+        <%= #error_tag f, :password %>
+
+        <%= #label f, :password_confirmation %>
+        <%= #password_input f, :password_confirmation %>
+        <%= #error_tag f, :password_confirmation %>
+
+        <div class="field is-pulled-right pt-4" style="display: flex; align-items: baseline;">
+          <div class="mr-5"><%= link "Sign in", to: Routes.user_registration_path(@socket, :new_session), class: "has-text-white" %></div>
+          <%= submit "Register", phx_disable_with: "Creating your account...", class: "button is-success is-active" %>
+        </div>
+    <% #end %>
+    </form>
+    </div>
+</div>
+

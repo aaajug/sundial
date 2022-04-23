@@ -5,14 +5,21 @@ defmodule BackendWeb.BoardController do
   alias Backend.Boards.Board
 
   def index(conn, _params) do
-    boards = Boards.list_boards()
-    serialized_boards = Boards.serialize(boards)
+    user = Pow.Plug.current_user(conn)
+    IO.inspect user.boards, label: "userownedboards3"
 
-    IO.inspect "boardsdb4"
-    IO.inspect serialized_boards
+    user_boards = Enum.at(Boards.list_boards(user.id), 0)
+
+    IO.inspect user_boards, label: "userboards"
+    boards = user_boards.boards
+    serialized_boards = Boards.serialize(boards)
 
     json conn, serialized_boards
   end
+
+  # def get_task(conn, %{"id" => id}) do
+  #   tasks =
+  # end
 
   def new(conn, _params) do
     changeset = Boards.change_board(%Board{})
@@ -20,9 +27,17 @@ defmodule BackendWeb.BoardController do
   end
 
   def create(conn, %{"data" => board_params}) do
-    board_params = Map.put(board_params, "user_id", 1)
+    # board_params = Map.put(board_params, "user_id", 1)
 
-    case Boards.create_board(board_params) do
+    board_params = for {key, val} <- board_params, into: %{}, do: {String.to_atom(key), val}
+
+    # fetch current user
+    # create board for user
+    user = Pow.Plug.current_user(conn)
+    # board_params = Map.put(board_params, :user, user)
+    board = Ecto.build_assoc(user, :boards, board_params)
+
+    case Boards.create_board(board) do
       {:ok, board} ->
         json conn, Boards.serialize(board)
 
@@ -32,7 +47,9 @@ defmodule BackendWeb.BoardController do
   end
 
   def show(conn, %{"id" => id}) do
-    board = Boards.get_board!(id)
+    user = Pow.Plug.current_user(conn)
+
+    board = Boards.get_board!(user, id)
 
     json conn, Boards.serialize(board)
     # render(conn, "show.html", board: board)

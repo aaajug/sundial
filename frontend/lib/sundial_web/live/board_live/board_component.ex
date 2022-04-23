@@ -3,23 +3,26 @@ defmodule SundialWeb.Live.Board.BoardComponent do
 
   import SundialWeb.BoardLive.Sections
 
-  # alias Sundial.Progress.States
   alias Sundial.Boards
   alias Sundial.API.BoardAPI
+  alias SundialWeb.EnsureAuthenticated
 
   def mount(socket) do
     {:ok, socket}
   end
 
-  def preload(list_of_assigns) do
-    board_ids = Enum.map(list_of_assigns, & &1.id)
-    boards = BoardAPI.get_boards(board_ids)
+  # def preload(list_of_assigns) do
+  #   # IO.inspect list_of_assigns, label: "listofassigns"
+  #   # need to get current_user_access_id
 
-    Enum.map(list_of_assigns, fn(assigns) ->
-      board = Enum.find(boards, fn(board) -> assigns.id == board["id"] end)
-      Map.merge(assigns, %{board: board})
-     end)
-  end
+  #   board_ids = Enum.map(list_of_assigns, & &1.id)
+  #   boards = BoardAPI.get_boards(board_ids)
+
+  #   Enum.map(list_of_assigns, fn(assigns) ->
+  #     board = Enum.find(boards, fn(board) -> assigns.id == board["id"] end)
+  #     Map.merge(assigns, %{board: board})
+  #    end)
+  # end
 
   def update(assigns, socket) do
     {:ok,
@@ -28,8 +31,6 @@ defmodule SundialWeb.Live.Board.BoardComponent do
   end
 
   def handle_event("delete", %{"id" => id}, socket) do
-    IO.inspect(id, label: "inboard delete event")
-
     BoardAPI.delete_board(%{id: id})
 
     {:noreply,

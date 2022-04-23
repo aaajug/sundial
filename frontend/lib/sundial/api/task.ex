@@ -13,15 +13,15 @@ defmodule Sundial.API.TaskAPI do
     end
   end
 
-  def get_tasks, do: get_tasks(nil)
-  def get_tasks(params) do
-    url = if params do
-      "/tasks?ids=" <> format_ids(params)
+  def get_tasks(client), do: get_tasks(client, nil)
+  def get_tasks(client, params) do
+    url = if params && Map.has_key?(params, :ids) do
+      "/tasks?ids=" <> format_ids(params.ids)
     else
       "/tasks"
     end
 
-    case get(url) do
+    case get(client, url) do
       {:ok, %{body: body}} -> body
         {_, %{body: body}} -> ""
         {:error, _} -> nil
@@ -36,8 +36,8 @@ defmodule Sundial.API.TaskAPI do
     end
   end
 
-  def create_task(params) do
-    case post("/tasks", params) do
+  def create_task(client, params, list_id, board_id) do
+    case post(client, "/boards/"<>board_id<>"/lists/"<>list_id<>"/tasks", params) do
       {:ok, %{body: body}} -> body
         {_, %{body: body}} -> ""
     end

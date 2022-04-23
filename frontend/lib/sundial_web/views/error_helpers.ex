@@ -6,6 +6,21 @@ defmodule SundialWeb.ErrorHelpers do
   use Phoenix.HTML
 
   @doc """
+  Generates tag for inlined form input errors using error messages and field names.
+  """
+  def error_tag(errors, field) do
+    class = if errors[field] do
+              "message-body"
+            else
+              ""
+            end
+
+    content_tag(:div, errors[field],
+      class: class
+    )
+  end
+
+  @doc """
   Generates tag for inlined form input errors.
   """
   def error_tag(form, field) do

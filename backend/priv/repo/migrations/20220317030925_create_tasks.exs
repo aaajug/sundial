@@ -8,7 +8,6 @@ defmodule Backend.Repo.Migrations.CreateTasks do
       add :deadline, :naive_datetime
       add :status, :integer
       add :completed_on, :naive_datetime
-      add :pane_id, :integer
 
       timestamps()
     end

@@ -1,0 +1,50 @@
+<%= if @live_action in [:new, :edit] do %>
+  <.modal return_to={@return_target}>
+    <.live_component
+      module={SundialWeb.TaskLive.FormComponent}
+      id={@task.id || :new}
+      title={@page_title}
+      action={@live_action}
+      task={@task}
+      status={@status}
+      serial_task={@serial_task}
+      return_to={@return_target}
+    />
+  </.modal>
+<% end %>
+
+<% 
+  # TODO: Relocate out of view  
+  #grouped_tasks = Enum.chunk_by(@tasks, fn(task) -> task.status end)
+  status_labels = %{1 => "Not yet started", 2 => "In progress", 3 => "On hold", 4 => "Completed"}
+%>
+
+<div>
+  <button class={"button is-small " <> @sort_class} phx-click="toggle-sorting" phx-value-sort_target={@sort_target} id="toggle-sorting">
+    <span class="icon is-small">
+      <ion-icon name="funnel-outline"></ion-icon> 
+    </span>
+    <span><%= @sort_label %> default sorting</span>
+  </button>
+</div>
+
+<%= if @tasks do %>
+<div class="columns pt-4" id="task-grid" phx-hook={@drag_hook}>
+  <%= for status_id <- [1,2,3,4] do %>
+    <% group = Enum.filter(@tasks, fn task -> task["status_id"] == status_id end) |> Enum.with_index %>
+    <div class="content column pane is-one-fourth mr-3 relative">
+      <div class="is-size-6 has-text-weight-very-light pb-1">
+        <%= status_labels[status_id] %> (<%= Enum.count(group) %>)
+      </div>
+
+      <div class="task-list" id={"task-list-" <> Integer.to_string(status_id)}>
+        <%= for {task, index} <- group do %>
+          <div class="task-card-component" data-drag_hook={@drag_hook}>
+            <.live_component module={SundialWeb.Live.Task.TaskComponent} id={task["id"]} drag_hook={@drag_hook} return_to={@return_target} card_index={index} />
+          </div>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+</div>
+<% end %>

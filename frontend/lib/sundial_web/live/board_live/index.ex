@@ -4,10 +4,16 @@ defmodule SundialWeb.BoardLive.Index do
   alias Sundial.Boards
   alias Sundial.Boards.Board
   alias Sundial.API.BoardAPI
+  alias Sundial.API.ClientAPI
+  alias SundialWeb.EnsureAuthenticated
+
+  # plug SundialWeb.EnsureAuthenticated
 
   @impl true
-  def mount(_params, _session, socket) do
-    {:ok, assign(socket, :boards, list_boards())}
+  def mount(_params, session, socket) do
+    boards = list_boards(session)
+
+    {:ok, assign(socket, :boards, boards)}
   end
 
   @impl true
@@ -37,15 +43,32 @@ defmodule SundialWeb.BoardLive.Index do
   end
 
   @impl true
+  def handle_event("refresh", _params, socket) do
+    {:noreply, push_redirect(socket, to: "/boards")}
+  end
+
+  @impl true
   def handle_event("delete", %{"id" => id}, socket) do
     # board = Boards.get_board!(id)
     # {:ok, _} = Boards.delete_board(board)
     BoardAPI.delete(%{id: id})
 
-    {:noreply, assign(socket, :boards, list_boards())}
+    {:noreply, assign(socket, :boards, list_boards(""))}
   end
 
-  defp list_boards do
-    BoardAPI.get_boards
+  defp list_boards(session) do
+    client = ClientAPI.client(session["current_user_access_token"])
+    client
+      |> BoardAPI.get_boards
   end
+
+  # defp ensure_authenticated(access_token, socket) do
+  #   IO.inspect !EnsureAuthenticated.is_authenticated?(access_token), label: "ensureauthdbclient"
+  #   if !EnsureAuthenticated.is_authenticated?(access_token) do
+  #     socket
+  #       |> push_redirect(to: "/login")
+  #   else
+  #     socket
+  #   end
+  # end
 end

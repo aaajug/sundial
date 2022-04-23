@@ -2,11 +2,16 @@ defmodule BackendWeb.ListController do
   use BackendWeb, :controller
 
   alias Backend.Lists
+  alias Backend.Boards
   alias Backend.Lists.List
 
-  def index(conn, _params) do
-    lists = Lists.list_lists()
-    render(conn, "index.html", lists: lists)
+  def index(conn, %{"id" => board_id}) do
+    user = Pow.Plug.current_user(conn)
+    lists = Lists.list_lists(user, board_id)
+    serialized_lists = Lists.serialize(lists)
+
+    json conn, serialized_lists
+    # render(conn, "index.html", lists: lists)
   end
 
   def new(conn, _params) do
@@ -14,21 +19,33 @@ defmodule BackendWeb.ListController do
     render(conn, "new.html", changeset: changeset)
   end
 
-  def create(conn, %{"list" => list_params}) do
-    case Lists.create_list(list_params) do
+  def create(conn, %{"id" => board_id, "list" => list_params}) do
+    # list_params = for {key, val} <- list_params, into: %{}, do: {String.to_atom(key), val}
+    list_params = if list_params == %{} do
+      Map.put(list_params, :title, "Unnamed list")
+    end
+
+    user = Pow.Plug.current_user(conn)
+    board = Boards.get_board!(board_id)
+
+    case Lists.create_list(user, board_id, list_params) do
       {:ok, list} ->
-        conn
-        |> put_flash(:info, "List created successfully.")
-        |> redirect(to: Routes.list_path(conn, :show, list))
+        IO.inspect "List Created"
+        json conn, Lists.serialize(list)
+        # conn
+        # |> put_flash(:info, "List created successfully.")
+        # |> redirect(to: Routes.list_path(conn, :show, list))
 
       {:error, %Ecto.Changeset{} = changeset} ->
-        render(conn, "new.html", changeset: changeset)
+        text conn, "Failed to create list"
+        # render(conn, "new.html", changeset: changeset)
     end
   end
 
   def show(conn, %{"id" => id}) do
     list = Lists.get_list!(id)
-    render(conn, "show.html", list: list)
+    json conn, Lists.serialize(list)
+    # render(conn, "show.html", list: list)
   end
 
   def edit(conn, %{"id" => id}) do
@@ -42,21 +59,29 @@ defmodule BackendWeb.ListController do
 
     case Lists.update_list(list, list_params) do
       {:ok, list} ->
-        conn
-        |> put_flash(:info, "List updated successfully.")
-        |> redirect(to: Routes.list_path(conn, :show, list))
+        json conn, Lists.serialize(list)
+        # conn
+        # |> put_flash(:info, "List updated successfully.")
+        # |> redirect(to: Routes.list_path(conn, :show, list))
 
       {:error, %Ecto.Changeset{} = changeset} ->
-        render(conn, "edit.html", list: list, changeset: changeset)
+        text conn, "Failed to update list."
+        # render(conn, "edit.html", list: list, changeset: changeset)
     end
   end
 
   def delete(conn, %{"id" => id}) do
     list = Lists.get_list!(id)
-    {:ok, _list} = Lists.delete_list(list)
+    case Lists.delete_list(list) do
+      {:ok, list} ->
+        json conn, Lists.serialize(list)
+      {:error, _} ->
+        text conn, "Failed to delete list."
+    end
 
-    conn
-    |> put_flash(:info, "List deleted successfully.")
-    |> redirect(to: Routes.list_path(conn, :index))
+
+    # conn
+    # |> put_flash(:info, "List deleted successfully.")
+    # |> redirect(to: Routes.list_path(conn, :index))
   end
 end

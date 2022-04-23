@@ -1,5 +1,6 @@
 defmodule BackendWeb.Router do
   use BackendWeb, :router
+  use Pow.Phoenix.Router
 
   pipeline :browser do
     plug :accepts, ["html"]
@@ -11,26 +12,44 @@ defmodule BackendWeb.Router do
 
   pipeline :api do
     plug :accepts, ["json","html"]
+    plug BackendWeb.APIAuthPlug, otp_app: :backend
+  end
+
+  pipeline :api_protected do
+    plug Pow.Plug.RequireAuthenticated, error_handler: BackendWeb.APIAuthErrorHandler
   end
 
   scope "/api", BackendWeb do
     pipe_through :api
 
+    resources "/registration", API.RegistrationController, singleton: true, only: [:create]
+    resources "/session", API.SessionController, singleton: true, only: [:create, :delete]
+    get "/session", API.SessionController, :get
+    get "/session/authenticated", API.SessionController, :is_authenticated
+    post "/session/renew", API.SessionController, :renew
+
     get("/ping", PingController, :show)
+  end
+
+  scope "/api", BackendWeb do
+    pipe_through [:api, :api_protected]
 
     post "/tasks/reorder", TaskController, :update_positions
-    patch "tasks/:id/update/status", TaskController, :update_status
+    patch "/tasks/:id/update/status", TaskController, :update_status
     get "/tasks/:id/changeset", TaskController, :changeset
     get("/tasks/default", TaskController, :list_tasks_by_default)
     get("/tasks", TaskController, :list_tasks)
-    # get("/tasks/new", TaskController, :new)
-    # post("/tasks/create", TaskController, :create)
-    resources "/tasks", TaskController, except: [:index]
-
-
+    post "/boards/:board_id/lists/:list_id/tasks", TaskController, :create
+    resources "/tasks", TaskController, except: [:index, :create]
 
     # Boards API
+    get "/boards/:id/tasks", BoardController, :get_tasks
     resources "/boards", BoardController
+    get "/boards/:id/lists", ListController, :index
+    resources "/lists", ListController, except: [:index]
+
+    # List API
+    post "/boards/:id/lists", ListController, :create
   end
 
   # Enables LiveDashboard only for development

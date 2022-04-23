@@ -7,7 +7,12 @@ defmodule Backend.Boards.Board do
 
   schema "boards" do
     field :title, :string, null: false, default: "New Board"
-    field :user_id, :integer, default: 0
+    # field :user_id, :integer, default: 0
+
+    belongs_to :user, Backend.Users.User
+    has_many :lists, Backend.Lists.List
+    has_many :tasks, Backend.Tasks.Task
+    many_to_many :users, Backend.Users.User, join_through: "permissions"
 
     timestamps()
   end

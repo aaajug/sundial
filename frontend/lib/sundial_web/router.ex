@@ -11,8 +11,43 @@ defmodule SundialWeb.Router do
     plug :put_secure_browser_headers
   end
 
+  pipeline :browser_no_csrf do
+    plug :accepts, ["html"]
+    plug :fetch_session
+    plug :fetch_live_flash
+    plug :put_root_layout, {SundialWeb.LayoutView, :root}
+    plug :put_secure_browser_headers
+  end
+
+  pipeline :protected do
+    plug SundialWeb.EnsureAuthenticated
+  end
+
+  pipeline :destroy_session do
+    plug SundialWeb.DestroySessionPlug
+  end
+
   pipeline :api do
     plug :accepts, ["json"]
+    # plug SundialWeb.APIAuthPlug, otp_app: :sundial
+  end
+
+  # pipeline :api_protected do
+  #   plug Pow.Plug.RequireAuthenticated, error_handler: SundialWeb.APIAuthErrorHandler
+  # end
+
+  # scope "/api", SundialWeb.API, as: :api do
+  #   pipe_through :api
+
+  #   resources "/registration", RegistrationController, singleton: true, only: [:create]
+  #   resources "/session", SessionController, singleton: true, only: [:create, :delete]
+  #   post "/session/renew", SessionController, :renew
+  # end
+
+  scope "/", SundialWeb do
+    pipe_through [:browser, :destroy_session]
+
+    live "/logout", UserLive.Registration, :destroy_session
   end
 
   scope "/" do
@@ -22,15 +57,40 @@ defmodule SundialWeb.Router do
   end
 
   scope "/", SundialWeb do
+    pipe_through [:browser, :protected]
+
+    live "/boards", BoardLive.Index, :index
+  end
+
+  scope "/", SundialWeb do
+    pipe_through [:browser_no_csrf]
+
+    post "/boards", BoardController, :create
+    post "/boards/:board_id/lists/:list_id/tasks", TaskController, :create
+    post "/boards/:id/lists", ListController, :create
+  end
+
+  scope "/", SundialWeb do
+    pipe_through :browser_no_csrf
+
+    post "/set_session", SessionHandler, :set_current_user
+  end
+
+
+  scope "/", SundialWeb do
     pipe_through :browser
 
     get("/ping", PingController, :show)
 
+    # get "/set_session", SessionHandler, :set_current_user
+    # post "/set_session", SessionHandler, :set_current_user
+
     # get "/", TaskController, :index
     # live "/", TaskViewLive
     # live "/", TaskLive.Index, :index
-    live "/", BoardLive.Index, :index
-    live "/tasks/new", TaskLive.Index, :new
+    live "/", UserLive.Registration, :new_session
+    # live "/tasks/new", TaskLive.Index, :new
+    live "/boards/:board_id/lists/:list_id/tasks/new", ListLive.Index, :new_task
     live "/tasks/:id/edit", TaskLive.Index, :edit
 
 
@@ -59,22 +119,21 @@ defmodule SundialWeb.Router do
 
     # get "/attachments", AttachmentsController, :index
 
-    live "/boards", BoardLive.Index, :index
+
+    # live "/boards", BoardLive.Index, :index
     live "/boards/new", BoardLive.Index, :new
     live "/boards/:id/edit", BoardLive.Index, :edit
 
     # live "/boards/:id", BoardLive.Show, :show
-    live "/boards/:id", TaskLive.Index, :index
+    live "/boards/:id", ListLive.Index, :index
     live "/boards/:id/show/edit", BoardLive.Show, :edit
 
     live "/lists", ListLive.Index, :index
-    live "/lists/new", ListLive.Index, :new
+    live "/boards/:id/lists/new", ListLive.Index, :new
     live "/lists/:id/edit", ListLive.Index, :edit
 
     live "/lists/:id", ListLive.Show, :show
     live "/lists/:id/show/edit", ListLive.Show, :edit
-
-
 
     live "/comments", CommentLive.Index, :index
     live "/comments/new", CommentLive.Index, :new
@@ -83,14 +142,16 @@ defmodule SundialWeb.Router do
     live "/comments/:id", CommentLive.Show, :show
     live "/comments/:id/show/edit", CommentLive.Show, :edit
 
-
-
     live "/permissions", PermissionLive.Index, :index
     live "/permissions/new", PermissionLive.Index, :new
     live "/permissions/:id/edit", PermissionLive.Index, :edit
 
     live "/permissions/:id", PermissionLive.Show, :show
     live "/permissions/:id/show/edit", PermissionLive.Show, :edit
+
+    live "/signup", UserLive.Registration, :index
+    live "/login", UserLive.Registration, :new_session
+    # live "/logout", UserLive.Registration, :destroy_session
   end
 
   # Other scopes may use custom stacks.

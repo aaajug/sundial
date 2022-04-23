@@ -5,8 +5,12 @@ defmodule Backend.Lists do
 
   import Ecto.Query, warn: false
   alias Backend.Repo
+  alias Backend.Boards.Board
 
   alias Backend.Lists.List
+  alias Backend.Lists.SerialList
+  alias Backend.Users.User
+  alias Backend.Tasks
 
   @doc """
   Returns the list of lists.
@@ -17,8 +21,36 @@ defmodule Backend.Lists do
       [%List{}, ...]
 
   """
-  def list_lists do
-    Repo.all(List)
+  def list_lists(user, board_id) do
+    # TODO: clean pipes
+    # TODO: create private function for getting target board
+    user_board = user
+      |> Repo.preload([boards: from(board in Board, where: board.id == ^board_id)])
+
+    target_board = user_board.boards |> Enum.at(0)
+
+    # IO.inspect target_board |> Repo.preload(:lists) , label: "targetboardlists2"
+    board_lists = target_board
+    |> Repo.preload(lists: :tasks)
+
+    t = board_lists.lists |> Enum.at(0)
+    IO.inspect t |> Repo.preload(:tasks), label: "firslistpreload"
+
+    IO.inspect board_lists, label: "boardlists3"
+
+    board_lists.lists
+    # target_board
+    # |> Ecto.build_assoc(:lists)
+    # |> List.changeset(attrs)
+    # |> Ecto.Changeset.put_assoc(:user, user)
+    # |> Repo.insert
+
+    # (from user in User, where: user.id == ^user_id)
+    #         |> Repo.all
+    #         |> Repo.preload(:boards)
+
+
+    # Repo.all(List)
   end
 
   @doc """
@@ -49,10 +81,59 @@ defmodule Backend.Lists do
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_list(attrs \\ %{}) do
-    %List{}
+  def create_list(user, board_id, attrs \\ %{}) do
+    # IO.inspect %List{} |> List.changeset(attrs), label: "changesetdb"
+
+    # board = (from board in Board, where: board.is == ^board.id)
+    #   |> Repo.all
+
+    # get owned boards of user
+    # get shared boards of user with manage or write permissions
+    # get specific board using board_id
+    # build list assoc of specific board
+    # create list changeset
+
+    # user_id = user.id
+
+    # user_boards = (from user in User,
+    #   where: user.id == ^user_id,
+    #   preload: [:boards])
+    #     |> Repo.all
+
+    # IO.inspect user_boards, label: "debuguserboards2"
+
+    # user_query = (from user in User,
+    #   where: user.id == ^user_id)
+
+    # IO.inspect user_query, label: "userquery"
+    # IO.inspect user, label: "userobject"
+    # IO.inspect Repo.preload(user, :boards), label: "preloadingcast"
+
+    user_board = user
+      |> Repo.preload([boards: from(board in Board, where: board.id == ^board_id)])
+
+    target_board = user_board.boards |> Enum.at(0)
+    IO.inspect target_board, label: "targetboarddebug2"
+
+
+    # user_boards = user_boards
+    #   |> Ecto.build_assoc(:shared_boards)
+
+    # IO.inspect user_boards, label: "debuguserboardswithsharedboards"
+
+    #  Ecto.build_assoc(user, :lists, attrs)
+
+    target_board
+    |> Ecto.build_assoc(:lists)
     |> List.changeset(attrs)
-    |> Repo.insert()
+    |> Ecto.Changeset.put_assoc(:user, user)
+    |> Repo.insert
+
+    # Ecto.build_assoc(user, :lists, )
+
+    # %List{}
+    # |> List.changeset(attrs)
+    # |> Repo.insert()
   end
 
   @doc """
@@ -87,6 +168,32 @@ defmodule Backend.Lists do
   """
   def delete_list(%List{} = list) do
     Repo.delete(list)
+  end
+
+  def serialize(%List{} = list) do
+    tasks = Enum.map(list.tasks,
+      fn task ->
+        Tasks.serialize(task)
+      end)
+
+    %SerialList{
+      id: list.id,
+      board_id: list.board_id,
+      position: list.position,
+      title: list.title,
+      owner_id: list.user_id,
+      # tasks: list.tasks
+      tasks: tasks
+    }
+  end
+
+  def serialize(lists) do
+    lists
+      |> Enum.map(
+        fn list ->
+          serialize(list)
+        end
+      )
   end
 
   @doc """

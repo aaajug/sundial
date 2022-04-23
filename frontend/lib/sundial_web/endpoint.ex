@@ -7,7 +7,8 @@ defmodule SundialWeb.Endpoint do
   @session_options [
     store: :cookie,
     key: "_sundial_key",
-    signing_salt: "H8RjnTid3P7hL492ELQ36YNZaWESHTTo "
+    signing_salt: "H8RjnTid3P7hL492ELQ36YNZaWESHTTo ",
+    max_age: 3600
   ]
 
   socket "/live", Phoenix.LiveView.Socket, websocket: [connect_info: [session: @session_options]]
@@ -46,6 +47,6 @@ defmodule SundialWeb.Endpoint do
   plug Plug.MethodOverride
   plug Plug.Head
   plug Plug.Session, @session_options
-  # plug Pow.Plug.Session, otp_app: :sundial
+  plug Pow.Plug.Session, otp_app: :sundial
   plug SundialWeb.Router
 end
