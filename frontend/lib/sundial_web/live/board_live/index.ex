@@ -24,11 +24,15 @@ defmodule SundialWeb.BoardLive.Index do
   end
 
   defp apply_action(socket, :edit, %{"id" => id}) do
-    board = BoardAPI.get_board(%{id: id})
+    client = ClientAPI.client(socket.assigns.current_user_access_token)
+    board = client
+     |>  BoardAPI.get_board(%{id: id})
+
     board = for {key, val} <- board, into: %{}, do: {String.to_atom(key), val}
 
     socket
     |> assign(:page_title, "Edit Board")
+    |> assign(:roles, BoardAPI.get_roles)
     |> assign(:board, board)
   end
 
@@ -56,6 +60,15 @@ defmodule SundialWeb.BoardLive.Index do
     BoardAPI.delete(%{id: id})
 
     {:noreply, assign(socket, :boards, list_boards(""))}
+  end
+
+  @impl true
+  def handle_event("add_shared_user_field", %{"return_to" => return_to}, socket) do
+    # save current form
+    # update no. of fields
+    # push redirect to return_to
+    {:noreply, socket
+    |> push_redirect(to: return_to)}
   end
 
   defp list_boards(session) do

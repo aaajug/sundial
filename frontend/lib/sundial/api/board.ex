@@ -5,8 +5,8 @@ defmodule Sundial.API.BoardAPI do
   plug Tesla.Middleware.BaseUrl, "http://backend:4000/api"
   plug Tesla.Middleware.JSON
 
-  def get_board(params) do
-    case get("/boards/" <> params.id) do
+  def get_board(client, params) do
+    case get(client, "/boards/" <> params.id) do
       {:ok, %{body: body}} -> body
         {_, %{body: body}} -> ""
     end
@@ -45,6 +45,13 @@ defmodule Sundial.API.BoardAPI do
   def delete_board(params) do
     IO.inspect "inboard delete API"
     case delete("/boards/" <> params.id) do
+      {:ok, %{body: body}} -> body
+        {_, %{body: body}} -> ""
+    end
+  end
+
+  def get_roles do
+    case get("/boards/roles") do
       {:ok, %{body: body}} -> body
         {_, %{body: body}} -> ""
     end

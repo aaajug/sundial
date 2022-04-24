@@ -3,6 +3,7 @@ defmodule BackendWeb.BoardController do
 
   alias Backend.Boards
   alias Backend.Boards.Board
+  alias Backend.Boards.Role
 
   # plug BackendWeb.Authorize,resource: BackendWeb.Boards.Board, except: [:new, :index]
 
@@ -12,7 +13,7 @@ defmodule BackendWeb.BoardController do
 
     user_boards = Enum.at(Boards.list_boards(user.id), 0)
 
-    IO.inspect user_boards, label: "userboards"
+    # IO.inspect user_boards, label: "userboards"
     boards = user_boards.boards
     serialized_boards = Boards.serialize(boards)
 
@@ -59,10 +60,14 @@ defmodule BackendWeb.BoardController do
   def show(conn, %{"id" => id}) do
     user = Pow.Plug.current_user(conn)
 
-    board = Boards.get_board!(user, id)
+    board = Boards.get_board(user, id)
 
     json conn, Boards.serialize(board)
     # render(conn, "show.html", board: board)
+  end
+
+  def get_roles(conn, _params) do
+    json conn, Role.get_names
   end
 
   def edit(conn, %{"id" => id}) do

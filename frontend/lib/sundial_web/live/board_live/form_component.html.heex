@@ -21,15 +21,59 @@
     phx-change="validate"
     phx-submit="save"> %>
 
-    <%# <form phx-target={@myself}
-    phx-submit="save"> %>
+    <form phx-target={@myself}
+    phx-submit="save">
 
-    <form action="/boards"
-    method="post">
+    <%# <form action="/boards"
+    method="post"> %>
   
-    <div class="field">
-      <label>Title</label>
+    <div class="field pt-3">
+      <label class="is-size-6">Title</label>
       <input id="board_title" name="board[title]" value={board_object.title} style="background-color: white;" required>
+    </div>
+
+    <div class="field is-size-7 mt-5">
+      <ion-icon name="information-circle"></ion-icon>
+      As the board's owner, you will automatically be a <b>Manager</b> of this board. Share this board with other users by adding their emails below. If their accounts exist, they will be able to access this board through the <b>Shared with me</b> page.
+    </div>
+
+    <div class="field pt-2">
+      <label class="is-size-6">Share board with:</label>
+      
+      <%# <.live_component module={SundialWeb.BoardLive.SharedUsersComponent} id={1} roles={@roles} no_of_fields={1}/>  %>
+      <%# no of fields on edit --> no. of users with permissions on this board %>
+
+
+      <%# <div id="board_users_container" phx-hook="RemoveSharedUserField" style="display:block;"> %>
+      <div id="board_users_container" style="display:block;">
+        <div class="field is-horizontal" id="user_1-container">
+          <div class="field-body">
+            <div class="field">
+              <input id="user_1-email" name="board[pemrissions][user_1][email]" placeholder="alice@wonderland.com" style="background-color: white;">
+            </div>
+            <div class="field">
+              <select id="user_1-role" name="board[pemrissions][user_1][role]" style="background-color: white;">
+                <%# <option value="" disabled selected>select role</option> %>
+                <%= for role <- @roles do %>
+                  <option value={role} selected={false}><%= role %></option>
+                <% end %>
+              </select>
+            </div>
+            <div class="field" style="display: flex; align-items: center;">
+              <span class="icon-text has-text-danger remove-user-field" id="remove-user-field-1" data-tag="1" style="cursor: pointer;">
+                <span class="icon">
+                  <ion-icon name="remove-circle"></ion-icon>
+                </span>
+                <span>remove</span>
+              </span>
+            </div> 
+          </div>
+        </div>
+      </div>
+      <span class="is-underlined is-size-7 add-user-field" id="user_next" data-next="2" style="cursor: pointer;">+ add user</span>
+      <%# <span class="is-underlined is-size-7 add-user-field" id="user_next" data-next="2" phx-hook="AddSharedUserField" style="cursor: pointer;">+ add user</span> %>
+      <%# <span style="display:;" class="is-underlined is-size-7 add-user-field" id="user_next" phx-value-return_to={"/boards/"<>Integer.to_string(board_object.id)<>"/edit"} phx-click="add_shared_user_field" style="cursor: pointer;">+ add user</span> %>
+
     </div>
     
     <%= #label f, :title %>
@@ -41,7 +85,7 @@
     <%= #error_tag f, :user_id %>
   
     <div class="field is-pulled-right pt-4">
-      <%# <%= submit "Create board", phx_disable_with: "Saving...", class: "button is-success is-active" %> %>
+      <%= #submit "Create board", phx_disable_with: "Saving...", class: "button is-success is-active" %>
       <%= submit "Create board", class: "button is-success is-active" %>
     </div>
   </form>

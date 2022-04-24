@@ -58,10 +58,12 @@ defmodule Backend.Boards do
 
   """
   def get_board!(id), do: Repo.get!(Board, id)
-  # def get_board(user, id) do
-  #   (from board in Board,
-  #     where: board.user_id == ^user.id and borad)
-  # end
+  def get_board(user, id) do
+    user
+    |> Repo.preload([boards: from(board in Board, where: board.id == ^id)])
+    |> Map.fetch!(:boards)
+    |> Enum.at(0)
+  end
 
   @doc """
   Creates a board.

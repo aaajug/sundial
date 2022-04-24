@@ -26,16 +26,18 @@ import {Socket} from "phoenix"
 import {LiveSocket} from "phoenix_live_view"
 import None from './none';
 import "./scroll.js"
+import "./board_form.js"
 
 import Drag from './drag_hook';
 import {QuillEditor} from './quill_hook'
 import {TimestampCheckbox, DeadlineTimeSelect, CompletedOnTimeSelect, 
         StatusSelect, DeadlineDate, CompletedOnDate, TaskAssignee}  from "./task_form_hook";
+import {AddSharedUserField, RemoveSharedUserField} from "./board_form_hook";
         
 let Hooks = {
     None, QuillEditor, Drag, TimestampCheckbox, DeadlineTimeSelect, 
     CompletedOnTimeSelect, StatusSelect, DeadlineDate, CompletedOnDate,
-    TaskAssignee
+    TaskAssignee, AddSharedUserField, RemoveSharedUserField
 }
 
 let csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content")

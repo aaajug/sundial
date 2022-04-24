@@ -29,6 +29,7 @@ defmodule BackendWeb.Router do
     post "/session/renew", API.SessionController, :renew
 
     get "/user_role", TaskController, :get_role
+    get "/boards/roles", BoardController, :get_roles
 
     get("/ping", PingController, :show)
   end

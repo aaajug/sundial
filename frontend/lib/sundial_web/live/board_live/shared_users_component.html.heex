@@ -1,0 +1,33 @@
+<div>
+<% IO.inspect @no_of_fields, label: "no_of_fieldsprint2" %>
+<div id="board_users_container">
+  <%= for tag <- Enum.to_list(1..@no_of_fields) do %>
+    <% tag_str = Integer.to_string(tag) %>
+    <div class="field is-horizontal" id={"user_"<>tag_str<>"-container"}>
+     <div class="field-body">
+      <div class="field">
+       <input id={"user_"<>tag_str<>"-email"} name={"board[pemrissions][user_"<>tag_str<>"][email]"} placeholder="alice@wonderland.com" style="background-color: white;">
+      </div>
+      <div class="field">
+       <select id={"user_"<>tag_str<>"-role"} name={"board[pemrissions][user_"<>tag_str<>"][role]"} style="background-color: white;">
+        <option value="" disabled selected>select role</option>
+        <%= for role <- @roles do %>
+         <option value={role} selected={false}><%= role %></option>
+        <% end %>
+       </select>
+      </div>
+      <div class="field" style="display: flex; align-items: center;">
+       <span class="icon-text has-text-danger remove-user-field" id={"remove-user-field-" <> tag_str} data-tag={tag_str} style="cursor: pointer;" phx-hook="RemoveSharedUserField">
+        <span class="icon">
+         <%# <ion-icon name="remove-circle"></ion-icon> %>
+        </span>
+        <span>- remove</span>
+       </span>
+      </div> 
+     </div>
+    </div>
+  <% end %>
+  </div>
+  <%# <span class="is-underlined is-size-7 add-user-field" id="user_next" data-next="2" phx-hook="AddSharedUserField" style="cursor: pointer;">+ add user</span> %>
+  <span class="is-underlined is-size-7 add-user-field" id="user_next" phx-value-next={Integer.to_string(@no_of_fields+1)} phx-target={@myself} phx-click="AddSharedUserField" style="cursor: pointer;">+ add user</span>
+</div>

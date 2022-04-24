@@ -25,12 +25,17 @@ defmodule SundialWeb.BoardLive.FormComponent do
   #   {:noreply, assign(socket, :changeset, changeset)}
   # end
 
+  # @impl true
+  # def handle_event("")
+
   @impl true
   def handle_event("save", %{"board" => board_params}, socket) do
     save_board(socket, socket.assigns.action, board_params)
   end
 
   defp save_board(socket, :edit, board_params) do
+    IO.inspect socket, label: "socketinboardformde"
+    IO.inspect board_params, label: "boardparamssubmit"
 
     BoardAPI.update_board(socket.assigns.board.id, board_params)
         {:noreply,
@@ -52,7 +57,10 @@ defmodule SundialWeb.BoardLive.FormComponent do
   end
 
   defp save_board(socket, :new, board_params) do
+    IO.inspect socket, label: "socketinboardformde"
+    IO.inspect board_params, label: "boardparamssubmit"
     BoardAPI.create_board(%{"data" => board_params})
+
 
     {:noreply,
          socket
