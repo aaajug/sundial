@@ -37,9 +37,17 @@ defmodule BackendWeb.BoardController do
     # create board for user
     user = Pow.Plug.current_user(conn)
     # board_params = Map.put(board_params, :user, user)
-    board = Ecto.build_assoc(user, :boards, board_params)
 
-    case Boards.create_board(board) do
+    permissions =  if Map.has_key?(board_params, :permissions) do
+      board_params.permissions
+    else
+      nil
+    end
+    re = Boards.create_board(user, board_params, permissions)
+
+    IO.inspect re, label: "createboardresultins"
+
+    case re do
       {:ok, board} ->
         json conn, Boards.serialize(board)
 

@@ -76,7 +76,7 @@ defmodule Backend.Boards do
 
   """
   # def create_board(attrs \\ %{}) do
-  def create_board(board) do
+  def create_board(user, board_params, permissions) do
     # attrs = if attrs do
     #   Map.put(attrs, "user_id", attrs["user_id"])
     # end
@@ -90,7 +90,27 @@ defmodule Backend.Boards do
     # |> Repo.insert()
 
     # %Board
-    Repo.insert!(board)
+
+    IO.inspect board_params, label: "boardparamsbeforeinsert"
+
+    board = user
+    |> Ecto.build_assoc(:boards)
+    |> Board.changeset(board_params)
+    |> Repo.insert!
+
+    # board = Repo.insert!(board)
+
+    # board_owner_role = %{"board_owner_role" => %{"email" => user.email, "role" => "manager"}}
+    # permissions = if permissions == nil || permissions == [] do
+    #   [board_owner_role]
+    # else
+    #   [board_owner_role | permissions]
+    # end
+
+    set_board_permissions(board, permissions)
+    set_board_permissions(board, [{"board_owner_role", %{"email" => user.email, "role" => "manager"}}])
+
+    {:ok, get_board!(board.id)}
 
     # %Board{}
     # |> attrs
@@ -110,38 +130,7 @@ defmodule Backend.Boards do
 
   """
   def update_board(%Board{} = board, permissions, attrs) do
-    board_id = board.id
-
-    IO.inspect permissions, label: "permissionsprint"
-
-    # TOOD: modularize
-    # TODO: catch non-existing users
-    if permissions do
-      permissions
-      |> Enum.each(fn permission ->
-          {_, %{"email" => email, "role" => role}} = permission
-          user = Users.get_user_by_email(email)
-          if user && is_non_existing_permission?(user.id, board_id) do
-            role = if user.id == board.user_id do
-                      "manager"
-                   else
-                      role
-                   end
-
-            permission = %Permission{
-              user_id: user.id,
-              board_id: board_id,
-              role: role
-            }
-
-            permission
-            |> Permission.changeset(attrs)
-            |> Repo.insert()
-          else
-            # return non-existing users
-          end
-        end)
-    end
+    set_board_permissions(board, permissions)
 
     board
     |> Board.changeset(attrs)
@@ -215,12 +204,62 @@ defmodule Backend.Boards do
     # users
   end
 
-  def is_non_existing_permission?(user_id, board_id) do
-    permission = from(permission in Permission,
+  def permission(user_id, board_id) do
+    # def is_update_permission?(user_id, board_id, role) do
+      IO.inspect user_id, label: "useridperm"
+      IO.inspect board_id, label: "boardidperm"
+    from(permission in Permission,
       where: permission.user_id == ^user_id
              and permission.board_id == ^board_id)
       |> Repo.one
 
-    permission == nil
+    # permission.role != role
+  end
+
+  def set_board_permissions(board, permissions) do
+    IO.inspect board, label: "boardrepoinsertboard"
+    IO.inspect permissions, label: "permissionsinsetboard5"
+
+    if permissions do
+      IO.inspect "insideherepermissions"
+      board_id = board.id
+      permissions
+        |> Enum.each(fn permission ->
+            {_, %{"email" => email, "role" => role}} = permission
+            user = Users.get_user_by_email(String.trim(email))
+            if user do
+              set_user_board_permission(user, board, email, role)
+            else
+              # return non-existing users
+            end
+          end)
+    end
+  end
+
+  defp set_user_board_permission(user, board, email, role) do
+    IO.inspect "insidehereuserexists"
+              role = if user.id == board.user_id do
+                        "manager"
+                    else
+                        role
+                    end
+
+              permission_record = permission(user.id, board.id)
+
+              attrs = %{
+                user_id: user.id,
+                board_id: board.id,
+                role: role
+              }
+
+              if permission_record do
+                permission_record
+                |> Permission.changeset(attrs)
+                |> Repo.update()
+              else
+                %Permission{}
+                |> Permission.changeset(attrs)
+                |> Repo.insert!()
+              end
   end
 end
