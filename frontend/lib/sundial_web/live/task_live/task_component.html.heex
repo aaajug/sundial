@@ -4,6 +4,17 @@ Optional: @task [details labels timestamps[deadline completed_on]]
 %>
 
 <div>
+<style>
+  .assignee-container {
+    background-color: #DBDBDB;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 100%;
+    text-align: right;
+  }
+</style>
+
 <%= case @card_index do %>
 <%    0 -> %>
       <div class="dropzone" id={"dropzone-header-" <> Integer.to_string(@task["id"]) <> "-" <> Integer.to_string(@card_index)} data-kind="dropzone" data-card_index={-1} data-column={@task["status"]}>
@@ -29,6 +40,10 @@ Optional: @task [details labels timestamps[deadline completed_on]]
         <hr class="my-3">
         <.content assigns={assigns} options={options} />
       <% end %>
+
+      <div class="p-2"></div>
+
+      <.assignee assigns={assigns} />
     </div>
 
     <div class = "pl-3 place-flex-end">

@@ -100,4 +100,21 @@ defmodule SundialWeb.TaskLive.Sections do
     </div>
     """
   end
+
+  def assignee(%{assigns: assigns}) do
+    assignee = case assigns.task["assignee"] do
+      nil -> "Unnassigned"
+      "" -> "Unnassigned"
+      _ -> assigns.task["assignee"]
+    end
+
+    ~H"""
+    <div class="assignee-container">
+        <span class="icon-text is-italic pr-2">
+          <span style="font-size: 0.65rem;"><%= assignee %></span>
+          <span class="icon is-size-7"><ion-icon name="person-circle"></ion-icon></span>
+        </span>
+      </div>
+    """
+  end
 end
