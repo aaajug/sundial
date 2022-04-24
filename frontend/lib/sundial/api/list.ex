@@ -5,8 +5,10 @@ defmodule Sundial.API.ListAPI do
   plug Tesla.Middleware.BaseUrl, "http://backend:4000/api"
   plug Tesla.Middleware.JSON
 
-  def get_list(params) do
-    case get("/lists/" <> params.id) do
+  plug Tesla.Middleware.Logger
+
+  def get_list(client, id) do
+    case get(client, "/lists/" <> id) do
       {:ok, %{body: body}} -> body
         {_, %{body: body}} -> ""
     end
@@ -37,16 +39,17 @@ defmodule Sundial.API.ListAPI do
     end
   end
 
-  def update_list(id, params) do
-    case patch("/lists/" <> Integer.to_string(id), params) do
+  def update_list(client, id, params) do
+    IO.inspect params, label: "listupdateparams"
+    case patch(client, "/lists/" <> Integer.to_string(id), params) do
       {:ok, %{body: body}} -> body
         {_, %{body: body}} -> ""
     end
   end
 
-  def delete_list(params) do
-    IO.inspect "inlist delete API"
-    case delete("/lists/" <> params.id) do
+  def delete_list(client, id) do
+    IO.inspect id, label: "inlist delete API"
+    case delete(client, "/lists/" <> id) do
       {:ok, %{body: body}} -> body
         {_, %{body: body}} -> ""
     end

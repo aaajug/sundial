@@ -15,7 +15,7 @@ defmodule SundialWeb.ListLive.Index do
 
     {:ok, socket
     |> assign(:current_user_access_token, session["current_user_access_token"])
-    |> assign(:lists, list_lists(session, board_id))
+    |> assign(:lists, list_lists(session["current_user_access_token"], board_id))
     |> assign(:drag_hook, "Drag")
     |> assign(:board_id, board_id)
     |> assign(:return_target, base_path)
@@ -34,10 +34,15 @@ defmodule SundialWeb.ListLive.Index do
     {:noreply, apply_action(socket, socket.assigns.live_action, params)}
   end
 
-  defp apply_action(socket, :edit, %{"id" => id}) do
+  defp apply_action(socket, :edit_list, %{"id" => id}) do
+    client = ClientAPI.client(socket.assigns.current_user_access_token)
+    list = ListAPI.get_list(client, id)
+    list = for {key, val} <- list, into: %{}, do: {String.to_atom(key), val}
+
     socket
     |> assign(:page_title, "Edit List")
-    |> assign(:list, Lists.get_list!(id))
+    |> assign(:list, list)
+    |> assign(:return_target, "/boards/" <> Integer.to_string(list.board_id))
   end
 
   defp apply_action(socket, :new, %{"id" => id}) do
@@ -95,16 +100,18 @@ defmodule SundialWeb.ListLive.Index do
     |> assign(:list, nil)
   end
 
-  # @impl true
-  # def handle_event("delete", %{"id" => id}, socket) do
-  #   list = Lists.get_list!(id)
-  #   {:ok, _} = Lists.delete_list(list)
+  @impl true
+  def handle_event("delete", %{"id" => id}, socket) do
+    client = ClientAPI.client(socket.assigns.current_user_access_token)
+    ListAPI.delete_list(client, id)
+    # list = Lists.get_list!(id)
+    # {:ok, _} = Lists.delete_list(list)
 
-  #   {:noreply, assign(socket, :lists, list_lists())}
-  # end
+    {:noreply, assign(socket, :lists, list_lists(socket.assigns.current_user_access_token, socket.asssigns.board_id))}
+  end
 
-  defp list_lists(session, board_id) do
-    client = ClientAPI.client(session["current_user_access_token"])
+  defp list_lists(current_user_access_token, board_id) do
+    client = ClientAPI.client(current_user_access_token)
 
     client |>
       ListAPI.get_lists(board_id)

@@ -45,7 +45,6 @@ defmodule BackendWeb.ListController do
   def show(conn, %{"id" => id}) do
     list = Lists.get_list!(id)
     json conn, Lists.serialize(list)
-    # render(conn, "show.html", list: list)
   end
 
   def edit(conn, %{"id" => id}) do

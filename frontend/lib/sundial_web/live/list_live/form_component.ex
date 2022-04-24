@@ -2,15 +2,17 @@ defmodule SundialWeb.ListLive.FormComponent do
   use SundialWeb, :live_component
 
   alias Sundial.Lists
+  alias Sundial.API.ClientAPI
+  alias Sundial.API.ListAPI
 
   @impl true
   def update(%{list: list} = assigns, socket) do
-    changeset = Lists.change_list(list)
+    # changeset = Lists.change_list(list)
+    IO.inspect "inupdateoflistformcomp"
 
     {:ok,
      socket
-     |> assign(assigns)
-     |> assign(:changeset, changeset)}
+     |> assign(assigns)}
   end
 
   @impl true
@@ -27,17 +29,26 @@ defmodule SundialWeb.ListLive.FormComponent do
     save_list(socket, socket.assigns.action, list_params)
   end
 
-  defp save_list(socket, :edit, list_params) do
-    case Lists.update_list(socket.assigns.list, list_params) do
-      {:ok, _list} ->
-        {:noreply,
-         socket
-         |> put_flash(:info, "List updated successfully")
-         |> push_redirect(to: socket.assigns.return_to)}
+  defp save_list(socket, :edit_list, list_params) do
+    client = ClientAPI.client(socket.assigns.current_user_access_token)
+    IO.inspect list_params, label: "list_paramsdebug"
+     k= ListAPI.update_list(client, socket.assigns.list.id, %{list: list_params})
 
-      {:error, %Ecto.Changeset{} = changeset} ->
-        {:noreply, assign(socket, :changeset, changeset)}
-    end
+    {:noreply,
+      socket
+      |> put_flash(:info, "List updated successfully")
+      |> push_redirect(to: socket.assigns.return_to)}
+
+    # case Lists.update_list(socket.assigns.list, list_params) do
+    #   {:ok, _list} ->
+    #     {:noreply,
+    #      socket
+    #      |> put_flash(:info, "List updated successfully")
+    #      |> push_redirect(to: socket.assigns.return_to)}
+
+    #   {:error, %Ecto.Changeset{} = changeset} ->
+    #     {:noreply, assign(socket, :changeset, changeset)}
+    # end
   end
 
   defp save_list(socket, :new, list_params) do

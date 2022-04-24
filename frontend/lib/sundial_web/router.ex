@@ -93,6 +93,7 @@ defmodule SundialWeb.Router do
     # live "/tasks/new", TaskLive.Index, :new
     live "/boards/:board_id/lists/:list_id/tasks/new", ListLive.Index, :new_task
     live "/tasks/:id/edit", ListLive.Index, :edit_task
+    live "/lists/:id/edit", ListLive.Index, :edit_list
 
 
     # resources "/users", UsersController, only: [:create, :update, :delete]
@@ -131,7 +132,7 @@ defmodule SundialWeb.Router do
 
     live "/lists", ListLive.Index, :index
     live "/boards/:id/lists/new", ListLive.Index, :new
-    live "/lists/:id/edit", ListLive.Index, :edit
+    # live "/lists/:id/edit", ListLive.Index, :edit
 
     live "/lists/:id", ListLive.Show, :show
     live "/lists/:id/show/edit", ListLive.Show, :edit

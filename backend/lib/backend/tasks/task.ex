@@ -17,7 +17,7 @@ defmodule Backend.Tasks.Task do
     belongs_to :board, Backend.Boards.Board
     belongs_to :assignee,  {"users", Backend.Users.User}, on_replace: :nilify
     belongs_to :author, {"users", Backend.Users.User}
-    has_many :comments, Backend.Tasks.Comment
+    has_many :comments, Backend.Tasks.Comment,  on_delete: :nilify_all
 
     timestamps()
   end

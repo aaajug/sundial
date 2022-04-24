@@ -17,6 +17,20 @@
   </.modal>
 <% end %>
 
+<%= if @live_action in [:edit_list] do %>
+  <.modal return_to={@return_target}>
+    <.live_component
+      module={SundialWeb.ListLive.FormComponent}
+      id={@list.id || :new}
+      title={@page_title}
+      action={@live_action}
+      list={@list}
+      current_user_access_token={@current_user_access_token} 
+      return_to={@return_target}
+    />
+  </.modal>
+<% end %>
+
 
 <%= if @lists do %>
 <div class="pt-4">
@@ -28,8 +42,14 @@
   <%= for list <- @lists do %>
     <% #group = Enum.filter(@tasks, fn task -> task["status_id"] == status_id end) |> Enum.with_index %>
     <div class="content column pane is-3 mr-3 relative">
-      <div class="is-size-6 has-text-weight-very-light pb-1">
-        <%= list["title"] %> (<%= Enum.count(list["tasks"]) %>)
+      <div class="is-size-6 has-text-weight-very-light pb-1" style="display: flex; align-items: center;">
+        <span class="pr-3"><%= list["title"] %> (<%= Enum.count(list["tasks"]) %>)</span>
+        <%= live_patch to: Routes.list_index_path(@socket, :edit_list, list["id"], %{return_to: "/boards/" <> @board_id}), id: "edit-task", class: "pr-2" do %>
+          <ion-icon name="pencil-outline" class="is-clickable action-button"></ion-icon>
+        <% end %>
+        <a id={"delete-list-" <> Integer.to_string(list["id"])} phx-click="delete" phx-value-id={list["id"]} phx-value-return_to={"/boards/" <> @board_id} data-confirm="This list  will be deleted. Are you sure?">
+          <ion-icon name="trash-outline" class="is-clickable action-button"></ion-icon>
+        </a>
       </div>
 
       <div class="list-column" id={"list-column-" <> Integer.to_string(list["id"])}>

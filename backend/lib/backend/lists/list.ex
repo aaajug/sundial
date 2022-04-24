@@ -12,7 +12,7 @@ defmodule Backend.Lists.List do
 
     belongs_to :user, Backend.Users.User
     belongs_to :board, Backend.Boards.Board
-    has_many :tasks, Backend.Tasks.Task
+    has_many :tasks, Backend.Tasks.Task, on_delete: :nilify_all
 
     timestamps()
   end

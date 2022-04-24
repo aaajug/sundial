@@ -4,6 +4,7 @@ defmodule SundialWeb.BoardLive.Index do
   alias Sundial.Boards
   alias Sundial.Boards.Board
   alias Sundial.API.BoardAPI
+  alias Sundial.API.ListAPI
   alias Sundial.API.ClientAPI
   alias SundialWeb.EnsureAuthenticated
 
@@ -22,6 +23,15 @@ defmodule SundialWeb.BoardLive.Index do
   def handle_params(params, _url, socket) do
     {:noreply, apply_action(socket, socket.assigns.live_action, params)}
   end
+
+  # defp apply_action(socket, :edit_list, %{"id" => id}) do
+  #   client = ClientAPI.client(socket.assigns.current_user_access_token)
+  #   list = ListAPI.get_list(client, id)
+
+  #   socket
+  #   |> assign(:page_title, "Edit List")
+  #   |> assign(:list, list)
+  # end
 
   defp apply_action(socket, :edit, %{"id" => id}) do
     client = ClientAPI.client(socket.assigns.current_user_access_token)

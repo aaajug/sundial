@@ -171,6 +171,9 @@ defmodule Backend.Lists do
   end
 
   def serialize(%List{} = list) do
+    list = list
+      |> Repo.preload(:tasks)
+
     tasks = Enum.map(list.tasks,
       fn task ->
         Tasks.serialize(task)
@@ -182,7 +185,6 @@ defmodule Backend.Lists do
       position: list.position,
       title: list.title,
       owner_id: list.user_id,
-      # tasks: list.tasks
       tasks: tasks
     }
   end
