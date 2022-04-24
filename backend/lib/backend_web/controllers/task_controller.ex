@@ -37,7 +37,7 @@ defmodule BackendWeb.TaskController do
   def create(conn, %{"board_id" => board_id, "list_id" => list_id, "data" => task_params})do
   # def create(conn, _params)do
     # text(conn, "Posted create task")
-    task_params = for {key, val} <- task_params, into: %{}, do: {String.to_atom(key), val}
+    # task_params = for {key, val} <- task_params, into: %{}, do: {String.to_atom(key), val}
     user = Pow.Plug.current_user(conn)
 
     assignee = get_assignee(task_params, user)
@@ -68,7 +68,6 @@ defmodule BackendWeb.TaskController do
 
     user = Pow.Plug.current_user(conn)
     assignee = get_assignee(params, user)
-
 
     IO.inspect assignee, label: "assigneeprintinc"
 
@@ -197,6 +196,7 @@ defmodule BackendWeb.TaskController do
   end
 
   defp get_assignee(params, user) do
+    IO.inspect params, label: "debugparamsingetassignee"
     if Map.has_key?(params, "assignee") do
       if params["assignee"] == "" || params["assignee"] == nil do
         nil

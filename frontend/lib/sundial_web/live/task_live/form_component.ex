@@ -58,6 +58,7 @@ defmodule SundialWeb.TaskLive.FormComponent do
     # text(socket, API.send(task_params))
     IO.inspect socket, label: "2socketnewtaskeventtaskform"
     client = ClientAPI.client(socket.assigns.current_user_access_token)
+    IO.inspect task_params, label: "task_paramsdebug"
     TaskAPI.create_task(client, %{"data" => task_params}, socket.assigns.list_id, socket.assigns.board_id)
     # case Tasks.create_task(task_params) do
     #   {:ok, _task} ->

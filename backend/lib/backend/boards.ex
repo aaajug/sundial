@@ -227,10 +227,11 @@ defmodule Backend.Boards do
       board_id = board.id
       permissions
         |> Enum.each(fn permission ->
-            {_, %{"email" => email, "role" => role}} = permission
+          IO.inspect permission, label: "permissionloop3"
+            {_, %{"email" => email, "remove" => remove,"role" => role}} = permission
             user = Users.get_user_by_email(String.trim(email))
             if user do
-              set_user_board_permission(user, board, email, role)
+              set_user_board_permission(user, board, email, role, remove)
             else
               # return non-existing users
             end
@@ -238,8 +239,17 @@ defmodule Backend.Boards do
     end
   end
 
-  defp set_user_board_permission(user, board, email, role) do
-    IO.inspect "insidehereuserexists"
+  defp set_user_board_permission(user, board, email, role, remove) do
+    if remove == "true" do
+      user_id = user.id
+      board_id = board.id
+
+      (from permission in Permission,
+        where: permission.user_id == ^user_id
+               and permission.board_id == ^board_id)
+        |> Repo.one
+        |> Repo.delete
+    else
               role = if user.id == board.user_id do
                         "manager"
                     else
@@ -263,5 +273,6 @@ defmodule Backend.Boards do
                 |> Permission.changeset(attrs)
                 |> Repo.insert!()
               end
+            end
   end
 end

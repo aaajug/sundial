@@ -45,7 +45,7 @@
 
 
       <%# <div id="board_users_container" phx-hook="RemoveSharedUserField" style="display:block;"> %>
-      <div id="board_users_container" style="display:block;">
+      <div id="board_users_container" phx-hook="RemoveSharedUserField" style="display:block;">
         <%= for {user, i} <- Enum.with_index(board_object.users) do %>
           <% tag = Integer.to_string(i + 1) %>
           <div class="field is-horizontal" id={"user_"<>tag<>"-container"}>
@@ -59,6 +59,7 @@
                 <option value={role} selected={role == user["role"]}><%= role %></option>
               <% end %>
               </select>
+              <input id={"user_"<>tag<>"-remove"} name={"board[permissions][user_"<>tag<>"][remove]"} hidden>
             </div>
             <div class="field" style="display: flex; align-items: center;">
               <span class="icon-text has-text-danger remove-user-field" id={"remove-user-field-"<>tag} data-tag={tag} style="cursor: pointer;">
@@ -72,8 +73,8 @@
           </div>
         <% end %>
       </div>
-      <span class="is-underlined is-size-7 add-user-field" id="user_next" data-next={Enum.count(board_object.users) + 1} style="cursor: pointer;">+ add user</span>
-      <%# <span class="is-underlined is-size-7 add-user-field" id="user_next" data-next="2" phx-hook="AddSharedUserField" style="cursor: pointer;">+ add user</span> %>
+      <%# <span class="is-underlined is-size-7 add-user-field" id="user_next" data-next={Enum.count(board_object.users) + 1} style="cursor: pointer;">+ add user</span> %>
+      <span class="is-underlined is-size-7 add-user-field" id="user_next" data-next={Enum.count(board_object.users) + 1} phx-hook="AddSharedUserField" style="cursor: pointer;">+ add user</span>
       <%# <span style="display:;" class="is-underlined is-size-7 add-user-field" id="user_next" phx-value-return_to={"/boards/"<>Integer.to_string(board_object.id)<>"/edit"} phx-click="add_shared_user_field" style="cursor: pointer;">+ add user</span> %>
 
     </div>
@@ -88,7 +89,7 @@
   
     <div class="field is-pulled-right pt-4">
       <%= #submit "Create board", phx_disable_with: "Saving...", class: "button is-success is-active" %>
-      <%= submit "Create board", class: "button is-success is-active" %>
+      <%= submit "Save", class: "button is-success is-active" %>
     </div>
   </form>
 </div>

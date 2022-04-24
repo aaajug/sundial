@@ -17,6 +17,7 @@ export const AddSharedUserField = {
               <option value="contributor">contributor</option>
               <option value="member">member</option>
             </select>
+            <input id="user_`+new_field_id+`-remove" name="board[permissions][user_`+new_field_id+`][remove]" hidden>
           </div>
           <div class="field" style="display: flex; align-items: center;">
             <span class="icon-text has-text-danger remove-user-field" id="remove-user-field-`+new_field_id+`" data-tag="`+new_field_id+`" style="cursor: pointer;">
@@ -30,6 +31,16 @@ export const AddSharedUserField = {
       </div>`;
 
       $("#board_users_container").append(new_field);
+
+      var item = document.getElementById("remove-user-field-" + new_field_id)
+        item.addEventListener('click', removeField);
+
+        function removeField() {
+          var tag = this.getAttribute("data-tag");
+
+          // $("#user_"+tag+"-email").val("");
+          $("#user_"+tag+"-container").hide();
+        }
     });
   }
 };
@@ -38,10 +49,10 @@ export const RemoveSharedUserField = {
   mounted() {
     $(".remove-user-field").click(function(e) {
       var tag = $(this).data("tag");
-      console.log("remove field with tag " + tag);
 
-      $("#user_"+tag+"-email").val("");
-      // $("#user_"+tag+"-container").hide();
+      $("#user_"+tag+"-remove").val("true");
+      // $("#user_"+tag+"-email").val("");
+      $("#user_"+tag+"-container").hide();
     });
   }
 };
