@@ -4,9 +4,11 @@ defmodule Backend.Boards do
   """
 
   import Ecto.Query, warn: false
-  alias Backend.Repo
 
+  alias Backend.Repo
+  alias Backend.Users
   alias Backend.Boards.Board
+  alias Backend.Boards.Permission
   alias Backend.Boards.SerialBoard
   alias Backend.Users.User
 
@@ -107,7 +109,40 @@ defmodule Backend.Boards do
       {:error, %Ecto.Changeset{}}
 
   """
-  def update_board(%Board{} = board, attrs) do
+  def update_board(%Board{} = board, permissions, attrs) do
+    board_id = board.id
+
+    IO.inspect permissions, label: "permissionsprint"
+
+    # TOOD: modularize
+    # TODO: catch non-existing users
+    if permissions do
+      permissions
+      |> Enum.each(fn permission ->
+          {_, %{"email" => email, "role" => role}} = permission
+          user = Users.get_user_by_email(email)
+          if user && is_non_existing_permission?(user.id, board_id) do
+            role = if user.id == board.user_id do
+                      "manager"
+                   else
+                      role
+                   end
+
+            permission = %Permission{
+              user_id: user.id,
+              board_id: board_id,
+              role: role
+            }
+
+            permission
+            |> Permission.changeset(attrs)
+            |> Repo.insert()
+          else
+            # return non-existing users
+          end
+        end)
+    end
+
     board
     |> Board.changeset(attrs)
     |> Repo.update()
@@ -144,10 +179,14 @@ defmodule Backend.Boards do
 
   # def serialize(%Board{} = board), do: serialize(board)
   def serialize(%Board{} = board) do
+
+    users = serialize_permissions(board)
+
     %SerialBoard{
       id: board.id,
       title: board.title,
-      owner_id: board.user_id
+      owner_id: board.user_id,
+      users: users
     }
   end
 
@@ -158,5 +197,30 @@ defmodule Backend.Boards do
           serialize(board)
         end
       )
+  end
+
+  def serialize_permissions(board) do
+    users = %{}
+
+    board
+      |> Repo.preload(:permissions)
+      |> Map.fetch!(:permissions)
+      |> Enum.map(fn permission ->
+            user = Users.get_user!(permission.user_id)
+            # users = Map.put(users, user.email, permission.role)
+            %{email: user.email,
+              role: permission.role}
+          end)
+
+    # users
+  end
+
+  def is_non_existing_permission?(user_id, board_id) do
+    permission = from(permission in Permission,
+      where: permission.user_id == ^user_id
+             and permission.board_id == ^board_id)
+      |> Repo.one
+
+    permission == nil
   end
 end

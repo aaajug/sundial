@@ -1,4 +1,4 @@
 defmodule Backend.Boards.SerialBoard do
   @derive Jason.Encoder
-  defstruct [:id, :title, :owner_id]
+  defstruct [:id, :title, :owner_id, :users]
 end

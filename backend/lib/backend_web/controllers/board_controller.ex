@@ -4,6 +4,8 @@ defmodule BackendWeb.BoardController do
   alias Backend.Boards
   alias Backend.Boards.Board
 
+  # plug BackendWeb.Authorize,resource: BackendWeb.Boards.Board, except: [:new, :index]
+
   def index(conn, _params) do
     user = Pow.Plug.current_user(conn)
     IO.inspect user.boards, label: "userownedboards3"
@@ -62,12 +64,16 @@ defmodule BackendWeb.BoardController do
   end
 
   def update(conn, params) do
+    IO.inspect ("inupdateofboardcontroller")
     id = String.to_integer(params["id"])
     board = Boards.get_board!(id)
 
     board_params = Map.delete(params, "id")
 
-    case Boards.update_board(board, board_params) do
+    permissions = params["permissions"]
+    board_params = Map.delete(board_params, "permissions")
+
+    case Boards.update_board(board, permissions, board_params) do
       {:ok, board} ->
         json conn, Boards.serialize(board)
         # conn

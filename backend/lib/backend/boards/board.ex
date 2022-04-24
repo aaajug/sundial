@@ -12,6 +12,7 @@ defmodule Backend.Boards.Board do
     belongs_to :user, Backend.Users.User
     has_many :lists, Backend.Lists.List
     has_many :tasks, Backend.Tasks.Task
+    has_many :permissions, Backend.Boards.Permission, foreign_key: :board_id
     many_to_many :users, Backend.Users.User, join_through: "permissions"
 
     timestamps()

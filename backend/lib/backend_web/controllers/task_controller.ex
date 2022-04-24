@@ -6,6 +6,12 @@ defmodule BackendWeb.TaskController do
   alias Backend.Users
   alias Backend.Tasks.Task
 
+  def get_role(conn, %{"board_id" => board_id}) do
+    # text conn, "user_role"
+    role = Users.get_role(Pow.Plug.current_user(conn), board_id)
+    text conn, role
+  end
+
   def changeset(conn, %{"id" => id}) do
     task = Tasks.get_task!(id)
     changeset = Tasks.change_task(task)

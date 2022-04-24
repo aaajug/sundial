@@ -20,11 +20,11 @@ defmodule SundialWeb.PermissionLive.Index do
     |> assign(:permission, Boards.get_permission!(id))
   end
 
-  defp apply_action(socket, :new, _params) do
-    socket
-    |> assign(:page_title, "New Permission")
-    |> assign(:permission, %Permission{})
-  end
+  # defp apply_action(socket, :new, _params) do
+  #   socket
+  #   |> assign(:page_title, "New Permission")
+  #   |> assign(:permission, %Permission{})
+  # end
 
   defp apply_action(socket, :index, _params) do
     socket

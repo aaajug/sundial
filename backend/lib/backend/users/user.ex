@@ -12,7 +12,8 @@ defmodule Backend.Users.User do
     has_many :assigned_tasks, {"tasks", Backend.Tasks.Task}, foreign_key: :assignee_id
     has_many :lists, Backend.Lists.List, foreign_key: :user_id
     has_many :boards, Backend.Boards.Board, foreign_key: :user_id
-    many_to_many :shared_boards, {"tasks",Backend.Boards.Board}, join_through: "permissions"
+    has_many :permissions, Backend.Boards.Permission, foreign_key: :user_id
+    many_to_many :shared_boards, {"boards",Backend.Boards.Board}, join_through: "permissions"
 
     timestamps()
   end

@@ -28,6 +28,8 @@ defmodule BackendWeb.Router do
     get "/session/authenticated", API.SessionController, :is_authenticated
     post "/session/renew", API.SessionController, :renew
 
+    get "/user_role", TaskController, :get_role
+
     get("/ping", PingController, :show)
   end
 
