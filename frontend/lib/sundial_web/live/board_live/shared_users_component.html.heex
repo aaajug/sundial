@@ -6,10 +6,10 @@
     <div class="field is-horizontal" id={"user_"<>tag_str<>"-container"}>
      <div class="field-body">
       <div class="field">
-       <input id={"user_"<>tag_str<>"-email"} name={"board[pemrissions][user_"<>tag_str<>"][email]"} placeholder="alice@wonderland.com" style="background-color: white;">
+       <input id={"user_"<>tag_str<>"-email"} name={"board[permissions][user_"<>tag_str<>"][email]"} placeholder="alice@wonderland.com" style="background-color: white;">
       </div>
       <div class="field">
-       <select id={"user_"<>tag_str<>"-role"} name={"board[pemrissions][user_"<>tag_str<>"][role]"} style="background-color: white;">
+       <select id={"user_"<>tag_str<>"-role"} name={"board[permissions][user_"<>tag_str<>"][role]"} style="background-color: white;">
         <option value="" disabled selected>select role</option>
         <%= for role <- @roles do %>
          <option value={role} selected={false}><%= role %></option>

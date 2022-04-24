@@ -3,6 +3,7 @@ defmodule SundialWeb.BoardLive.FormComponent do
 
   alias Sundial.Boards
   alias Sundial.API.BoardAPI
+  alias Sundial.API.ClientAPI
 
   @impl true
   def update(%{board: board} = assigns, socket) do
@@ -34,10 +35,13 @@ defmodule SundialWeb.BoardLive.FormComponent do
   end
 
   defp save_board(socket, :edit, board_params) do
-    IO.inspect socket, label: "socketinboardformde"
+    IO.inspect socket, label: "socketinboardformde2"
     IO.inspect board_params, label: "boardparamssubmit"
 
-    BoardAPI.update_board(socket.assigns.board.id, board_params)
+    client = ClientAPI.client(socket.assigns.current_user_access_token)
+    client |>
+      BoardAPI.update_board(socket.assigns.board.id, board_params)
+
         {:noreply,
          socket
          |> put_flash(:info, "Board updated successfully")
