@@ -400,14 +400,24 @@ defmodule Backend.Tasks do
     deadline = format_datetime(task.deadline)
     [deadline_date, deadline_time, deadline_time_hour, deadline_time_minute] = parse_date(task.deadline)
 
-    task_assignee = task
+    task_preloaded = task
       |> Repo.preload(:assignee)
+      |> Repo.preload(:comments)
 
-    assignee = if task_assignee.assignee do
-      task_assignee.assignee.email
+    assignee = if task_preloaded.assignee do
+      task_preloaded.assignee.email
     else
       ""
     end
+
+    # comments = if task_preloaded.comments && task_preloaded.comments != [] do
+    #   task_preloaded.comments
+    #   |> Enum.map(fn comment ->
+    #       serialize_comment(comment)
+    #     end)
+    # else
+    #   []
+    # end
 
     %SerialTask{
       id: task.id,
@@ -428,6 +438,7 @@ defmodule Backend.Tasks do
       completed_on_parsed: %{date: completed_on_date, time: completed_on_time, hour: completed_on_time_hour, minute: completed_on_time_minute},
       position: task.position,
       index: index
+      # comments: comments
     }
   end
 

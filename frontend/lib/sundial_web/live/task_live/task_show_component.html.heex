@@ -27,10 +27,11 @@
 
     <div class="column">
       <h1 class="is-size-3 has-text-weight-semibold">Discussion</h1>
+      <%= #@task["comments"] %>
       <% #for comment <- @task["comments"] do %>
-      comment author
+      <%# comment author
       comment body
-      hr
+      hr %>
       <% #end %>
     </div>
   </div>

@@ -16,6 +16,9 @@
 @import "./label.scss";
 @import "./elements.scss";
 
+@import "./task_modal.scss";
+@import "./extra.scss";
+
 html, header {
   background-color: $blue_whale;
 }

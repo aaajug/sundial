@@ -6,14 +6,6 @@ defmodule SundialWeb.Live.Task.TaskModalComponent do
   end
 
   def render(assigns) do
-    # IO.inspect assigns, label: "assignsintaskmodal2"
-
-  #   <div class="modal is-active">
-  #   <div class="modal-background"></div>
-  #     <div class="modal-content">
-  #   Okay hellow
-  # </div>
-
     ~H"""
     <div id={@id} class="modal is-active"
       tabindex="-1"
