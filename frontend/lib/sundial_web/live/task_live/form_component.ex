@@ -33,12 +33,12 @@ defmodule SundialWeb.TaskLive.FormComponent do
   end
 
   # defp save_task(socket, :edit_task, task_params) do
-  #   IO.inspect "savetaskeditaskpasson"
+  #   #IO.inspect "savetaskeditaskpasson"
   #   save_task(socket, :edit, task_params)
   # end
   # TODO: Move to backend
   defp save_task(socket, :edit_task, task_params) do
-    IO.inspect "savetaskedit"
+    # #IO.inspect "savetaskedit"
     # case TaskAPI.update_task(socket.assigns.task.id, task_params) do
       client = ClientAPI.client(socket.assigns.current_user_access_token)
       TaskAPI.update_task(client, socket.assigns.task.id, task_params)
@@ -56,9 +56,9 @@ defmodule SundialWeb.TaskLive.FormComponent do
   # TODO: Move to backend
   defp save_task(socket, :new_task, task_params) do
     # text(socket, API.send(task_params))
-    IO.inspect socket, label: "2socketnewtaskeventtaskform"
+    #IO.inspect socket, label: "2socketnewtaskeventtaskform"
     client = ClientAPI.client(socket.assigns.current_user_access_token)
-    IO.inspect task_params, label: "task_paramsdebug"
+    #IO.inspect task_params, label: "task_paramsdebug"
     TaskAPI.create_task(client, %{"data" => task_params}, socket.assigns.list_id, socket.assigns.board_id)
     # case Tasks.create_task(task_params) do
     #   {:ok, _task} ->

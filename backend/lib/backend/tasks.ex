@@ -578,8 +578,20 @@ defmodule Backend.Tasks do
       id: comment.id,
       task_id: comment.task_id,
       author: comment.user.email,
-      content: comment.content
+      content: comment.content,
+      posted_on: format_comment_datetime(comment.inserted_at)
     }
+  end
+
+  def serialize_task_comment(%Comment{} = comment) do
+    comment
+      |> Repo.preload(:task)
+      |> Map.fetch!(:task)
+      |> serialize
+  end
+
+  defp format_comment_datetime(datetime) do
+    Calendar.strftime(datetime, "%d %b %Y @ %I:%M%p")
   end
 
 end

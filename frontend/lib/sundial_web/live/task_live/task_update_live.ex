@@ -3,7 +3,7 @@ defmodule SundialWeb.Live.TaskUpdateLive do
   # alias SundialWeb.TaskView
 
   def render(assigns) do
-    # IO.inspect @socket
+    # #IO.inspect @socket
     ~H"""
       update task
     """
@@ -15,7 +15,7 @@ defmodule SundialWeb.Live.TaskUpdateLive do
     # {:ok, assign(socket, %{conn: session["conn"], tasks: session["tasks"], status: session["status"]})}
     # TODO: Remove status from here, and also from the controller. Will be handled by TaskComponent instead.
     {:ok, assign(socket, %{})}
-    # IO.inspect "debug in: mount"
+    # #IO.inspect "debug in: mount"
     # {:ok, socket}
   end
 

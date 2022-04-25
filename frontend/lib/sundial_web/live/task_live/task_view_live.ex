@@ -14,7 +14,7 @@ defmodule SundialWeb.TaskViewLive do
     # {:ok, assign(socket, %{conn: session["conn"], tasks: session["tasks"], status: session["status"]})}
     # TODO: Remove status from here, and also from the controller. Will be handled by TaskComponent instead.
     # put_flash(socket, :info, "It worked!")
-    # IO.inspect socket
+    # #IO.inspect socket
     if Tasks.is_all_position_nil?(), do: Tasks.initialize_positions
     tasks = if sort_by == "default" do
               Tasks.list_tasks()
@@ -24,7 +24,7 @@ defmodule SundialWeb.TaskViewLive do
 
     {:ok, assign(socket, %{tasks: tasks})}
     # {:ok, assign(socket, %{tasks: session["tasks"], status: session["status"]})}
-    # IO.inspect "debug in: mount"
+    # #IO.inspect "debug in: mount"
     # {:ok, socket}
   end
 
@@ -50,7 +50,7 @@ defmodule SundialWeb.TaskViewLive do
   # end
 
   # def preload(_assigns) do
-  #   IO.inspect "in taskviewlive preload"
+  #   #IO.inspect "in taskviewlive preload"
 
   #   # Tasks.is_all_position_nil?(), do: Tasks.initialize_positions
   #   # tasks = Tasks.list_tasks()
@@ -59,8 +59,8 @@ defmodule SundialWeb.TaskViewLive do
   # end
 
   def handle_info(msg, socket) do
-    IO.inspect "Task view handle info"
-    IO.inspect msg
+    #IO.inspect "Task view handle info"
+    #IO.inspect msg
 
     {:noreply, socket}
   end

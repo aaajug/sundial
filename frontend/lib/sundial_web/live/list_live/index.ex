@@ -12,8 +12,17 @@ defmodule SundialWeb.ListLive.Index do
 
   @impl true
   def mount(params, session, socket) do
+    IO.inspect socket.assigns, label: "debuglistliveindexinmount"
+
     board_id = params["id"] || params["board_id"]
     base_path = "/boards/" <> board_id
+
+    task = if params["task_id"] do
+              client = ClientAPI.client(session["current_user_access_token"])
+              TaskAPI.get_task(client, %{id: params["task_id"]})
+          else
+            nil
+          end
 
     {:ok, socket
     |> assign(:current_user_access_token, session["current_user_access_token"])
@@ -21,12 +30,13 @@ defmodule SundialWeb.ListLive.Index do
     |> assign(:drag_hook, "Drag")
     |> assign(:board_id, board_id)
     |> assign(:return_target, base_path)
+    |> assign(:task, task)
     |> assign(:show_manage_header, true)}
   end
 
   @impl true
   def handle_event("refresh", %{"return_to" => return_to}, socket) do
-    # IO.inspect params, label: "refreeshtasksa"
+    # #IO.inspect params, label: "refreeshtasksa"
     {:noreply, push_redirect(socket, to: return_to)}
   end
 
@@ -67,7 +77,7 @@ defmodule SundialWeb.ListLive.Index do
   end
 
   defp apply_action(socket, :new_task, %{"board_id" => board_id, "list_id" => list_id}) do
-    IO.inspect "new task in live"
+    #IO.inspect "new task in live"
 
     socket
     |> assign(:page_title, "Add a new task")
@@ -85,7 +95,7 @@ defmodule SundialWeb.ListLive.Index do
     task = TaskAPI.get_task(client, %{id: id})
     task = for {key, val} <- task, into: %{}, do: {String.to_atom(key), val}
 
-    IO.inspect task, label: "taskobjectprint2"
+    # #IO.inspect task, label: "taskobjectprint2"
     socket
     |> assign(:page_title, "Edit Task")
     |> assign(:list_id, "")
@@ -98,6 +108,7 @@ defmodule SundialWeb.ListLive.Index do
   end
 
   defp apply_action(socket, :show_task, %{"board_id" => board_id, "task_id" => id}) do
+    IO.inspect "debuglistliveindex: in apply action of :show_task"
     client = ClientAPI.client(socket.assigns.current_user_access_token)
     task = TaskAPI.get_task(client, %{id: id})
 

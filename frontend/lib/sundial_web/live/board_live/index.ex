@@ -88,7 +88,7 @@ defmodule SundialWeb.BoardLive.Index do
   end
 
   # defp ensure_authenticated(access_token, socket) do
-  #   IO.inspect !EnsureAuthenticated.is_authenticated?(access_token), label: "ensureauthdbclient"
+  #   #IO.inspect !EnsureAuthenticated.is_authenticated?(access_token), label: "ensureauthdbclient"
   #   if !EnsureAuthenticated.is_authenticated?(access_token) do
   #     socket
   #       |> push_redirect(to: "/login")

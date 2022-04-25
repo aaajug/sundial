@@ -26,7 +26,7 @@ defmodule SundialWeb.UserLive.LoginFormComponent do
     # {:noreply,
       # socket |> push_redirect(to: "/set_session")}
 
-      IO.inspect "loginhandleevent"
+      #IO.inspect "loginhandleevent"
 
     {
       {:error, error},
@@ -36,7 +36,7 @@ defmodule SundialWeb.UserLive.LoginFormComponent do
 
     if success_info do
       # SessionHandler.set_current_user(socket, data)
-      IO.inspect "currentusersavedinsocket"
+      #IO.inspect "currentusersavedinsocket"
 
       socket = socket
       |> assign(:error, error)
@@ -45,7 +45,7 @@ defmodule SundialWeb.UserLive.LoginFormComponent do
       |> push_redirect(to: "/set_session")
       # |> push_redirect(to: "/boards")
 
-      IO.inspect socket, label: "socketinloginformcomp3"
+      #IO.inspect socket, label: "socketinloginformcomp3"
       {:noreply,
       socket}
     else

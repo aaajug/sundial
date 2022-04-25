@@ -41,7 +41,7 @@ defmodule BackendWeb.CommentController do
 
     case Tasks.create_comment(user, task_id, comment_params) do
             {:ok, comment} ->
-              data = Tasks.serialize_comment(comment)
+              data = Tasks.serialize_task_comment(comment)
               # Jason.encode(data)
               json conn, data
               # conn
@@ -192,7 +192,7 @@ defmodule BackendWeb.CommentController do
   end
 
   defp get_assignee(params, user) do
-    IO.inspect params, label: "debugparamsingetassignee"
+    # IO.inspect params, label: "debugparamsingetassignee"
     if Map.has_key?(params, "assignee") do
       if params["assignee"] == "" || params["assignee"] == nil do
         nil

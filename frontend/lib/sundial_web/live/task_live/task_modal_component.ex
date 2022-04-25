@@ -1,11 +1,13 @@
 defmodule SundialWeb.Live.Task.TaskModalComponent do
   use Phoenix.LiveDashboard.Web, :live_component
 
-  def task_modal(assigns) do
-    render(assigns)
-  end
-
   def render(assigns) do
+    status = if assigns.task["is_overdue"] do
+      "overdue"
+    else
+      assigns.task["status"]
+    end
+
     ~H"""
     <div id={@id} class="modal is-active"
       tabindex="-1"
@@ -33,7 +35,7 @@ defmodule SundialWeb.Live.Task.TaskModalComponent do
 
         .modal-content {
           background-color: white !important;
-          padding: 120px 60px;
+          padding: 70px 0px 0px;
           box-shadow: 5px 0px 10px #141414;
           width: 70%;
           height: 80vh;
@@ -51,15 +53,59 @@ defmodule SundialWeb.Live.Task.TaskModalComponent do
           top: 30px;
           right: 30px;
         }
+
+        .modal-content.initial {
+          border-left: solid;
+          border-left-color: #BCBCBC;
+          border-left-width: 25px;
+        }
+
+        .modal-content.started {
+          border-left: solid;
+          border-left-color: #FF7324;
+          border-left-width: 25px;
+        }
+
+        .modal-content.started .header p {
+          color: #FF7324;
+        }
+
+        .modal-content.completed {
+          border-left: solid;
+          border-left-color: #059C1D;
+          border-left-width: 25px;
+        }
+
+        .modal-content.completed .header p {
+          color: #059C1D;
+        }
+
+        &.modal-content.paused {
+          border-left: solid;
+          border-left-color: #000000;
+          border-left-width: 25px;
+          background-color: #9f9f9f;
+        }
+
+        &.modal-content.overdue {
+          border-left: solid;
+          border-left-color: #D84646;
+          border-left-width: 25px;
+        }
+
+        .modal-content.overdue .header p {
+          color: #D84646;
+        }
+
       </style>
 
-      <div class="modal-content">
+      <div class={"modal-content " <> status}>
         <div class="modal-dialog modal-lg">
             <div class="modal-header">
               <%= live_patch raw("&times;"), to: @return_to, class: "close" %>
             </div>
             <div class="modal-body">
-              <.live_component module={SundialWeb.Live.Task.TaskShowComponent} id="task-show-modal" task={assigns.task} />
+              <.live_component module={SundialWeb.Live.Task.TaskShowComponent} id="task-show-modal" task={assigns.task} current_user_access_token={@current_user_access_token} />
             </div>
         </div>
       </div>

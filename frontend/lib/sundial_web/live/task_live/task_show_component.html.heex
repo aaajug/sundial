@@ -4,6 +4,44 @@
     overflow: auto;
     max-height: 45%;
   }
+
+  .task-expanded-column {
+    max-height: 60vh !important;
+    overflow-y: auto;
+  }
+
+  .discussion-content {
+    max-height: 75vh !important;
+    overflow-y: auto;
+  }
+
+  .scrollbar::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+    background-color: #C5C5C5;
+    border-radius: 30px;
+  }
+
+  .scrollbar::-webkit-scrollbar {
+    width: 4px;
+    background-color: #C5C5C5;
+    border-radius: 30px;
+  }
+
+  .scrollbar::-webkit-scrollbar-thumb {
+    background-color: #C5C5C5;
+    border-radius: 30px;
+  }
+
+  .add-comment-container {
+    position: absolute;
+    bottom: 10px;
+    left: 0;
+    width: 100%;
+  }
+
+  .discussion.column {
+    padding-left: 40px;
+  }
 </style>
 
 <div class="has-text-black">
@@ -13,24 +51,37 @@
                 @task["status"]
               end %>
               
-  <div class="columns">
-    <div class="column">
+  <div class="columns pl-5">
+    <div class="column is-7 ml-5 pr-0">
       <.assignee_label assigns={assigns} />
       <.timestamps assigns={assigns} />
       <.header assigns={assigns} status={status} />
 
       <%= if @task["details"] && @task["details_plaintext"] && String.trim(@task["details_plaintext"]) != "" do %>
         <hr class="my-3">
-        <.content assigns={assigns} options={%{truncated: false}} />
+        <%# <.content assigns={assigns} options={%{truncated: false, container_class: ""}} /> %>
+        <div class="task-expanded-column scrollbar">
+          <div class="content is-mini-text pb-6">
+            <%= raw assigns.task["details"] %>
+          </div>
+        </div>
       <% end %>
     </div>
 
-    <div class="column">
-      <h1 class="is-size-3 has-text-weight-semibold">Discussion</h1>
-      <%= #@task["comments"] %>
-      <% for comment <- @task["comments"] do %>
-        comment["content"]
-      <% end %>
+    <div class="discussion column relative">
+      <h1 class="is-size-3 has-text-weight-semibold pb-3">Discussion</h1>
+      <div class="discussion-content scrollbar pb-6 pr-6">
+        <%= for comment <- @task["comments"] do %>
+          <.live_component module={SundialWeb.Live.Task.CommentComponent} id={comment["id"]} comment={comment} />
+        <% end %>
+
+        <div style="height:300px;"></div>  
+      </div>
+
+      <div class="add-comment-container"> 
+        <%# <% IO.inspect assigns, label: "assignsincommentform" %> %>
+        <.live_component module={SundialWeb.CommentLive.FormComponent} id="new-comment" assigns={assigns} current_user_access_token={@current_user_access_token}/>
+      </div> 
     </div>
   </div>
 </div>

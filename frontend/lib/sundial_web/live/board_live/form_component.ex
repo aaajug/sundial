@@ -35,8 +35,8 @@ defmodule SundialWeb.BoardLive.FormComponent do
   end
 
   defp save_board(socket, :edit, board_params) do
-    IO.inspect socket, label: "socketinboardformde2"
-    IO.inspect board_params, label: "boardparamssubmit2"
+    #IO.inspect socket, label: "socketinboardformde2"
+    #IO.inspect board_params, label: "boardparamssubmit2"
 
     client = ClientAPI.client(socket.assigns.current_user_access_token)
     client |>
@@ -61,8 +61,8 @@ defmodule SundialWeb.BoardLive.FormComponent do
   end
 
   defp save_board(socket, :new, board_params) do
-    # IO.inspect socket, label: "socketinboardformde"
-    # IO.inspect board_params, label: "boardparamssubmit"
+    # #IO.inspect socket, label: "socketinboardformde"
+    # #IO.inspect board_params, label: "boardparamssubmit"
     client = ClientAPI.client(socket.assigns.current_user_access_token)
     BoardAPI.create_board(client, %{"data" => board_params})
 

@@ -196,7 +196,7 @@ defmodule BackendWeb.TaskController do
   end
 
   defp get_assignee(params, user) do
-    IO.inspect params, label: "debugparamsingetassignee"
+    # IO.inspect params, label: "debugparamsingetassignee"
     if Map.has_key?(params, "assignee") do
       if params["assignee"] == "" || params["assignee"] == nil do
         nil

@@ -2,15 +2,15 @@ defmodule SundialWeb.CommentLive.FormComponent do
   use SundialWeb, :live_component
 
   alias Sundial.Tasks
+  alias Sundial.API.ClientAPI
+  alias Sundial.API.TaskAPI
 
   @impl true
-  def update(%{comment: comment} = assigns, socket) do
-    changeset = Tasks.change_comment(comment)
-
+  def update(assigns, socket) do
+    # IO.inspect assigns, label: "assignscommentliveinde2"
     {:ok,
      socket
-     |> assign(assigns)
-     |> assign(:changeset, changeset)}
+     |> assign(assigns)}
   end
 
   @impl true
@@ -24,7 +24,7 @@ defmodule SundialWeb.CommentLive.FormComponent do
   end
 
   def handle_event("save", %{"comment" => comment_params}, socket) do
-    save_comment(socket, socket.assigns.action, comment_params)
+    save_comment(socket, :new, comment_params)
   end
 
   defp save_comment(socket, :edit, comment_params) do
@@ -41,15 +41,32 @@ defmodule SundialWeb.CommentLive.FormComponent do
   end
 
   defp save_comment(socket, :new, comment_params) do
-    case Tasks.create_comment(comment_params) do
-      {:ok, _comment} ->
-        {:noreply,
-         socket
-         |> put_flash(:info, "Comment created successfully")
-         |> push_redirect(to: socket.assigns.return_to)}
+    # IO.inspect socket.assigns, label: "assignsinsavecomments"
+    # IO.inspect Map.keys(socket.assigns.assigns), label: "assignsinsavecomment2-mapkeys"
+    task_id = socket.assigns.assigns.task["id"];
+    board_id = socket.assigns.assigns.task["board_id"]
 
-      {:error, %Ecto.Changeset{} = changeset} ->
-        {:noreply, assign(socket, changeset: changeset)}
-    end
+    client = ClientAPI.client(socket.assigns.assigns.current_user_access_token)
+    response = TaskAPI.create_comment(client, board_id, task_id, comment_params)
+
+    IO.inspect response, label: "APIresponse"
+
+    # on success: update socket assigns.
+    {:noreply,
+      socket
+        |> assign(:task, response)
+      }
+
+
+    # case Tasks.create_comment(comment_params) do
+    #   {:ok, _comment} ->
+    #     {:noreply,
+    #      socket
+    #      |> put_flash(:info, "Comment created successfully")
+    #      |> push_redirect(to: socket.assigns.return_to)}
+
+    #   {:error, %Ecto.Changeset{} = changeset} ->
+    #     {:noreply, assign(socket, changeset: changeset)}
+    # end
   end
 end

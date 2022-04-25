@@ -14,8 +14,8 @@ defmodule SundialWeb.Live.Task.TaskComponent do
 
   # TODO: Move to backend
   # def preload(list_of_assigns) do
-  #   # IO.inspect "list_of_assigns"
-  #   # IO.inspect list_of_assigns
+  #   # #IO.inspect "list_of_assigns"
+  #   # #IO.inspect list_of_assigns
 
   #   #if Tasks.is_all_position_nil?(), do: Tasks.initialize_positions # or create a migration to update all existing records?
 

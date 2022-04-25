@@ -42,6 +42,11 @@ defmodule SundialWeb.TaskLive.Sections do
   end
 
   def content(%{assigns: assigns, options: options}) do
+    container_class = if Map.has_key?(options, :container_class) do
+      options.container_class
+    else
+      ""
+    end
     ~H"""
     <% is_truncated = if Map.has_key?(options, :truncated) do
                         options.truncated
@@ -51,7 +56,7 @@ defmodule SundialWeb.TaskLive.Sections do
 
     <% class = "content is-mini-text #{if is_truncated, do: "truncated"}"  %>
 
-    <div class="card-content p-0 pt-2">
+    <div class={"card-content p-0 pt-2" <> container_class}>
       <div class={class}>
         <%= raw assigns.task["details"] %>
         <%= #Jason.encode!(@content_item.quill) %>
@@ -62,7 +67,7 @@ defmodule SundialWeb.TaskLive.Sections do
 
   # TODO: links for API editing
   def actions(%{assigns: assigns}) do
-    # IO.inspect assigns
+    # #IO.inspect assigns
     ~H"""
     <div class="">
       <%= live_patch to: Routes.list_index_path(@socket, :show_task, assigns.task["board_id"], assigns.task["id"], %{return_to: @return_to}), id: "show-task" do %>

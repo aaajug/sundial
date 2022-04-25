@@ -1,5 +1,5 @@
 <div>
-<% IO.inspect @no_of_fields, label: "no_of_fieldsprint2" %>
+<% #IO.inspect @no_of_fields, label: "no_of_fieldsprint2" %>
 <div id="board_users_container">
   <%= for tag <- Enum.to_list(1..@no_of_fields) do %>
     <% tag_str = Integer.to_string(tag) %>

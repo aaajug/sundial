@@ -86,6 +86,13 @@ defmodule Sundial.API.TaskAPI do
     end
   end
 
+  def create_comment(client, board_id, task_id, params) do
+    case post(client, "/tasks/"<>Integer.to_string(task_id)<>"/comments", %{data: params}) do
+      {:ok, %{body: body}} -> body
+        {_, %{body: body}} -> ""
+    end
+  end
+
   defp format_ids(ids) do
     if ids, do: Enum.join(ids, ","), else: ""
   end

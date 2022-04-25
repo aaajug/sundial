@@ -1,0 +1,65 @@
+<div class="my-2">
+  <style>
+    .gray {
+      color: #5A5A5A;  
+    }
+
+    .inline-block {
+      display: inline-block !important;
+    }
+
+    .spaced-between-flex {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .truncated {
+      overflow: hidden;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+    }
+
+    .truncated-span {
+      text-overflow:ellipsis;overflow:hidden;white-space:nowrap;
+      max-width: 150px;
+    }
+
+    .is-size-8 {
+      font-size: 0.70em;
+      letter-spacing: 0.3px;
+    }
+
+    span.is-size-8 {
+      line-height: 0px;
+    }
+
+    .is-size-9 {
+      font-size: 0.55em;
+    }
+  </style>
+
+  <div class="spaced-between-flex">
+    <div class="gray icon-text is-size-8">
+      <span class="icon has-text-info">
+        <ion-icon name="person"></ion-icon>
+      </span>
+      <span class="is-italic truncated-span">
+        <%= @comment["author"] %>
+      </span>
+    </div>
+
+    <div class="gray float-right is-size-9">
+      <%= @comment["posted_on"] %>
+    </div>
+  </div>
+  
+  <div class="mt-1">
+    <span class="has-text-weight-light is-size-8"> 
+      <%= @comment["content"] %>
+    </span>
+  </div>
+  
+  <hr class="my-3">
+</div>

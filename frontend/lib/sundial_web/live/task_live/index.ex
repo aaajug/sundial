@@ -85,7 +85,7 @@ defmodule SundialWeb.TaskLive.Index do
 
    # TODO: Move to backend
   defp apply_action(socket, :new, _params) do
-    IO.inspect "new task in live"
+    #IO.inspect "new task in live"
 
     socket
     |> assign(:page_title, "Add a new task")
@@ -101,7 +101,7 @@ defmodule SundialWeb.TaskLive.Index do
     task = TaskAPI.get_task(client, %{id: id})
     task = for {key, val} <- task, into: %{}, do: {String.to_atom(key), val}
 
-    # IO.inspect task, label: "taskobjectprint2"
+    # #IO.inspect task, label: "taskobjectprint2"
     socket
     |> assign(:page_title, "Edit Task")
     |> assign(:list_id, "")

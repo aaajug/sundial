@@ -1,7 +1,7 @@
-defmodule SundialWeb.Live.Task.TaskShowComponent do
+
+defmodule SundialWeb.Live.Task.CommentComponent do
   use Phoenix.LiveComponent
 
-  import Phoenix.HTML
   import SundialWeb.TaskLive.Sections
 
   alias Sundial.Progress.States
@@ -10,8 +10,7 @@ defmodule SundialWeb.Live.Task.TaskShowComponent do
   alias Sundial.API.ClientAPI
 
   def mount(socket) do
-    IO.inspect socket.assigns, label: "assignsintaskshowcomponent"
-    {:ok, assign(socket, %{status: States.get()})}
+    {:ok, socket}
   end
 
   def update(assigns, socket) do

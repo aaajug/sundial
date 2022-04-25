@@ -32,7 +32,7 @@
 <% end %>
 
 <%= if @live_action in [:show_task] do %>
-  <.live_component module={SundialWeb.Live.Task.TaskModalComponent} return_to={@return_target} id={"modal"} task={@task}>
+  <.live_component module={SundialWeb.Live.Task.TaskModalComponent} return_to={@return_target} id={"modal"} task={@task} current_user_access_token={@current_user_access_token} >
     <%# <.live_component 
     module={SundialWeb.Live.Task.TaskShowComponent} 
     id={@task["id"]} task={@task} return_to={@return_target} current_user_access_token={@current_user_access_token}/> %>
