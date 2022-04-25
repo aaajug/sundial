@@ -9,8 +9,6 @@ defmodule SundialWeb.Live.Task.TaskComponent do
   alias Sundial.API.ClientAPI
 
   def mount(socket) do
-
-    IO.inspect socket, label: "taskcomponentsocketinmount"
     {:ok, assign(socket, %{status: States.get()})}
   end
 

@@ -10,10 +10,10 @@ defmodule Backend.Boards.Board do
     # field :user_id, :integer, default: 0
 
     belongs_to :user, Backend.Users.User
-    has_many :lists, Backend.Lists.List
-    has_many :tasks, Backend.Tasks.Task
-    has_many :permissions, Backend.Boards.Permission, foreign_key: :board_id
-    many_to_many :users, Backend.Users.User, join_through: "permissions"
+    has_many :lists, Backend.Lists.List, on_delete: :nilify_all
+    has_many :tasks, Backend.Tasks.Task, on_delete: :nilify_all
+    has_many :permissions, Backend.Boards.Permission, foreign_key: :board_id, on_delete: :nilify_all
+    many_to_many :users, Backend.Users.User, join_through: "permissions", on_delete: :nothing
 
     timestamps()
   end

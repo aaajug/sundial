@@ -5,7 +5,7 @@
     board_object = if Map.has_key?(assigns, :board) && @board.id do
                       @board
                     else
-                      %{title: nil, users: nil}
+                      %{title: nil, users: []}
                     end
   %>
 

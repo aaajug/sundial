@@ -11,6 +11,7 @@ defmodule Backend.Lists do
   alias Backend.Lists.SerialList
   alias Backend.Users.User
   alias Backend.Tasks
+  alias Backend.Boards
 
   @doc """
   Returns the list of lists.
@@ -24,21 +25,22 @@ defmodule Backend.Lists do
   def list_lists(user, board_id) do
     # TODO: clean pipes
     # TODO: create private function for getting target board
-    user_board = user
-      |> Repo.preload([boards: from(board in Board, where: board.id == ^board_id)])
 
-    target_board = user_board.boards |> Enum.at(0)
+    board = Boards.get_board!(String.to_integer(board_id))
+            |> Repo.preload(lists: :tasks)
+
+    # user_board = user
+    #   |> Repo.preload([boards: from(board in Board, where: board.id == ^board_id)])
+
+    # target_board = user_board.boards |> Enum.at(0)
 
     # IO.inspect target_board |> Repo.preload(:lists) , label: "targetboardlists2"
-    board_lists = target_board
-    |> Repo.preload(lists: :tasks)
+    # board_lists = target_board
 
-    t = board_lists.lists |> Enum.at(0)
-    IO.inspect t |> Repo.preload(:tasks), label: "firslistpreload"
 
-    IO.inspect board_lists, label: "boardlists3"
+    # t = board_lists.lists |> Enum.at(0)
 
-    board_lists.lists
+    board.lists
     # target_board
     # |> Ecto.build_assoc(:lists)
     # |> List.changeset(attrs)
@@ -109,11 +111,14 @@ defmodule Backend.Lists do
     # IO.inspect user, label: "userobject"
     # IO.inspect Repo.preload(user, :boards), label: "preloadingcast"
 
-    user_board = user
-      |> Repo.preload([boards: from(board in Board, where: board.id == ^board_id)])
+    target_board = Boards.get_board!(board_id)
 
-    target_board = user_board.boards |> Enum.at(0)
-    IO.inspect target_board, label: "targetboarddebug2"
+
+    # user_board = user
+    #   |> Repo.preload([boards: from(board in Board, where: board.id == ^board_id)])
+
+    # target_board = user_board.boards |> Enum.at(0)
+    # IO.inspect target_board, label: "targetboarddebug2"
 
 
     # user_boards = user_boards
@@ -123,6 +128,13 @@ defmodule Backend.Lists do
 
     #  Ecto.build_assoc(user, :lists, attrs)
 
+    attrs = if attrs do
+      attrs
+    else
+      %{title: "Unnamed list"}
+    end
+
+    IO.inspect attrs, label: "attrsdebugger2"
     target_board
     |> Ecto.build_assoc(:lists)
     |> List.changeset(attrs)

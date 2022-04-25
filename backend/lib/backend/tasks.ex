@@ -11,6 +11,7 @@ defmodule Backend.Tasks do
   alias Backend.Lists.List
   alias Backend.Boards.Board
   alias Backend.Tasks.SerialTask
+  alias Backend.Tasks.SerialComment
   # alias Backend.Progress.Status
   alias Backend.Progress
 
@@ -500,9 +501,13 @@ defmodule Backend.Tasks do
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_comment(attrs \\ %{}) do
+  def create_comment(user, task_id, attrs \\ %{}) do
+    task = get_task!(task_id)
+
     %Comment{}
     |> Comment.changeset(attrs)
+    |> Ecto.Changeset.put_assoc(:user, user)
+    |> Ecto.Changeset.put_assoc(:task, task)
     |> Repo.insert()
   end
 
@@ -518,7 +523,7 @@ defmodule Backend.Tasks do
       {:error, %Ecto.Changeset{}}
 
   """
-  def update_comment(%Comment{} = comment, attrs) do
+  def update_comment(task, user, %Comment{} = comment, attrs) do
     comment
     |> Comment.changeset(attrs)
     |> Repo.update()
@@ -552,4 +557,17 @@ defmodule Backend.Tasks do
   def change_comment(%Comment{} = comment, attrs \\ %{}) do
     Comment.changeset(comment, attrs)
   end
+
+  def serialize_comment(%Comment{} = comment) do
+    comment = comment
+      |> Repo.preload(:user)
+
+    %SerialComment{
+      id: comment.id,
+      task_id: comment.task_id,
+      author: comment.user.email,
+      content: comment.content
+    }
+  end
+
 end

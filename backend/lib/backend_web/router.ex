@@ -53,6 +53,11 @@ defmodule BackendWeb.Router do
 
     # List API
     post "/boards/:id/lists", ListController, :create
+
+    # Comment API
+    post "/tasks/:id/comments", CommentController, :create
+    patch "/tasks/:task_id/comments/:comment_id", CommentController, :update
+    delete "/comments/:id", CommentController, :delete
   end
 
   # Enables LiveDashboard only for development

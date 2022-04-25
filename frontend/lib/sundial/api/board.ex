@@ -42,9 +42,9 @@ defmodule Sundial.API.BoardAPI do
     end
   end
 
-  def delete_board(params) do
+  def delete_board(client, params) do
     IO.inspect "inboard delete API"
-    case delete("/boards/" <> params.id) do
+    case delete(client, "/boards/" <> params.id) do
       {:ok, %{body: body}} -> body
         {_, %{body: body}} -> ""
     end

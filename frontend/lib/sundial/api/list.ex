@@ -5,7 +5,7 @@ defmodule Sundial.API.ListAPI do
   plug Tesla.Middleware.BaseUrl, "http://backend:4000/api"
   plug Tesla.Middleware.JSON
 
-  plug Tesla.Middleware.Logger
+  # plug Tesla.Middleware.Logger
 
   def get_list(client, id) do
     case get(client, "/lists/" <> id) do

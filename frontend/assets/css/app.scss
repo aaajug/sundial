@@ -98,6 +98,10 @@ html, header {
   height: 100%;
   overflow: auto;
   background-color: rgba(0,0,0,0.4);
+
+  // &.task-modal {
+  //   background-color: white;
+  // }
 }
 
 .phx-modal-content {
@@ -122,12 +126,18 @@ html, header {
   right: 30px;
 }
 
+// .task-modal {
+//   background-color: white;
+// }
+
 .phx-modal-close:hover,
 .phx-modal-close:focus {
   color: black;
   text-decoration: none;
   cursor: pointer;
 }
+
+
 
 .fade-in-scale {
   animation: 0.2s ease-in 0s normal forwards 1 fade-in-scale-keys;

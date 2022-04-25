@@ -110,7 +110,7 @@ defmodule Backend.Boards do
     # end
 
     set_board_permissions(board, permissions)
-    set_board_permissions(board, [{"board_owner_role", %{"email" => user.email, "role" => "manager"}}])
+    set_board_permissions(board, [{"board_owner_role", %{"email" => user.email, "remove" => "", "role" => "manager"}}])
 
     {:ok, get_board!(board.id)}
 
@@ -132,6 +132,7 @@ defmodule Backend.Boards do
 
   """
   def update_board(%Board{} = board, permissions, attrs) do
+    # IO.inspect attrs
     set_board_permissions(board, permissions)
 
     board
@@ -240,7 +241,7 @@ defmodule Backend.Boards do
   end
 
   defp set_user_board_permission(user, board, email, role, remove) do
-    if remove == "true" do
+    if remove == "true" && user.id != board.user_id do
       user_id = user.id
       board_id = board.id
 

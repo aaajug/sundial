@@ -49,6 +49,7 @@ defmodule SundialWeb.BoardLive.Index do
   defp apply_action(socket, :new, _params) do
     socket
     |> assign(:page_title, "New Board")
+    |> assign(:roles, BoardAPI.get_roles)
     |> assign(:board, %Board{})
   end
 
@@ -65,9 +66,8 @@ defmodule SundialWeb.BoardLive.Index do
 
   @impl true
   def handle_event("delete", %{"id" => id}, socket) do
-    # board = Boards.get_board!(id)
-    # {:ok, _} = Boards.delete_board(board)
-    BoardAPI.delete(%{id: id})
+    client = ClientAPI.client(socket.assigns.current_user_access_token)
+    BoardAPI.delete(client, %{id: id})
 
     {:noreply, assign(socket, :boards, list_boards(""))}
   end

@@ -65,6 +65,9 @@ defmodule SundialWeb.TaskLive.Sections do
     # IO.inspect assigns
     ~H"""
     <div class="">
+      <%= live_patch to: Routes.list_index_path(@socket, :show_task, %SerialTask{id: assigns.task["id"]}, %{return_to: @return_to}), id: "show-task" do %>
+        <ion-icon name="open" class="is-clickable action-button"></ion-icon>
+      <% end %> <br>
       <%= live_patch to: Routes.list_index_path(@socket, :edit_task, %SerialTask{id: assigns.task["id"]}, %{return_to: @return_to}), id: "edit-task" do %>
       <%= #link to: "/" do %>
         <ion-icon name="pencil-outline" class="is-clickable action-button"></ion-icon>
@@ -115,6 +118,21 @@ defmodule SundialWeb.TaskLive.Sections do
           <span class="icon is-size-7"><ion-icon name="person-circle"></ion-icon></span>
         </span>
       </div>
+    """
+  end
+
+  def assignee_label(%{assigns: assigns}) do
+    assignee = case assigns.task["assignee"] do
+      nil -> "Unnassigned"
+      "" -> "Unnassigned"
+      _ -> assigns.task["assignee"]
+    end
+
+    ~H"""
+      <span class="icon-text pr-2">
+        <span class="icon is-size-7"><ion-icon name="person-circle"></ion-icon></span>
+        <span style="font-size: 0.65rem;"><%= assignee %></span>
+      </span>
     """
   end
 end

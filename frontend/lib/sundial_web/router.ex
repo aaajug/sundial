@@ -63,13 +63,12 @@ defmodule SundialWeb.Router do
     live "/boards", BoardLive.Index, :index
   end
 
-  scope "/", SundialWeb do
-    pipe_through [:browser_no_csrf]
+  # scope "/", SundialWeb do
+  #   pipe_through [:browser_no_csrf]
 
-    post "/boards", BoardController, :create
-    post "/boards/:board_id/lists/:list_id/tasks", TaskController, :create
-    post "/boards/:id/lists", ListController, :create
-  end
+  #   post "/boards", BoardController, :create
+  #   post "/boards/:board_id/lists/:list_id/tasks", TaskController, :create
+  # end
 
   scope "/", SundialWeb do
     pipe_through :browser_no_csrf
@@ -94,6 +93,7 @@ defmodule SundialWeb.Router do
     live "/boards/:board_id/lists/:list_id/tasks/new", ListLive.Index, :new_task
     live "/tasks/:id/edit", ListLive.Index, :edit_task
     live "/lists/:id/edit", ListLive.Index, :edit_list
+    live "/tasks/:id/show", ListLive.Index, :show_task
 
 
     # resources "/users", UsersController, only: [:create, :update, :delete]
@@ -136,6 +136,7 @@ defmodule SundialWeb.Router do
 
     live "/lists/:id", ListLive.Show, :show
     live "/lists/:id/show/edit", ListLive.Show, :edit
+    live "/boards/:id/lists", ListLive.Index, :new_list
 
     live "/comments", CommentLive.Index, :index
     live "/comments/new", CommentLive.Index, :new
@@ -153,6 +154,7 @@ defmodule SundialWeb.Router do
 
     live "/signup", UserLive.Registration, :index
     live "/login", UserLive.Registration, :new_session
+
     # live "/logout", UserLive.Registration, :destroy_session
   end
 

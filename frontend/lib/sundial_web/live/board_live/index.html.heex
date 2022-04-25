@@ -64,7 +64,7 @@
     <div class="columns pt-4">
       <%= if @boards do %>
         <%= for board <- @boards do %>
-          <.live_component module={SundialWeb.Live.Board.BoardComponent} id={board["id"]} board={board} />
+          <.live_component module={SundialWeb.Live.Board.BoardComponent} id={board["id"]} board={board} current_user_access_token={@current_user_access_token}/>
         <% end %>
       <% end %>
     </div>

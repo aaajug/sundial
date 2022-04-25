@@ -44,6 +44,7 @@ defmodule BackendWeb.BoardController do
     else
       nil
     end
+
     re = Boards.create_board(user, board_params, permissions)
 
     IO.inspect re, label: "createboardresultins"

@@ -17,6 +17,6 @@ defmodule Backend.Tasks.Comment do
   def changeset(comment, attrs) do
     comment
     |> cast(attrs, [:content, :user_id, :task_id])
-    |> validate_required([:content, :user_id, :task_id])
+    |> validate_required([:content])
   end
 end

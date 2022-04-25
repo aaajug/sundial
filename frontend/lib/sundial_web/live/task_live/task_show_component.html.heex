@@ -1,0 +1,38 @@
+<div>
+<style>
+  .card-content {
+    overflow: auto;
+    max-height: 45%;
+  }
+</style>
+
+<div class="has-text-black">
+  <% status = if @task["is_overdue"] do 
+                "overdue"
+              else 
+                @task["status"]
+              end %>
+              
+  <div class="columns">
+    <div class="column">
+      <.assignee_label assigns={assigns} />
+      <.timestamps assigns={assigns} />
+      <.header assigns={assigns} status={status} />
+
+      <%= if @task["details"] && @task["details_plaintext"] && String.trim(@task["details_plaintext"]) != "" do %>
+        <hr class="my-3">
+        <.content assigns={assigns} options={%{truncated: false}} />
+      <% end %>
+    </div>
+
+    <div class="column">
+      <h1 class="is-size-3 has-text-weight-semibold">Discussion</h1>
+      <% #for comment <- @task["comments"] do %>
+      comment author
+      comment body
+      hr
+      <% #end %>
+    </div>
+  </div>
+</div>
+</div>

@@ -1,6 +1,8 @@
 defmodule SundialWeb.ListLive.Index do
   use SundialWeb, :live_view
 
+  import SundialWeb.Live.Task.TaskModalComponent
+
   alias Sundial.Lists
   alias Sundial.Progress
   alias Sundial.Tasks.Task
@@ -45,17 +47,18 @@ defmodule SundialWeb.ListLive.Index do
     |> assign(:return_target, "/boards/" <> Integer.to_string(list.board_id))
   end
 
-  defp apply_action(socket, :new, %{"id" => id}) do
+  defp apply_action(socket, :new_list, %{"id" => id}) do
     # TODO: use dynamic return_to
-    return_to = "/boards/1"
 
     # TODO: add user id
-    params = %{list: %{list_id: id, user_id: 1}}
-    ListAPI.create_list(params)
+    params = %{list: %{list_id: id}}
+
+    client = ClientAPI.client(socket.assigns.current_user_access_token)
+    ListAPI.create_list(client, socket.assigns.board_id, params)
 
     socket
       |> put_flash(:info, "List created successfully")
-      |> push_redirect(to: return_to)
+      |> push_redirect(to: socket.assigns.return_target)
   # }
 
     # socket
@@ -94,6 +97,15 @@ defmodule SundialWeb.ListLive.Index do
     |> assign(:return_to, return_to)
   end
 
+  defp apply_action(socket, :show_task, %{"id" => id}) do
+    client = ClientAPI.client(socket.assigns.current_user_access_token)
+    task = TaskAPI.get_task(client, %{id: id})
+
+    socket
+    |> assign(:task, task)
+    # |> assign(:return_to, "/boards/" <> socket.assigns.board_id)
+  end
+
   defp apply_action(socket, :index, _params) do
     socket
     |> assign(:page_title, "Listing Lists")
@@ -107,7 +119,10 @@ defmodule SundialWeb.ListLive.Index do
     # list = Lists.get_list!(id)
     # {:ok, _} = Lists.delete_list(list)
 
-    {:noreply, assign(socket, :lists, list_lists(socket.assigns.current_user_access_token, socket.asssigns.board_id))}
+    {:noreply,
+      socket
+      |> push_redirect(to: "/boards/" <> socket.assigns.board_id)}
+    # {:noreply, assign(socket, :lists, list_lists(socket.assigns.current_user_access_token, socket.assigns.board_id))}
   end
 
   defp list_lists(current_user_access_token, board_id) do
