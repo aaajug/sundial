@@ -7,10 +7,11 @@ defmodule BackendWeb.ListController do
 
   def index(conn, %{"id" => board_id}) do
     user = Pow.Plug.current_user(conn)
+    board_title = Boards.get_board!(board_id).title
     lists = Lists.list_lists(user, board_id)
     serialized_lists = Lists.serialize(lists)
 
-    json conn, serialized_lists
+    json conn, %{board_id: board_id, board_title: board_title, lists: serialized_lists}
     # render(conn, "index.html", lists: lists)
   end
 

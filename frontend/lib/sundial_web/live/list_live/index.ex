@@ -12,8 +12,6 @@ defmodule SundialWeb.ListLive.Index do
 
   @impl true
   def mount(params, session, socket) do
-    IO.inspect socket.assigns, label: "debuglistliveindexinmount"
-
     board_id = params["id"] || params["board_id"]
     base_path = "/boards/" <> board_id
 
@@ -24,9 +22,14 @@ defmodule SundialWeb.ListLive.Index do
             nil
           end
 
+    response = list_lists(session["current_user_access_token"], board_id)
+
+    IO.inspect response, label: "listlistsresponse"
+
     {:ok, socket
     |> assign(:current_user_access_token, session["current_user_access_token"])
-    |> assign(:lists, list_lists(session["current_user_access_token"], board_id))
+    |> assign(:lists, response["lists"])
+    |> assign(:board_title, response["board_title"])
     |> assign(:drag_hook, "Drag")
     |> assign(:board_id, board_id)
     |> assign(:return_target, base_path)
