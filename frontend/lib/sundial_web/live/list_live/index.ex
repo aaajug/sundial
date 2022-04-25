@@ -97,7 +97,7 @@ defmodule SundialWeb.ListLive.Index do
     |> assign(:return_to, return_to)
   end
 
-  defp apply_action(socket, :show_task, %{"id" => id}) do
+  defp apply_action(socket, :show_task, %{"board_id" => board_id, "task_id" => id}) do
     client = ClientAPI.client(socket.assigns.current_user_access_token)
     task = TaskAPI.get_task(client, %{id: id})
 

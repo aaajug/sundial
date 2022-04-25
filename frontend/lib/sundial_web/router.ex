@@ -93,8 +93,9 @@ defmodule SundialWeb.Router do
     live "/boards/:board_id/lists/:list_id/tasks/new", ListLive.Index, :new_task
     live "/tasks/:id/edit", ListLive.Index, :edit_task
     live "/lists/:id/edit", ListLive.Index, :edit_list
-    live "/tasks/:id/show", ListLive.Index, :show_task
+    # live "/tasks/:task_id/show", ListLive.Index, :show_task
 
+    live "/boards/:board_id/tasks/:task_id/show", ListLive.Index, :show_task
 
     # resources "/users", UsersController, only: [:create, :update, :delete]
     # scope path: "/account" do

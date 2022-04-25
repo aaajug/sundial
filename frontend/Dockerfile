@@ -19,6 +19,7 @@ CMD mix deps.get
 
 # RUN mix do compile
 # COPY deps/tesla/lib/tesla/adapter/httpc.ex deps/tesla/lib/tesla/adapter/
+CMD mix phx.digest
 CMD mix deps.compile
 
 # CMD mix deps.get

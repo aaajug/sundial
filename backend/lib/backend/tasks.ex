@@ -403,6 +403,7 @@ defmodule Backend.Tasks do
     task_preloaded = task
       |> Repo.preload(:assignee)
       |> Repo.preload(:comments)
+      |> Repo.preload(:list)
 
     assignee = if task_preloaded.assignee do
       task_preloaded.assignee.email
@@ -410,18 +411,18 @@ defmodule Backend.Tasks do
       ""
     end
 
-    # comments = if task_preloaded.comments && task_preloaded.comments != [] do
-    #   task_preloaded.comments
-    #   |> Enum.map(fn comment ->
-    #       serialize_comment(comment)
-    #     end)
-    # else
-    #   []
-    # end
+    comments = if task_preloaded.comments && task_preloaded.comments != [] do
+      task_preloaded.comments
+      |> Enum.map(fn comment ->
+          serialize_comment(comment)
+        end)
+    else
+      []
+    end
 
     %SerialTask{
       id: task.id,
-      board_id: task.board_id,
+      board_id: task_preloaded.list.board_id,
       list_id: task.list_id,
       author: "",
       assignee: assignee,
@@ -437,8 +438,8 @@ defmodule Backend.Tasks do
       deadline_parsed: %{date: deadline_date, time: deadline_time, hour: deadline_time_hour, minute: deadline_time_minute},
       completed_on_parsed: %{date: completed_on_date, time: completed_on_time, hour: completed_on_time_hour, minute: completed_on_time_minute},
       position: task.position,
-      index: index
-      # comments: comments
+      index: index,
+      comments: comments
     }
   end
 

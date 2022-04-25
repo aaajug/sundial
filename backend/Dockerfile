@@ -20,4 +20,5 @@ CMD mix deps.get
 CMD mix deps.compile
 
 # CMD pwd
-CMD ["../app/entrypoint.sh"]
+# CMD ["../app/entrypoint.sh"]
+CMD mix phx.server
