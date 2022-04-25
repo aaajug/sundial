@@ -41,6 +41,7 @@ defmodule SundialWeb.CommentLive.FormComponent do
   end
 
   defp save_comment(socket, :new, comment_params) do
+    IO.inspect "handle_event_in: forcomponent"
     # IO.inspect socket.assigns, label: "assignsinsavecomments"
     # IO.inspect Map.keys(socket.assigns.assigns), label: "assignsinsavecomment2-mapkeys"
     task_id = socket.assigns.assigns.task["id"];
@@ -56,7 +57,6 @@ defmodule SundialWeb.CommentLive.FormComponent do
       socket
         |> assign(:task, response)
       }
-
 
     # case Tasks.create_comment(comment_params) do
     #   {:ok, _comment} ->

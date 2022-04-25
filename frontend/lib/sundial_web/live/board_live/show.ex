@@ -11,7 +11,8 @@ defmodule SundialWeb.BoardLive.Show do
 
   @impl true
   def handle_params(%{"id" => id}, _, socket) do
-    board = BoardAPI.get_board(%{id: id})
+
+    board = BoardAPI.get_board(nil, %{id: id})
 
     {:noreply,
      socket

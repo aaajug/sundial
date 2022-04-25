@@ -105,7 +105,7 @@ defmodule SundialWeb.Live.Task.TaskModalComponent do
               <%= live_patch raw("&times;"), to: @return_to, class: "close" %>
             </div>
             <div class="modal-body">
-              <.live_component module={SundialWeb.Live.Task.TaskShowComponent} id="task-show-modal" task={assigns.task} current_user_access_token={@current_user_access_token} />
+              <.live_component module={SundialWeb.Live.Task.TaskShowComponent} id="task-show-modal" task={assigns.task} return_to={@return_to} current_user_access_token={@current_user_access_token} />
             </div>
         </div>
       </div>

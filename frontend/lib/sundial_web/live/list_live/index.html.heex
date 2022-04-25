@@ -42,12 +42,12 @@
 
 <%= if @lists do %>
 <div class="pt-4">
-  <button class="button is-small" phx-click="refresh" phx-value-return_to={"/boards/" <> @board_id}>
+  <button class="button is-small" phx-click="refresh" phx-value-return_to={"/boards/" <> @board_id} style="position: fixed;">
     refresh
   </button>
 </div>
 
-<div class="columns pt-4" id="task-grid" phx-hook={@drag_hook}>
+<div class="columns px-3 pb-6" id="task-grid" phx-hook={@drag_hook} style="padding-top:5rem;">
   <%= for list <- @lists do %>
     <% #group = Enum.filter(@tasks, fn task -> task["status_id"] == status_id end) |> Enum.with_index %>
     <div class="content column pane is-3 mr-3 relative">

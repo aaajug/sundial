@@ -5,13 +5,12 @@ defmodule SundialWeb.Live.Task.TaskShowComponent do
   import SundialWeb.TaskLive.Sections
 
   alias Sundial.Progress.States
-  alias Sundial.Tasks
   alias Sundial.API.TaskAPI
   alias Sundial.API.ClientAPI
 
   def mount(socket) do
-    IO.inspect socket.assigns, label: "assignsintaskshowcomponent"
-    {:ok, assign(socket, %{status: States.get()})}
+    {:ok, socket
+      |> assign(%{status: States.get()})}
   end
 
   def update(assigns, socket) do
@@ -38,5 +37,18 @@ defmodule SundialWeb.Live.Task.TaskShowComponent do
      socket
        |> put_flash(:info, "Task successfully deleted.")
        |> push_redirect(to: return_to)}
+  end
+
+  def handle_event("save", %{"comment" => comment_params}, socket) do
+    task_id = socket.assigns.task["id"];
+    board_id = socket.assigns.task["board_id"]
+
+    client = ClientAPI.client(socket.assigns.current_user_access_token)
+    response = TaskAPI.create_comment(client, board_id, task_id, comment_params)
+
+    {:noreply,
+      socket
+        |> assign(:task, response)
+      }
   end
 end

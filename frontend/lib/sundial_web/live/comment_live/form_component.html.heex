@@ -1,18 +1,10 @@
 <div>
-  <%# <.form
-    let={f}
-    for={@changeset}
-    id="comment-form"
-    phx-target={@myself}
-    phx-change="validate"
-    phx-submit="save"> %>
-
   <form 
     id="comment-form"
-    phx-target={@myself}
+    phx-target={@target}
     phx-submit="save">
 
-    <div class="field is-horizontal p-6">
+    <div class="field is-horizontal pt-2 px-6 pb-5">
       <div class="field-body">
         <div class="field mr-1" style="width:80%"> 
           <textarea name="comment[content]" placeholder="Contribute to the discussion..." class="p-3" />

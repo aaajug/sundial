@@ -33,10 +33,11 @@
   }
 
   .add-comment-container {
+    background-color: white;
     position: absolute;
     bottom: 10px;
     left: 0;
-    width: 100%;
+    width: 95%;
   }
 
   .discussion.column {
@@ -54,8 +55,11 @@
   <div class="columns pl-5">
     <div class="column is-7 ml-5 pr-0">
       <.assignee_label assigns={assigns} />
+      <br>
       <.timestamps assigns={assigns} />
       <.header assigns={assigns} status={status} />
+      <%# <.actions_inline assigns={assigns} return_to={@return_to} />
+      <.state_actions assigns={assigns} return_to={@return_to} /> %>
 
       <%= if @task["details"] && @task["details_plaintext"] && String.trim(@task["details_plaintext"]) != "" do %>
         <hr class="my-3">
@@ -79,9 +83,8 @@
       </div>
 
       <div class="add-comment-container"> 
-        <%# <% IO.inspect assigns, label: "assignsincommentform" %> %>
-        <.live_component module={SundialWeb.CommentLive.FormComponent} id="new-comment" assigns={assigns} current_user_access_token={@current_user_access_token}/>
-      </div> 
+        <.live_component module={SundialWeb.CommentLive.FormComponent} id="new-comment" target={@myself} />
+      </div>
     </div>
   </div>
 </div>

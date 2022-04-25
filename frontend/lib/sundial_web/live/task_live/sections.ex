@@ -70,7 +70,7 @@ defmodule SundialWeb.TaskLive.Sections do
     # #IO.inspect assigns
     ~H"""
     <div class="">
-      <%= live_patch to: Routes.list_index_path(@socket, :show_task, assigns.task["board_id"], assigns.task["id"], %{return_to: @return_to}), id: "show-task" do %>
+      <%= live_patch to: Routes.list_index_path(@socket, :show_task, assigns.task["board_id"], assigns.task["id"], %{return_to: "/boards/" <> Integer.to_string(assigns.task["board_id"]) <> "/tasks/" <> Integer.to_string(assigns.task["id"])}), id: "show-task" do %>
         <ion-icon name="open" class="is-clickable action-button"></ion-icon>
       <% end %> <br>
       <%= live_patch to: Routes.list_index_path(@socket, :edit_task, %SerialTask{id: assigns.task["id"]}, %{return_to: @return_to}), id: "edit-task" do %>
@@ -83,6 +83,22 @@ defmodule SundialWeb.TaskLive.Sections do
     </div>
     """
   end
+
+  def actions_inline(%{assigns: assigns}) do
+    # #IO.inspect assigns
+    ~H"""
+    <div class="">
+      <%= live_patch to: Routes.list_index_path(@socket, :edit_task, %SerialTask{id: assigns.task["id"]}, %{return_to: @return_to}), id: "edit-task", style: "cursor:pointer;text-decoration:underline;" do %>
+        edit
+      <% end %>
+      <a id={"delete-task-" <> Integer.to_string(assigns.task["id"])} phx-click="delete" phx-value-id={assigns.task["id"]} phx-value-return_to={@return_to} data-confirm="This task will be deleted. Are you sure?" phx-target={assigns.myself} style="cursor:pointer;text-decoration:underline;">
+        <!--ion-icon name="trash-outline" class="is-clickable action-button"></ion-icon-->
+        delete
+      </a>
+    </div>
+    """
+  end
+
 
   def state_actions(%{assigns: assigns}) do
     status_states = [
