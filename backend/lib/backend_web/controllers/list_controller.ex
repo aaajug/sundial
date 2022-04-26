@@ -8,7 +8,7 @@ defmodule BackendWeb.ListController do
   def index(conn, %{"id" => board_id}) do
     user = Pow.Plug.current_user(conn)
     board = Boards.get_board!(board_id)
-    lists = Lists.list_lists(user, board)
+    lists = Lists.list_lists(board, user)
     serialized_lists = Lists.serialize(lists)
 
     json conn, %{board_id: board_id, board_title: board.title, lists: serialized_lists}
@@ -67,6 +67,17 @@ defmodule BackendWeb.ListController do
       {:error, %Ecto.Changeset{} = changeset} ->
         text conn, "Failed to update list."
         # render(conn, "edit.html", list: list, changeset: changeset)
+    end
+  end
+
+  def update_positions(conn, %{"insert_index" => insert_index, "list_id" => list_id}) do
+    user = Pow.Plug.current_user(conn)
+
+    case Lists.update_positions(user, insert_index, list_id) do
+      {:ok, response} ->
+        json conn, response
+      {:error, message} ->
+        text(conn, %{error: message})
     end
   end
 

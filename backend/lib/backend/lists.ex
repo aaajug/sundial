@@ -23,7 +23,7 @@ defmodule Backend.Lists do
       [%List{}, ...]
 
   """
-  def list_lists(user, board) do
+  def list_lists(board, user) do
     # TODO: clean pipes
     # TODO: create private function for getting target board
 
@@ -151,10 +151,10 @@ defmodule Backend.Lists do
     # |> Repo.insert()
   end
 
-  @doc """
-  Updates a list.
+    @doc """
+      Updates a list.
 
-  ## Examples
+      ## Examples
 
       iex> update_list(list, %{field: new_value})
       {:ok, %List{}}
@@ -162,11 +162,78 @@ defmodule Backend.Lists do
       iex> update_list(list, %{field: bad_value})
       {:error, %Ecto.Changeset{}}
 
-  """
-  def update_list(%List{} = list, attrs) do
+    """
+    def update_list(%List{} = list, attrs) do
+      list
+      |> List.changeset(attrs)
+      |> Repo.update()
+    end
+
+  def update_positions(user, insert_index, list_id) do
+    insert_index = String.to_integer(insert_index)
+    list_id = String.to_integer(list_id)
+
+    list = get_list!(list_id)
+
+    board =
+      list
+      |> Repo.preload(:board)
+      |> Map.fetch!(:board)
+
+    lists = list_lists(board, user)
+    list_count = Enum.count(lists)
+
+    new_position =
+      cond do
+        insert_index == 0 ->
+          first_position = get_position_at(lists, 0)
+          first_position - 1000
+
+        insert_index == list_count ->
+          last_position = get_position_at(lists, - 1)
+          last_position + 1000
+
+        true ->
+          before_position = get_position_at(lists, insert_index - 1)
+          after_position = get_position_at(lists, insert_index)
+
+          after_position = if after_position == before_position + 1 do
+            Enum.to_list(insert_index..list_count-1)
+            |> Enum.with_index(fn i, multiplier ->
+              list = Enum.at(lists, i)
+              update_position(list, list.position + (1000*(multiplier+1)))
+            end
+            )
+
+              after_position + 1000
+            else
+              after_position
+            end
+
+          div(after_position + before_position, 2)
+      end
+
+    case update_position(list, new_position) do
+      {:ok, _} ->
+        lists = list_lists(board, user)
+        serialized_lists = serialize(lists)
+
+        {:ok, %{board_id: board.id, board_title: board.title, lists: serialized_lists}}
+
+      {:error, _} -> {:error, "Unable to reorder tasks."}
+    end
+  end
+
+  defp get_position_at(lists, index) do
+    lists
+    |> Enum.at(index)
+    |> Map.fetch!(:position)
+  end
+
+  def update_position(%List{} = list, position) do
     list
-    |> List.changeset(attrs)
-    |> Repo.update()
+      |> List.changeset(%{"position" => position})
+      |> Repo.update()
   end
 
   @doc """

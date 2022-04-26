@@ -54,6 +54,7 @@ defmodule BackendWeb.Router do
 
     # List API
     post "/boards/:id/lists", ListController, :create
+    post "/lists/reorder", ListController, :update_positions
 
     # Comment API
     post "/tasks/:id/comments", CommentController, :create

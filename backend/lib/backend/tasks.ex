@@ -201,10 +201,10 @@ defmodule Backend.Tasks do
             end
             )
 
-          after_position + 1000
-        else
-          after_position
-        end
+            after_position + 1000
+          else
+            after_position
+          end
 
         div(after_position + before_position, 2)
     end
@@ -226,7 +226,7 @@ defmodule Backend.Tasks do
           |> Repo.preload(:board)
           |> Map.fetch!(:board)
 
-        lists = Lists.list_lists(user, board)
+        lists = Lists.list_lists(board, user)
         # query = from(task in Task, order_by: [task.position])
         # board = Lists.get_list!(list_id)
         #   |> Repo.preload(board: [lists: [tasks: query]])
