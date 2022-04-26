@@ -7,6 +7,7 @@ defmodule Backend.Tasks do
   # import Backend.Progress
   alias Backend.Repo
   alias Backend.Lists
+  alias Backend.Tasks
 
   alias Backend.Tasks.Task
   alias Backend.Lists.List
@@ -154,7 +155,98 @@ defmodule Backend.Tasks do
   # end
 
   # Updates positions of tasks in order of the given list of IDs
-  def update_positions(user, list, list_id) do
+
+  def update_positions(user, insert_index, list_id, task_id) do
+    insert_index = String.to_integer(insert_index)
+    list_id = String.to_integer(list_id)
+
+    IO.inspect insert_index, label: "debuggerlog4_insert_index"
+
+    tasks =
+      Lists.get_list!(list_id)
+      |> Repo.preload([tasks: from(task in Task, order_by: [task.position, task.updated_at, task.inserted_at])])
+      |> Map.fetch!(:tasks)
+
+    IO.inspect tasks, label: "tasksinupdatepos"
+
+    task_count =
+      tasks
+      |> Enum.count
+
+    new_position = cond do
+      insert_index == 0 ->
+        IO.inspect "index is 0 ", label: "debuggerlog_"
+        first_position = get_position_at(tasks, 0)
+        IO.inspect first_position, label: "debuggerlog_3 first position"
+        first_position - 1000
+
+      insert_index == task_count ->
+        IO.inspect "index is last", label: "debuggerlog_"
+        last_position = get_position_at(tasks, -1)
+        last_position + 1000;
+
+      true ->
+        IO.inspect "index is in between", label: "debuggerlog_"
+        before_position = get_position_at(tasks, insert_index - 1)
+        after_position = get_position_at(tasks, insert_index)
+
+        after_position = if after_position == before_position + 1 do
+            Enum.to_list(insert_index..task_count-1)
+            |> Enum.with_index(fn i, multiplier ->
+              task = Enum.at(tasks, i)
+              update_position(task, task.position + (1000*(multiplier+1)))
+            end
+            )
+
+          after_position + 1000
+        else
+          after_position
+        end
+
+        div(after_position + before_position, 2)
+    end
+
+
+    IO.inspect new_position, label: "debuggerlog4_newpositionprint"
+
+    task = Tasks.get_task!(task_id)
+
+    response = if list_id == task.list_id do
+      update_position(task, new_position)
+    else
+      insert_to_list(task, list_id, new_position)
+    end
+
+    case response do
+      {:ok, _} ->
+        query = from(task in Task, order_by: [task.position, task.updated_at, task.inserted_at])
+        board = Lists.get_list!(list_id)
+          |> Repo.preload(board: [lists: [tasks: query]])
+          |> Map.fetch!(:board)
+
+        serialized_lists = Lists.serialize(board.lists)
+
+        {:ok, %{board_id: board.id, board_title: board.title, lists: serialized_lists}}
+
+      {:error, _} -> {:error, "Unable to reorder tasks."}
+    end
+  end
+
+  defp insert_to_list(task, list_id, position) do
+    target_list = Lists.get_list!(list_id)
+
+    task
+    |> Task.changeset(%{position: position, list_id: list_id})
+    |> Repo.update
+  end
+
+  defp get_position_at(tasks, index) do
+    tasks
+    |> Enum.at(index)
+    |> Map.fetch!(:position)
+  end
+
+  def update_positions_old(user, list, list_id) do
     initial_positions = []
     result = true
 
@@ -259,13 +351,34 @@ defmodule Backend.Tasks do
     # task = Ecto.build_assoc(user, :authored_tasks, task_params)
 
     # TODO: add assignee
-    user
-    |> Repo.preload([boards: from(board in Board, where: board.id == ^board_id)])
-    |> Map.fetch!(:boards)
-    |> Enum.at(0)
-    |> Repo.preload([lists: from(list in List, where: list.id == ^list_id)])
-    |> Map.fetch!(:lists)
-    |> Enum.at(0)
+
+    list =
+      user
+      |> Repo.preload([boards: from(board in Board, where: board.id == ^board_id)])
+      |> Map.fetch!(:boards)
+      |> Enum.at(0)
+      |> Repo.preload([lists: from(list in List, where: list.id == ^list_id)])
+      |> Map.fetch!(:lists)
+      |> Enum.at(0)
+
+
+
+    last_task =
+      list
+      |> Repo.preload(:tasks)
+      |> Map.fetch!(:tasks)
+      |> Enum.at(-1)
+      # |> Map.fetch!(:position)
+
+    next_position = if last_task do
+        last_task.position + 1000
+      else
+        5000
+      end
+
+    attrs = Map.put(attrs, "position", next_position)
+
+    list
     |> Ecto.build_assoc(:tasks)
     |> Task.changeset(attrs)
     |> Ecto.Changeset.put_assoc(:author, user)

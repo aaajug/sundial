@@ -17,7 +17,7 @@ Optional: @task [details labels timestamps[deadline completed_on]]
 
 <%= case @card_index do %>
 <% 0 -> %>
-      <div class="dropzone" id={"dropzone-header-" <> Integer.to_string(@task["id"]) <> "-" <> Integer.to_string(@card_index)} data-kind="dropzone" data-card_index={-1} data-column={@task["list_id"]}>
+      <div class="dropzone" id={"dropzone-header-" <> Integer.to_string(@task["id"]) <> "-" <> Integer.to_string(@card_index)} data-position={0} data-kind="dropzone" data-card_index={-1} data-column={@task["list_id"]}>
       </div>
 <% _ ->  %> 
 <% end %>
@@ -32,7 +32,7 @@ Optional: @task [details labels timestamps[deadline completed_on]]
 
   <div class="flex relative mt-3">
     <div class={"fullwidth task-card card is-clipped " <> status <> " list-" <> Integer.to_string(@task["list_id"]) <> "-column"} draggable="true" data-task_id={@task["id"]}>
-      <%= #@task["id"] %>
+      <%= @task["id"] %> <%= @card_index %>: <%= @task["position"] %>
       <.timestamps assigns={assigns} />
       <.header assigns={assigns} status={status} />
       <%= if @task["details"] && @task["details_plaintext"] && String.trim(@task["details_plaintext"]) != "" do %>
@@ -53,6 +53,6 @@ Optional: @task [details labels timestamps[deadline completed_on]]
   </div>
 </div>
 
-<div class="dropzone" id={"dropzone-" <> Integer.to_string(@task["id"]) <> "-" <> Integer.to_string(@card_index)} data-kind="dropzone" data-card_index={@card_index} data-column={@task["list_id"]}>
+<div class="dropzone" id={"dropzone-" <> Integer.to_string(@task["id"]) <> "-" <> Integer.to_string(@card_index)} data-position={@card_index+1} data-kind="dropzone" data-card_index={@card_index} data-column={@task["list_id"]}>
 </div>
 </div>

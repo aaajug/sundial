@@ -19,26 +19,37 @@
 
     <style>
       header {
-        position: fixed;
-        margin-bottom: 0;
-        padding-bottom: 10vh;
         background-color: #122329;
         border-bottom: solid 2px #374E56;
-        /*z-index: 2;*/
+        margin-bottom: 0;
+        height: 20vh;
+        top: 0;
+        z-index: 2;
+        width: 100%;
+        position: fixed;
+        /*position: sticky;
+        padding-bottom: 10vh;*/
       }
       .body-content {
-        padding-top: 13vh;
+        padding-top: 20vh;
       }
 
       html {
-        overflow-y: hidden;
+        /*overflow-y: hidden;*/
       }
+
+      /*#container {
+        overflow: auto;
+        height: 100vh;
+      }*/
     </style>
   </head>
   <body>
-    <header><%= render "header.html", conn: @conn %></header>
-    <div class="body-content">
-      <%= @inner_content %>
+    <div id="container">
+      <header><%= render "header.html", conn: @conn %></header>
+      <div class="body-content">
+        <%= @inner_content %>
+      </div>
     </div>
 
     <script type="module" src="https://cdn.jsdelivr.net/npm/ionicons/dist/ionicons/ionicons.esm.js"></script>

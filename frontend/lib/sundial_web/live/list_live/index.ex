@@ -43,10 +43,11 @@ defmodule SundialWeb.ListLive.Index do
   end
 
   @impl true
-  def handle_event("dropped", %{"list" => list, "list_id" => list_id}, socket) do
+  def handle_event("dropped", %{"insert_index" => insert_index, "list_id" => list_id, "task_id" => task_id}, socket) do
+  # def handle_event("dropped", %{"list" => list, "list_id" => list_id}, socket) do
 
     client = ClientAPI.client(socket.assigns.current_user_access_token)
-    response = TaskAPI.update_positions(client, list_id, %{list: list})
+    response = TaskAPI.update_positions(client, list_id, task_id, insert_index)
 
     tasks = Enum.map(response["lists"], fn list ->
       Enum.map(list["tasks"], fn task ->
@@ -54,10 +55,12 @@ defmodule SundialWeb.ListLive.Index do
       end)
     end)
 
+    IO.inspect tasks, label: "new ordering"
+
     {:noreply,
     socket
-      |> push_redirect(to: socket.assigns.return_target)}
-    # |> assign(:lists, response["lists"])
+      # |> push_redirect(to: socket.assigns.return_target)}
+      |> assign(:lists, response["lists"])}
     # |> put_flash(:info, "Tasks reordered successfully")}
   end
 

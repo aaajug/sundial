@@ -65,8 +65,8 @@ defmodule Sundial.API.TaskAPI do
     end
   end
 
-  def update_positions(client, list_id, params) do
-    case post(client, "/lists/"<>list_id<>"/tasks/reorder", params) do
+  def update_positions(client, list_id, task_id, insert_index) do
+    case post(client, "/lists/"<>list_id<>"/tasks/reorder", %{insert_index: insert_index, task_id: task_id}) do
       {:ok, %{body: body}} -> body
       {_, %{body: body}} -> ""
     end

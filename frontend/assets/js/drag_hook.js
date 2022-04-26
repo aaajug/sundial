@@ -68,7 +68,7 @@ export default {
     }
       
       function handleDragEnd(e) {
-        $("html").css("overflow-y", "hidden");
+        // $("html").css("overflow-y", "hidden");
         this.style.opacity = '1';
 
         $(".dropzone").hide();
@@ -118,7 +118,7 @@ export default {
       }
       
       function handleDrop(e) {      
-        $("html").css("overflow-y", "hidden");
+        // $("html").css("overflow-y", "hidden");
         $(".dropzone").hide();
 
         document.querySelectorAll(".dropzone").forEach(function (item) {
@@ -140,24 +140,28 @@ export default {
         //   // hook.pushEventTo(selector, 'move_column', {});
         // }
 
+        // don't drop if same column AND card index
+        var destination_column_id = this.closest(".list-column-component").dataset.column;
+        var source_column_id = dragSrcEl.dataset.column;
+
         var dragged_card_index = dragSrcEl.dataset.card_index;
         var dropzone_card_index = this.dataset.card_index;
 
-
-        if(dropzone_card_index == dragged_card_index || dropzone_card_index == dragged_card_index - 1)
-          return false;
+        if(destination_column_id == source_column_id)
+          if(dropzone_card_index == dragged_card_index || dropzone_card_index == dragged_card_index - 1)
+            return false;
       
         if (dragSrcEl !== this) {
-          var destination_column_id = this.closest(".list-column-component").dataset.column;
+          
           // var destination_column = document.querySelector(destination_column_id);
-          console.log(destination_column_id);
+          console.log("destination list id:" + destination_column_id);
 
           dragged_task_id = dragSrcEl.dataset.task_id;                 // get task.id of the element being dragged (moved)
           dragged_task_index = dragSrcEl.dataset.task_index;           // get current task_index of the element being dragged (index before move)
                                                                        // hook --> socket will have the details of the task which acted as a dropzone
           /* dropzone insert */
-          this.innerHTML = e.dataTransfer.getData('text/html');
-          dragSrcEl.remove();
+          // this.innerHTML = e.dataTransfer.getData('text/html');
+          // dragSrcEl.remove();
 
           // var destination_column_id = "#" + this.closest(".list-column-component").id;
           // var destination_column = document.querySelector(destination_column_id);
@@ -166,14 +170,17 @@ export default {
           var list = [];
           //".task-card." + dragSrcEl.dataset.task_status + "-column"
           // console.log(".task-card." + destination_column_id + "-column");
+
           document.querySelectorAll(".task-card.list-" + destination_column_id + "-column").forEach((card) => {
             list.push(card.dataset.task_id);
           });
 
-          console.log(list);
+          console.log(dragSrcEl.dataset.task_id + " to -> " + this.dataset.position + " of list ID#" + destination_column_id);
 
           hook.pushEventTo(selector, 'dropped', {
-            list: list,
+            // list: list,
+            task_id: dragSrcEl.dataset.task_id,
+            insert_index: this.dataset.position,
             list_id: destination_column_id
           });
         }

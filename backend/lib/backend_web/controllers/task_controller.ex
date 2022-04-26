@@ -131,23 +131,18 @@ defmodule BackendWeb.TaskController do
     Progress.list_status_options()
   end
 
-  def update_positions(conn, %{"list" => list, "list_id" => list_id}) do
+  def update_positions(conn, %{"insert_index" => insert_index, "list_id" => list_id, "task_id" => task_id}) do
     user = Pow.Plug.current_user(conn)
 
-    list = list
-      # |> String.split("[")
-      # |> Enum.join
-      # |> String.split("]")
-      # |> Enum.join
-      # |> String.split(",")
-      |> Enum.map(fn id -> String.to_integer(id) end)
+    # list = list
+      # |> Enum.map(fn id -> String.to_integer(id) end)
 
-    case Tasks.update_positions(user, list, list_id) do
+    case Tasks.update_positions(user, insert_index, list_id, task_id) do
       {:ok, response} ->
         # {:reply, socket, push_redirect(socket, to: "/")}
         json conn, response
-      {:error, _} ->
-        text(conn, "error updating task")
+      {:error, message} ->
+        text(conn, %{error: message})
         # put_flash(socket, :error, "Can't reorder tasks as of the moment. Please try again later.")
         # {:reply, socket, push_redirect(socket, to: "/")}
     end

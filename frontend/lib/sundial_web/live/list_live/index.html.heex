@@ -42,13 +42,13 @@
 
 
 <%= if @lists do %>
-<div class="pt-5">
+<%# <div class="pt-5">
   <button class="button is-small" phx-click="refresh" phx-value-return_to={"/boards/" <> @board_id} style="position: fixed;">
     refresh
   </button>
-</div>
+</div> %>
 
-<div class="columns px-3 pb-6" id="task-grid" phx-hook={@drag_hook} style="padding-top:5rem;">
+<div class="columns px-3 pb-6 pt-5" id="task-grid" phx-hook={@drag_hook}>
   <%= for list <- @lists do %>
     <% #group = Enum.filter(@tasks, fn task -> task["status_id"] == status_id end) |> Enum.with_index %>
     <div class="content column pane is-3 mr-3 relative">
@@ -63,7 +63,7 @@
       </div>
 
       <div class="list-column" id={"list-column-" <> Integer.to_string(list["id"])}>
-        <a href={"/boards/"<>@board_id<>"/lisionts/"<>Integer.to_string(list["id"])<>"/tasks/new"} class="navbar-item" id="new-task-link" data-phx-link="patch" data-phx-link-state="push" phx-update="ignore">
+        <a href={"/boards/"<>@board_id<>"/lists/"<>Integer.to_string(list["id"])<>"/tasks/new"} class="navbar-item" id="new-task-link" data-phx-link="patch" data-phx-link-state="push" phx-update="ignore">
           <ion-icon name="add-outline"></ion-icon> 
           Add task
         </a>
