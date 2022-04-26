@@ -73,13 +73,16 @@ defmodule SundialWeb.TaskLive.Sections do
       <%= live_patch to: Routes.list_index_path(@socket, :show_task, assigns.task["board_id"], assigns.task["id"], %{return_to: "/boards/" <> Integer.to_string(assigns.task["board_id"]) <> "/tasks/" <> Integer.to_string(assigns.task["id"])}), id: "show-task" do %>
         <ion-icon name="open" class="is-clickable action-button"></ion-icon>
       <% end %> <br>
-      <%= live_patch to: Routes.list_index_path(@socket, :edit_task, %SerialTask{id: assigns.task["id"]}, %{return_to: @return_to}), id: "edit-task" do %>
-      <%= #link to: "/" do %>
-        <ion-icon name="pencil-outline" class="is-clickable action-button"></ion-icon>
+      <%= if assigns.board["create_allowed"] do %>
+        <%= live_patch to: Routes.list_index_path(@socket, :edit_task, %SerialTask{id: assigns.task["id"]}, %{return_to: @return_to}), id: "edit-task" do %>
+          <ion-icon name="pencil-outline" class="is-clickable action-button"></ion-icon>
+        <% end %>
       <% end %>
-      <a id={"delete-task-" <> Integer.to_string(assigns.task["id"])} phx-click="delete" phx-value-id={assigns.task["id"]} phx-value-return_to={@return_to} data-confirm="This task will be deleted. Are you sure?" phx-target={assigns.myself}>
-        <ion-icon name="trash-outline" class="is-clickable action-button"></ion-icon>
-      </a>
+      <%= if assigns.board["delete_allowed"] do %>
+        <a id={"delete-task-" <> Integer.to_string(assigns.task["id"])} phx-click="delete" phx-value-id={assigns.task["id"]} phx-value-return_to={@return_to} data-confirm="This task will be deleted. Are you sure?" phx-target={assigns.myself}>
+          <ion-icon name="trash-outline" class="is-clickable action-button"></ion-icon>
+        </a>
+      <% end %>
     </div>
     """
   end
@@ -99,7 +102,6 @@ defmodule SundialWeb.TaskLive.Sections do
     """
   end
 
-
   def state_actions(%{assigns: assigns}) do
     status_states = [
       %{description: "Not yet started", id: 1, name: "initial"},
@@ -110,19 +112,24 @@ defmodule SundialWeb.TaskLive.Sections do
 
     task_status = assigns.task["status"]
 
-    ~H"""
-    <div class="state-actions-container absolute" phx-update="ignore">
-      <%= for status <- status_states do %>
-        <%= unless status.name == task_status do %>
-          <a id={"state-action-" <> status.name} phx-click="update_status" phx-target={assigns.myself} phx-value-status={status.id} phx-value-return_to={@return_to}>
-            <button class={"has-tooltip-arrow has-tooltip-right action-state-link " <> status.name} data-tooltip={"Set " <> status.name} type="submit">
-              <ion-icon name="ellipse" class={status.name}></ion-icon> <br>
-            </button>
-          </a>
+    if assigns.board["create_allowed"] do
+      ~H"""
+      <div class="state-actions-container absolute" phx-update="ignore">
+        <%= for status <- status_states do %>
+          <%= unless status.name == task_status do %>
+            <a id={"state-action-" <> status.name} phx-click="update_status" phx-target={assigns.myself} phx-value-status={status.id} phx-value-return_to={@return_to}>
+              <button class={"has-tooltip-arrow has-tooltip-right action-state-link " <> status.name} data-tooltip={"Set " <> status.name} type="submit">
+                <ion-icon name="ellipse" class={status.name}></ion-icon> <br>
+              </button>
+            </a>
+          <% end %>
         <% end %>
-      <% end %>
-    </div>
-    """
+      </div>
+      """
+    else
+      ~H"""
+      """
+    end
   end
 
   def assignee(%{assigns: assigns}) do

@@ -21,23 +21,19 @@ defmodule Backend.Authorization do
     grant(role)
     |> read(Board)
     |> read(List)
-    # |> list_tasks(Task)
+    |> read(Task)
     |> read(Comment)
     |> create(Comment)
     |> create(List)
     |> update(List)
-    # |> update_positions(List)
     |> create(Task)
     |> update(Task)
-    # |> update_positions(Task)
-    # |> update_status(Task)
   end
 
   def can("member" = role) do
     grant(role)
     |> read(Board)
     |> read(List)
-    # |> list_tasks(Task)
     |> read(Comment)
     |> create(Comment)
   end

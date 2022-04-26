@@ -8,6 +8,7 @@ defmodule Backend.Tasks do
   alias Backend.Repo
   alias Backend.Lists
   alias Backend.Tasks
+  alias Backend.Boards
 
   alias Backend.Tasks.Task
   alias Backend.Lists.List
@@ -361,16 +362,13 @@ defmodule Backend.Tasks do
 
     # TODO: add assignee
 
+    board = Boards.get_board!(board_id)
+
     list =
-      user
-      |> Repo.preload([boards: from(board in Board, where: board.id == ^board_id)])
-      |> Map.fetch!(:boards)
-      |> Enum.at(0)
+      board
       |> Repo.preload([lists: from(list in List, where: list.id == ^list_id)])
       |> Map.fetch!(:lists)
       |> Enum.at(0)
-
-
 
     last_task =
       list
@@ -716,11 +714,12 @@ defmodule Backend.Tasks do
     }
   end
 
-  def serialize_task_comment(%Comment{} = comment) do
-    comment
+  def serialize_task_comment(user, %Comment{} = comment) do
+    task = comment
       |> Repo.preload(:task)
       |> Map.fetch!(:task)
-      |> serialize
+
+      serialize(user, task)
   end
 
   defp format_comment_datetime(datetime) do

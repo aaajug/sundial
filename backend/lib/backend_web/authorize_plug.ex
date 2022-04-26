@@ -43,10 +43,9 @@ defmodule BackendWeb.Authorize do
   defp maybe_continue(true, conn), do: conn
 
   defp maybe_continue(false, conn) do
-    IO.inspect "You are not authorized for this action.", label: "maybecontinuefunc7"
     conn
       |> halt
-      |> text(%{unauthorized: "You are not authorized for this action."})
+      |> json(%{unauthorized: "You are not authorized for this action."})
   end
 
   defp check(:index, role, resource) do

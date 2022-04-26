@@ -39,7 +39,6 @@ defmodule BackendWeb.Router do
 
     post "/lists/:list_id/tasks/reorder", TaskController, :update_positions
     patch "/tasks/:id/update/status", TaskController, :update_status
-    get "/tasks/:id/changeset", TaskController, :changeset
     get("/tasks/default", TaskController, :list_tasks_by_default)
     get("/tasks", TaskController, :list_tasks)
     post "/boards/:board_id/lists/:list_id/tasks", TaskController, :create
