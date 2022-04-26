@@ -1,3 +1,14 @@
+<style>
+  .dropzone-column {
+    background-color: pink;
+    margin-right: -5%;
+  }
+
+  .dropzone-column.left {
+    margin-left: -5%;
+  }
+</style>
+
 <%= if @live_action in [:new_task, :edit_task] do %>
   <.modal return_to={@return_target}>
     <.live_component
@@ -32,57 +43,61 @@
 <% end %>
 
 <%= if @live_action in [:show_task] do %>
-  <.live_component module={SundialWeb.Live.Task.TaskModalComponent} return_to={@return_target} id={"modal"} task={@task} current_user_access_token={@current_user_access_token} >
-    <%# <.live_component 
-    module={SundialWeb.Live.Task.TaskShowComponent} 
-    id={@task["id"]} task={@task} return_to={@return_target} current_user_access_token={@current_user_access_token}/> %>
-  </.live_component>
+  <.live_component module={SundialWeb.Live.Task.TaskModalComponent} return_to={@return_target} id={"modal"} task={@task} current_user_access_token={@current_user_access_token} />
 <% end %>
 
-
-
 <%= if @lists do %>
-<%# <div class="pt-5">
-  <button class="button is-small" phx-click="refresh" phx-value-return_to={"/boards/" <> @board_id} style="position: fixed;">
-    refresh
-  </button>
-</div> %>
+  <div class="columns px-3 pb-6 pt-5" id="task-grid" phx-hook={@drag_hook}>
+    <%# <div class="dropzone-column column is-1" data-index="0" data-kind="dropzone"></div> %>
+    <% list_count = Enum.count(@lists) %>
+    <%= for {list, list_index} <- Enum.with_index(@lists) do %>
+      <% #group = Enum.filter(@tasks, fn task -> task["status_id"] == status_id end) |> Enum.with_index %>
+      <div class="list-column-container content column pane is-3 mr-0 pr-0 relative" draggable="true">
+        <div class="is-size-6 has-text-weight-very-light pb-1" style="display: flex; align-items: end;" phx-update="ignore">
+          <span class="pr-3">
+            <%= if list_index != 0 do %>
+              <ion-icon name="arrow-back-circle-outline" class="icon" phx-click="move_list" phx-value-list_id={list["id"]} phx-value-insert_index={list_index-1}></ion-icon>
+            <%= end %>
+            <%= if list_index != list_count-1 do %>
+              <ion-icon name="arrow-forward-circle-outline" class="icon" phx-click="move_list" phx-value-list_id={list["id"]} phx-value-insert_index={list_index+2}></ion-icon>
+            <% end %>
+          </span>
+          <span class="pr-3 is-size-5 truncated" style="max-width: 65%;"><%= list["title"] %> (<%= Enum.count(list["tasks"]) %>)</span>
+          <%= live_patch to: Routes.list_index_path(@socket, :edit_list, list["id"], %{return_to: "/boards/" <> @board_id}), id: "edit-task", class: "pr-2" do %>
+            <ion-icon name="pencil-outline" class="is-clickable action-button"></ion-icon>
+          <% end %>
+          <a id={"delete-list-" <> Integer.to_string(list["id"])} phx-click="delete" phx-value-id={list["id"]} phx-value-return_to={"/boards/" <> @board_id} data-confirm="This list  will be deleted. Are you sure?">
+            <ion-icon name="trash-outline" class="is-clickable action-button"></ion-icon>
+          </a>
+          <br>
+        </div>
+        <div phx-update="ignore">
+          
+        </div>
 
-<div class="columns px-3 pb-6 pt-5" id="task-grid" phx-hook={@drag_hook}>
-  <%= for list <- @lists do %>
-    <% #group = Enum.filter(@tasks, fn task -> task["status_id"] == status_id end) |> Enum.with_index %>
-    <div class="content column pane is-3 mr-3 relative">
-      <div class="is-size-6 has-text-weight-very-light pb-1" style="display: flex; align-items: center;" phx-update="ignore">
-        <span class="pr-3 is-size-4 truncated"><%= list["title"] %> (<%= Enum.count(list["tasks"]) %>)</span>
-        <%= live_patch to: Routes.list_index_path(@socket, :edit_list, list["id"], %{return_to: "/boards/" <> @board_id}), id: "edit-task", class: "pr-2" do %>
-          <ion-icon name="pencil-outline" class="is-clickable action-button"></ion-icon>
-        <% end %>
-        <a id={"delete-list-" <> Integer.to_string(list["id"])} phx-click="delete" phx-value-id={list["id"]} phx-value-return_to={"/boards/" <> @board_id} data-confirm="This list  will be deleted. Are you sure?">
-          <ion-icon name="trash-outline" class="is-clickable action-button"></ion-icon>
-        </a>
-      </div>
-
-      <div class="list-column" id={"list-column-" <> Integer.to_string(list["id"])}>
-        <a href={"/boards/"<>@board_id<>"/lists/"<>Integer.to_string(list["id"])<>"/tasks/new"} class="navbar-item" id="new-task-link" data-phx-link="patch" data-phx-link-state="push" phx-update="ignore">
-          <ion-icon name="add-outline"></ion-icon> 
-          Add task
-        </a>
-        <div class="task-list">
-          <%= if list["tasks"] == [] do %>
-            <div class="list-column-component" id={"column-for-list-"<>Integer.to_string(list["id"])} data-column={Integer.to_string(list["id"])} data-drag_hook={@drag_hook}>
-              <div class="dropzone" id={"dropzone-header-empty-" <> Integer.to_string(list["id"])} data-position={0} data-kind="dropzone" data-card_index={-1} data-column={@task["list_id"]}>
+        <div class="list-column" id={"list-column-" <> Integer.to_string(list["id"])} data-index={list_index} data-list_id={list["id"]}>
+          <a href={"/boards/"<>@board_id<>"/lists/"<>Integer.to_string(list["id"])<>"/tasks/new"} class="navbar-item" id="new-task-link" data-phx-link="patch" data-phx-link-state="push" phx-update="ignore" style="color:#ffe08a;">
+            <ion-icon name="add-outline"></ion-icon> 
+            Add task
+          </a>
+          <div class="task-list">
+            <%= if list["tasks"] == [] do %>
+              <div class="list-column-component" id={"column-for-list-"<>Integer.to_string(list["id"])} data-column={Integer.to_string(list["id"])} data-drag_hook={@drag_hook}>
+                <div class="dropzone" id={"dropzone-header-empty-" <> Integer.to_string(list["id"])} data-position={0} data-kind="dropzone" data-card_index={-1} data-column={@task["list_id"]}>
+                </div>
               </div>
-            </div>
-          <% end %>
+            <% end %>
 
-          <%= for {task, index} <- Enum.with_index(list["tasks"]) do %>
-            <div class="list-column-component" id={"column-for-list-"<>Integer.to_string(list["id"])} data-column={Integer.to_string(list["id"])} data-drag_hook={@drag_hook}>
-              <.live_component module={SundialWeb.Live.Task.TaskComponent} id={task["id"]} task={task} drag_hook={@drag_hook} return_to={@return_target} card_index={index} current_user_access_token={@current_user_access_token}/>
-            </div>
-          <% end %>
+            <%= for {task, index} <- Enum.with_index(list["tasks"]) do %>
+              <div class="list-column-component" id={"column-for-list-"<>Integer.to_string(list["id"])} data-column={Integer.to_string(list["id"])} data-drag_hook={@drag_hook}>
+                <.live_component module={SundialWeb.Live.Task.TaskComponent} id={task["id"]} task={task} drag_hook={@drag_hook} return_to={@return_target} card_index={index} current_user_access_token={@current_user_access_token}/>
+              </div>
+            <% end %>
+          </div>
         </div>
       </div>
-    </div>
-  <% end %>
-</div>
+
+      <%# <div class="dropzone-column column left is-1" data-index={list_index} data-kind="dropzone"></div> %>
+    <% end %>
+  </div>
 <% end %>

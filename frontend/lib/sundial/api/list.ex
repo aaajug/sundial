@@ -47,6 +47,16 @@ defmodule Sundial.API.ListAPI do
     end
   end
 
+  def reorder_lists(client, list_id, insert_index) do
+    url = "/lists/reorder"
+    params = %{list_id: list_id, insert_index: insert_index}
+
+    case post(client, url, params) do
+      {:ok, %{body: body}} -> body
+        {_, %{body: body}} -> ""
+    end
+  end
+
   def delete_list(client, id) do
     IO.inspect id, label: "inlist delete API"
     case delete(client, "/lists/" <> id) do

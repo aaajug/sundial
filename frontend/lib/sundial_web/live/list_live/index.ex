@@ -64,6 +64,16 @@ defmodule SundialWeb.ListLive.Index do
     # |> put_flash(:info, "Tasks reordered successfully")}
   end
 
+  @impl true
+  def handle_event("move_list", %{"list_id" => list_id, "insert_index" => insert_index}, socket) do
+    client = ClientAPI.client(socket.assigns.current_user_access_token)
+    lists = ListAPI.reorder_lists(client, list_id, insert_index)
+
+    {:noreply,
+    socket
+    |> assign(:lists, :lists)}
+  end
+
 
   @impl true
   def handle_params(params, _url, socket) do

@@ -49,12 +49,12 @@ defmodule BackendWeb.Router do
     get "/boards/:id/tasks", BoardController, :get_tasks
     get "/boards/shared", BoardController, :shared_boards
     resources "/boards", BoardController
-    get "/boards/:id/lists", ListController, :index
-    resources "/lists", ListController, except: [:index]
 
     # List API
     post "/boards/:id/lists", ListController, :create
     post "/lists/reorder", ListController, :update_positions
+    resources "/lists", ListController, except: [:index]
+    get "/boards/:id/lists", ListController, :index
 
     # Comment API
     post "/tasks/:id/comments", CommentController, :create

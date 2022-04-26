@@ -31,6 +31,7 @@ import "./scroll.js"
 import "./board_form.js"
 
 import Drag from './drag_hook';
+import DragColumn from './drag_column_hook';
 import {QuillEditor} from './quill_hook'
 import {TimestampCheckbox, DeadlineTimeSelect, CompletedOnTimeSelect, 
         StatusSelect, DeadlineDate, CompletedOnDate, TaskAssignee}  from "./task_form_hook";
@@ -39,7 +40,7 @@ import {AddSharedUserField, RemoveSharedUserField} from "./board_form_hook";
 let Hooks = {
     None, QuillEditor, Drag, TimestampCheckbox, DeadlineTimeSelect, 
     CompletedOnTimeSelect, StatusSelect, DeadlineDate, CompletedOnDate,
-    TaskAssignee, AddSharedUserField, RemoveSharedUserField
+    TaskAssignee, AddSharedUserField, RemoveSharedUserField, DragColumn
 }
 
 let csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content")
