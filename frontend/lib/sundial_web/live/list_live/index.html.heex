@@ -78,11 +78,13 @@
           <ion-icon name="add-outline"></ion-icon> 
           Add task
         </a>
-        <%= for {task, index} <- Enum.with_index(list["tasks"]) do %>
-          <div class="list-column-component" data-drag_hook={@drag_hook}>
-            <.live_component module={SundialWeb.Live.Task.TaskComponent} id={task["id"]} task={task} drag_hook={@drag_hook} return_to={@return_target} card_index={index} current_user_access_token={@current_user_access_token}/>
-          </div>
-        <% end %>
+        <div class="task-list">
+          <%= for {task, index} <- Enum.with_index(list["tasks"]) do %>
+            <div class="list-column-component" id={"column-for-list-"<>Integer.to_string(list["id"])} data-column={Integer.to_string(list["id"])} data-drag_hook={@drag_hook}>
+              <.live_component module={SundialWeb.Live.Task.TaskComponent} id={task["id"]} task={task} drag_hook={@drag_hook} return_to={@return_target} card_index={index} current_user_access_token={@current_user_access_token}/>
+            </div>
+          <% end %>
+        </div>
       </div>
     </div>
   <% end %>

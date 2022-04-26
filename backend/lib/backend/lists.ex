@@ -8,6 +8,7 @@ defmodule Backend.Lists do
   alias Backend.Boards.Board
 
   alias Backend.Lists.List
+  alias Backend.Tasks.Task
   alias Backend.Lists.SerialList
   alias Backend.Users.User
   alias Backend.Tasks
@@ -26,8 +27,9 @@ defmodule Backend.Lists do
     # TODO: clean pipes
     # TODO: create private function for getting target board
 
+    query = from(task in Task, order_by: [task.position, task.updated_at, task.inserted_at])
     board = Boards.get_board!(String.to_integer(board_id))
-            |> Repo.preload(lists: :tasks)
+            |> Repo.preload([lists: [tasks: query]])
 
     # user_board = user
     #   |> Repo.preload([boards: from(board in Board, where: board.id == ^board_id)])

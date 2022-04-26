@@ -30,20 +30,26 @@ export default {
       var content = this.querySelector(".content");
       var flex_container = this.querySelector(".flex");
 
+      var unexpanded = true;
+
       if(content) {
-        var unexpanded = content.classList.contains("truncated");
-    
-        $(".task-card").find(".content").addClass("truncated");
-        $(".draggable-card").find(".flex").removeClass("highlighted");
-        
-        if(unexpanded) {
-          content.classList.remove("truncated");
-          flex_container.classList.add("highlighted");
-        }
+        unexpanded = content.classList.contains("truncated");
       }
+    
+      $(".task-card").find(".content").addClass("truncated");
+      $(".draggable-card").find(".flex").removeClass("highlighted");
+        
+      if(unexpanded) {
+        if(content) {
+          content.classList.remove("truncated");
+        }
+        flex_container.classList.add("highlighted");
+      }
+      
     }
 
     function handleDragStart(e) {
+        $("html").css("overflow-y", "scroll");
         dragSrcEl = this;
 
         this.click();
@@ -62,6 +68,7 @@ export default {
     }
       
       function handleDragEnd(e) {
+        $("html").css("overflow-y", "hidden");
         this.style.opacity = '1';
 
         $(".dropzone").hide();
@@ -111,21 +118,27 @@ export default {
       }
       
       function handleDrop(e) {      
+        $("html").css("overflow-y", "hidden");
         $(".dropzone").hide();
 
         document.querySelectorAll(".dropzone").forEach(function (item) {
           item.style.height = "50px";
         });
 
-        var column = document.querySelector("#" + this.id).closest(".task-list");
+        // console.log(this.id);
+        // var column = document.querySelector("#" + this.id).closest(".task-list");
+        var column = this.closest(".task-list");
         column.style.overflowY = "scroll";
 
-        var dragged_card_column = dragSrcEl.dataset.task_status;
-        var dropzone_card_column = this.dataset.column;
+        var dragged_card_column = dragSrcEl.dataset.column;
+        var dropzone_column = this.dataset.column;
 
-        if(dragged_card_column != dropzone_card_column){
-          hook.pushEventTo(selector, 'move_column', {});
-        }
+        // console.log(dragged_card_column + " " + dropzone_column)
+
+        // if(dragged_card_column != dropzone_card_column){
+        //   console.log()
+        //   // hook.pushEventTo(selector, 'move_column', {});
+        // }
 
         var dragged_card_index = dragSrcEl.dataset.card_index;
         var dropzone_card_index = this.dataset.card_index;
@@ -135,6 +148,10 @@ export default {
           return false;
       
         if (dragSrcEl !== this) {
+          var destination_column_id = this.closest(".list-column-component").dataset.column;
+          // var destination_column = document.querySelector(destination_column_id);
+          console.log(destination_column_id);
+
           dragged_task_id = dragSrcEl.dataset.task_id;                 // get task.id of the element being dragged (moved)
           dragged_task_index = dragSrcEl.dataset.task_index;           // get current task_index of the element being dragged (index before move)
                                                                        // hook --> socket will have the details of the task which acted as a dropzone
@@ -142,13 +159,22 @@ export default {
           this.innerHTML = e.dataTransfer.getData('text/html');
           dragSrcEl.remove();
 
+          // var destination_column_id = "#" + this.closest(".list-column-component").id;
+          // var destination_column = document.querySelector(destination_column_id);
+          // console.log(destination_column);
+
           var list = [];
-            document.querySelectorAll(".task-card." + dragSrcEl.dataset.task_status + "-column").forEach((card) => {
+          //".task-card." + dragSrcEl.dataset.task_status + "-column"
+          // console.log(".task-card." + destination_column_id + "-column");
+          document.querySelectorAll(".task-card.list-" + destination_column_id + "-column").forEach((card) => {
             list.push(card.dataset.task_id);
           });
 
+          console.log(list);
+
           hook.pushEventTo(selector, 'dropped', {
             list: list,
+            list_id: destination_column_id
           });
         }
 

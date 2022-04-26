@@ -37,7 +37,7 @@ defmodule BackendWeb.Router do
   scope "/api", BackendWeb do
     pipe_through [:api, :api_protected]
 
-    post "/tasks/reorder", TaskController, :update_positions
+    post "/lists/:list_id/tasks/reorder", TaskController, :update_positions
     patch "/tasks/:id/update/status", TaskController, :update_status
     get "/tasks/:id/changeset", TaskController, :changeset
     get("/tasks/default", TaskController, :list_tasks_by_default)

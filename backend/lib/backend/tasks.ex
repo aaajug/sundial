@@ -6,6 +6,7 @@ defmodule Backend.Tasks do
   import Ecto.Query, warn: false
   # import Backend.Progress
   alias Backend.Repo
+  alias Backend.Lists
 
   alias Backend.Tasks.Task
   alias Backend.Lists.List
@@ -153,7 +154,7 @@ defmodule Backend.Tasks do
   # end
 
   # Updates positions of tasks in order of the given list of IDs
-  def update_positions(list) do
+  def update_positions(user, list, list_id) do
     initial_positions = []
     result = true
 
@@ -183,7 +184,17 @@ defmodule Backend.Tasks do
       :broken ->
         rollback(initial_positions)
         {:error, "Failed to reorder tasks. Doing a rollback."}
-      true -> {:ok, updated_tasks, "Tasks reordered"}
+      true ->
+        query = from(task in Task, order_by: [task.position, task.updated_at, task.inserted_at])
+
+        board = Lists.get_list!(list_id)
+          |> Repo.preload(board: [lists: [tasks: query]])
+          |> Map.fetch!(:board)
+
+        serialized_lists = Lists.serialize(board.lists)
+
+        {:ok, %{board_id: board.id, board_title: board.title, lists: serialized_lists}}
+        # {:ok, updated_tasks, "Tasks reordered"}
     end
   end
 

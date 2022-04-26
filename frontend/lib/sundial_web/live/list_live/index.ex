@@ -24,8 +24,6 @@ defmodule SundialWeb.ListLive.Index do
 
     response = list_lists(session["current_user_access_token"], board_id)
 
-    IO.inspect response, label: "listlistsresponse"
-
     {:ok, socket
     |> assign(:current_user_access_token, session["current_user_access_token"])
     |> assign(:lists, response["lists"])
@@ -41,6 +39,25 @@ defmodule SundialWeb.ListLive.Index do
   def handle_event("refresh", %{"return_to" => return_to}, socket) do
     # #IO.inspect params, label: "refreeshtasksa"
     {:noreply, push_redirect(socket, to: return_to)}
+  end
+
+  @impl true
+  def handle_event("dropped", %{"list" => list, "list_id" => list_id}, socket) do
+
+    client = ClientAPI.client(socket.assigns.current_user_access_token)
+    response = TaskAPI.update_positions(client, list_id, %{list: list})
+
+    tasks = Enum.map(response["lists"], fn list ->
+      Enum.map(list["tasks"], fn task ->
+        task["id"]
+      end)
+    end)
+
+    {:noreply,
+    socket
+      |> push_redirect(to: socket.assigns.return_target)}
+    # |> assign(:lists, response["lists"])
+    # |> put_flash(:info, "Tasks reordered successfully")}
   end
 
 
