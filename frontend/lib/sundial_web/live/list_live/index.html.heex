@@ -68,6 +68,13 @@
           Add task
         </a>
         <div class="task-list">
+          <%= if list["tasks"] == [] do %>
+            <div class="list-column-component" id={"column-for-list-"<>Integer.to_string(list["id"])} data-column={Integer.to_string(list["id"])} data-drag_hook={@drag_hook}>
+              <div class="dropzone" id={"dropzone-header-empty-" <> Integer.to_string(list["id"])} data-position={0} data-kind="dropzone" data-card_index={-1} data-column={@task["list_id"]}>
+              </div>
+            </div>
+          <% end %>
+
           <%= for {task, index} <- Enum.with_index(list["tasks"]) do %>
             <div class="list-column-component" id={"column-for-list-"<>Integer.to_string(list["id"])} data-column={Integer.to_string(list["id"])} data-drag_hook={@drag_hook}>
               <.live_component module={SundialWeb.Live.Task.TaskComponent} id={task["id"]} task={task} drag_hook={@drag_hook} return_to={@return_target} card_index={index} current_user_access_token={@current_user_access_token}/>

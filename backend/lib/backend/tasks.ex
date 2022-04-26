@@ -174,11 +174,14 @@ defmodule Backend.Tasks do
       |> Enum.count
 
     new_position = cond do
-      insert_index == 0 ->
+      insert_index == 0 && tasks != []->
         IO.inspect "index is 0 ", label: "debuggerlog_"
         first_position = get_position_at(tasks, 0)
         IO.inspect first_position, label: "debuggerlog_3 first position"
         first_position - 1000
+
+      insert_index == 0 ->
+        5000
 
       insert_index == task_count ->
         IO.inspect "index is last", label: "debuggerlog_"

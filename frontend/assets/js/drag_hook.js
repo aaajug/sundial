@@ -1,5 +1,3 @@
-import { ColorStyle } from "./quill";
-
 export default {
   mounted() {
     const hook = this;
