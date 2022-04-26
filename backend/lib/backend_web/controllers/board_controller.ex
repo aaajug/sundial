@@ -12,7 +12,7 @@ defmodule BackendWeb.BoardController do
     user_boards = Enum.at(Boards.list_boards(user.id), 0)
 
     boards = user_boards.boards
-    serialized_boards = Boards.serialize(boards)
+    serialized_boards = Boards.serialize(user, boards)
 
     json conn, serialized_boards
   end
@@ -20,7 +20,7 @@ defmodule BackendWeb.BoardController do
   def shared_boards(conn, _params) do
     user = Pow.Plug.current_user(conn)
     boards = Boards.list_shared_boards(user)
-    serialized_boards = Boards.serialize(boards)
+    serialized_boards = Boards.serialize(user, boards)
 
     json conn, serialized_boards
   end
@@ -44,7 +44,7 @@ defmodule BackendWeb.BoardController do
 
     case Boards.create_board(user, board_params, permissions) do
       {:ok, board} ->
-        json conn, Boards.serialize(board)
+        json conn, Boards.serialize(user, board)
 
       {:error, %Ecto.Changeset{} = changeset} ->
         text conn, "Error creating board"
@@ -56,7 +56,7 @@ defmodule BackendWeb.BoardController do
 
     board = Boards.get_board(user, id)
 
-    json conn, Boards.serialize(board)
+    json conn, Boards.serialize(user, board)
   end
 
   def get_roles(conn, _params) do
@@ -70,6 +70,8 @@ defmodule BackendWeb.BoardController do
   end
 
   def update(conn, params) do
+    user = Pow.Plug.current_user(conn)
+
     id = String.to_integer(params["id"])
     board = Boards.get_board!(id)
 
@@ -80,7 +82,7 @@ defmodule BackendWeb.BoardController do
 
     case Boards.update_board(board, permissions, board_params) do
       {:ok, board} ->
-        json conn, Boards.serialize(board)
+        json conn, Boards.serialize(user, board)
 
       {:error, %Ecto.Changeset{} = changeset} ->
         text conn, "Failed to update board."

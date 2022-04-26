@@ -47,7 +47,7 @@ defmodule Backend.Boards do
     user_id = user.id
 
     user
-      |> Repo.preload([shared_boards: from(board in Board, where: board.user_id != ^user_id)])
+      |> Repo.preload([shared_boards: from(board in Board, where: board.user_id != ^user_id, order_by: [board.id])])
       |> Map.fetch!(:shared_boards)
   end
 
@@ -185,23 +185,29 @@ defmodule Backend.Boards do
   end
 
   # def serialize(%Board{} = board), do: serialize(board)
-  def serialize(%Board{} = board) do
-
+  def serialize(user, %Board{} = board) do
     users = serialize_permissions(board)
+
+    # update, delete only for managers
+    role = permission(user.id, board.id)
+        |> Map.fetch!(:role)
+
+    actions_allowed = role == "manager"
 
     %SerialBoard{
       id: board.id,
       title: board.title,
       owner_id: board.user_id,
-      users: users
+      users: users,
+      actions_allowed: actions_allowed
     }
   end
 
-  def serialize(boards) do
+  def serialize(user, boards) do
     boards
       |> Enum.map(
         fn board ->
-          serialize(board)
+          serialize(user, board)
         end
       )
   end

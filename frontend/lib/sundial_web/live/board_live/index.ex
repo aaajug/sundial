@@ -35,15 +35,6 @@ defmodule SundialWeb.BoardLive.Index do
     {:noreply, apply_action(socket, socket.assigns.live_action, params)}
   end
 
-  # defp apply_action(socket, :edit_list, %{"id" => id}) do
-  #   client = ClientAPI.client(socket.assigns.current_user_access_token)
-  #   list = ListAPI.get_list(client, id)
-
-  #   socket
-  #   |> assign(:page_title, "Edit List")
-  #   |> assign(:list, list)
-  # end
-
   defp apply_action(socket, :edit, %{"id" => id}) do
     client = ClientAPI.client(socket.assigns.current_user_access_token)
     board = client
@@ -51,10 +42,15 @@ defmodule SundialWeb.BoardLive.Index do
 
     board = for {key, val} <- board, into: %{}, do: {String.to_atom(key), val}
 
-    socket
-    |> assign(:page_title, "Edit Board")
-    |> assign(:roles, BoardAPI.get_roles)
-    |> assign(:board, board)
+    if board.actions_allowed do
+      socket
+      |> assign(:page_title, "Edit Board")
+      |> assign(:roles, BoardAPI.get_roles)
+      |> assign(:board, board)
+    else
+      socket
+      |> push_redirect(to: "/boards?shared=true")
+    end
   end
 
   defp apply_action(socket, :new, _params) do
