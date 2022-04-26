@@ -72,8 +72,8 @@ defmodule Sundial.API.TaskAPI do
     end
   end
 
-  def delete_task(params) do
-    case delete("/tasks/" <> params.id) do
+  def delete_task(client, params) do
+    case delete(client, "/tasks/" <> params.id) do
       {:ok, %{body: body}} -> body
         {_, %{body: body}} -> ""
     end

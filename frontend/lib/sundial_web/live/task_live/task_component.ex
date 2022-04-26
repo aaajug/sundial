@@ -91,11 +91,9 @@ defmodule SundialWeb.Live.Task.TaskComponent do
   # end
 
   def handle_event("delete", %{"id" => id, "return_to" => return_to}, socket) do
-    # task = Tasks.get_task!(id)
-    # {:ok, _} = Tasks.delete_task(task)
-    TaskAPI.delete_task(%{id: id})
+    client = ClientAPI.client(socket.assigns.current_user_access_token)
+    TaskAPI.delete_task(client, %{id: id})
 
-    # {:noreply, assign(socket, :tasks, list_tasks())}
     {:noreply,
      socket
        |> put_flash(:info, "Task successfully deleted.")
