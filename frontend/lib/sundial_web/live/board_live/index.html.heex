@@ -73,7 +73,7 @@
   <div class="column is-four-fifths ml-4 pt-6">
     <%= live_patch to: Routes.board_index_path(@socket, :new) do %>
       <button class="button is-small active" id="new-board-button">
-        <span class="icon is-small">
+        <span class="icon is-small" phx-update="ignore">
           <ion-icon name="grid-outline"></ion-icon>
         </span>
         <span>New Board</span>

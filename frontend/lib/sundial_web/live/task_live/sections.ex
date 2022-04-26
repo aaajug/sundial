@@ -69,7 +69,7 @@ defmodule SundialWeb.TaskLive.Sections do
   def actions(%{assigns: assigns}) do
     # #IO.inspect assigns
     ~H"""
-    <div class="">
+    <div class="" phx-update="ignore">
       <%= live_patch to: Routes.list_index_path(@socket, :show_task, assigns.task["board_id"], assigns.task["id"], %{return_to: "/boards/" <> Integer.to_string(assigns.task["board_id"]) <> "/tasks/" <> Integer.to_string(assigns.task["id"])}), id: "show-task" do %>
         <ion-icon name="open" class="is-clickable action-button"></ion-icon>
       <% end %> <br>
@@ -111,7 +111,7 @@ defmodule SundialWeb.TaskLive.Sections do
     task_status = assigns.task["status"]
 
     ~H"""
-    <div class="state-actions-container absolute">
+    <div class="state-actions-container absolute" phx-update="ignore">
       <%= for status <- status_states do %>
         <%= unless status.name == task_status do %>
           <a id={"state-action-" <> status.name} phx-click="update_status" phx-target={assigns.myself} phx-value-status={status.id} phx-value-return_to={@return_to}>
@@ -136,7 +136,7 @@ defmodule SundialWeb.TaskLive.Sections do
     <div class="assignee-container">
         <span class="icon-text is-italic pr-2">
           <span style="font-size: 0.65rem;"><%= assignee %></span>
-          <span class="icon is-size-7"><ion-icon name="person-circle"></ion-icon></span>
+          <span class="icon is-size-7" phx-update="ignore"><ion-icon name="person-circle"></ion-icon></span>
         </span>
       </div>
     """
