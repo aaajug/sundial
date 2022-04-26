@@ -25,10 +25,11 @@ defmodule SundialWeb.ListLive.Index do
     response = list_lists(session["current_user_access_token"], board_id)
 
     {:ok, socket
-    |> assign(:header_title, response["board_title"])
+    |> assign(:header_title, response["board"]["title"])
     |> assign(:current_user_access_token, session["current_user_access_token"])
     |> assign(:lists, response["lists"])
-    |> assign(:board_title, response["board_title"])
+    |> assign(:board_title, response["board"]["title"])
+    |> assign(:board, response["board"])
     |> assign(:drag_hook, "Drag")
     |> assign(:board_id, board_id)
     |> assign(:return_target, base_path)

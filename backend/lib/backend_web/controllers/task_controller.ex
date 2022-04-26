@@ -14,9 +14,8 @@ defmodule BackendWeb.TaskController do
   end
 
   def show(conn, %{"id" => id}) do
-    serialized_task =
-      Tasks.get_task!(id)
-        |> Tasks.serialize
+    user = Pow.Plug.current_user(conn)
+    serialized_task = Tasks.serialize(user, Tasks.get_task!(id))
 
     json conn, serialized_task
   end
@@ -27,7 +26,7 @@ defmodule BackendWeb.TaskController do
 
     case Tasks.create_task(user, assignee, task_params, list_id, board_id) do
             {:ok, task} ->
-              data = Tasks.serialize(task)
+              data = Tasks.serialize(user, task)
               json conn, data
 
             {:error, %Ecto.Changeset{} = changeset} ->
@@ -49,7 +48,7 @@ defmodule BackendWeb.TaskController do
 
         case Tasks.update_task(task, assignee, task_params) do
                 {:ok, task} ->
-                  data = Tasks.serialize(task)
+                  data = Tasks.serialize(user, task)
                   json conn, data
 
                 {:error, %Ecto.Changeset{} = changeset} ->
@@ -60,8 +59,9 @@ defmodule BackendWeb.TaskController do
 
   def list_tasks(conn, params) do
     tasks = get_tasks(params)
+    user = Pow.Plug.current_user(conn)
 
-    serialized_tasks = Tasks.serialize(tasks)
+    serialized_tasks = Tasks.serialize(user, tasks)
 
     IO.inspect "boardsdb5"
     IO.inspect serialized_tasks
@@ -86,6 +86,8 @@ defmodule BackendWeb.TaskController do
   end
 
   def update_status(conn, params) do
+    user = Pow.Plug.current_user(conn)
+
     id = String.to_integer(params["id"])
     task = Tasks.get_task!(id)
 
@@ -95,7 +97,7 @@ defmodule BackendWeb.TaskController do
 
     case Tasks.update_task(task, nil, task_params) do
       {:ok, _task} ->
-        data = Tasks.serialize(Tasks.get_task!(id))
+        data = Tasks.serialize(user, Tasks.get_task!(id))
         json conn, data
 
       {:error, %Ecto.Changeset{} = _changeset} ->

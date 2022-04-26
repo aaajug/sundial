@@ -10,9 +10,9 @@ defmodule BackendWeb.CommentController do
   plug BackendWeb.Authorize, resource: Comment
 
   def show(conn, %{"id" => id}) do
-    serialized_task =
-      Tasks.get_task!(id)
-        |> Tasks.serialize
+    user = Pow.Plug.current_user(conn)
+
+    serialized_task = Tasks.serialize(user, Tasks.get_task!(id))
 
     json conn, serialized_task
   end
@@ -22,7 +22,7 @@ defmodule BackendWeb.CommentController do
 
     case Tasks.create_comment(user, task_id, comment_params) do
             {:ok, comment} ->
-              data = Tasks.serialize_task_comment(comment)
+              data = Tasks.serialize_task_comment(user, comment)
               json conn, data
 
             {:error, %Ecto.Changeset{} = changeset} ->

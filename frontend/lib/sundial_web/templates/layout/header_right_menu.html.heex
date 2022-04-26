@@ -1,4 +1,4 @@
-<%= if Map.has_key?(@conn.assigns, :show_manage_header) && @conn.assigns.show_manage_header do %>
+<%= if Map.has_key?(@conn.assigns, :board) && @conn.assigns.board["actions_allowed"] && Map.has_key?(@conn.assigns, :show_manage_header) && @conn.assigns.show_manage_header do %>
   <a href={@conn.assigns.return_target  <> "/lists"} class="navbar-item" id="new-list-link" data-phx-link="patch" data-phx-link-state="push" phx-value-path={assigns.conn.path_info}>
     <ion-icon name="add-outline"></ion-icon> 
     Add list

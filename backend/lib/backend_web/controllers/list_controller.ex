@@ -11,9 +11,10 @@ defmodule BackendWeb.ListController do
     user = Pow.Plug.current_user(conn)
     board = Boards.get_board!(board_id)
     lists = Lists.list_lists(board, user)
-    serialized_lists = Lists.serialize(lists)
+    serialized_lists = Lists.serialize(user, lists)
+    serialized_board = Boards.serialize(user, board)
 
-    json conn, %{board_id: board_id, board_title: board.title, lists: serialized_lists}
+    json conn, %{board: serialized_board, lists: serialized_lists}
   end
 
   def create(conn, %{"id" => board_id, "list" => list_params}) do
@@ -27,7 +28,7 @@ defmodule BackendWeb.ListController do
     case Lists.create_list(user, board_id, list_params) do
       {:ok, list} ->
         IO.inspect "List Created"
-        json conn, Lists.serialize(list)
+        json conn, Lists.serialize(user, list)
 
       {:error, %Ecto.Changeset{} = changeset} ->
         text conn, "Failed to create list"
@@ -35,16 +36,19 @@ defmodule BackendWeb.ListController do
   end
 
   def show(conn, %{"id" => id}) do
+    user = Pow.Plug.current_user(conn)
     list = Lists.get_list!(id)
-    json conn, Lists.serialize(list)
+
+    json conn, Lists.serialize(user, list)
   end
 
   def update(conn, %{"id" => id, "list" => list_params}) do
     list = Lists.get_list!(id)
+    user = Pow.Plug.current_user(conn)
 
     case Lists.update_list(list, list_params) do
       {:ok, list} ->
-        json conn, Lists.serialize(list)
+        json conn, Lists.serialize(user, list)
 
       {:error, %Ecto.Changeset{} = changeset} ->
         text conn, "Failed to update list."
@@ -64,9 +68,11 @@ defmodule BackendWeb.ListController do
 
   def delete(conn, %{"id" => id}) do
     list = Lists.get_list!(id)
+    user = Pow.Plug.current_user(conn)
+
     case Lists.delete_list(list) do
       {:ok, list} ->
-        json conn, Lists.serialize(list)
+        json conn, Lists.serialize(user, list)
       {:error, _} ->
         text conn, "Failed to delete list."
     end

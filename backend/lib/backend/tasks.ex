@@ -232,7 +232,7 @@ defmodule Backend.Tasks do
         #   |> Repo.preload(board: [lists: [tasks: query]])
         #   |> Map.fetch!(:board)
 
-        serialized_lists = Lists.serialize(lists)
+        serialized_lists = Lists.serialize(user, lists)
         # serialized_lists = Lists.serialize(board.lists)
 
         {:ok, %{board_id: board.id, board_title: board.title, lists: serialized_lists}}
@@ -292,7 +292,7 @@ defmodule Backend.Tasks do
           |> Repo.preload(board: [lists: [tasks: query]])
           |> Map.fetch!(:board)
 
-        serialized_lists = Lists.serialize(board.lists)
+        serialized_lists = Lists.serialize(user, board.lists)
 
         {:ok, %{board_id: board.id, board_title: board.title, lists: serialized_lists}}
         # {:ok, updated_tasks, "Tasks reordered"}
@@ -504,7 +504,7 @@ defmodule Backend.Tasks do
 
     is_overdue
   """
-  def serialize_task(%Task{} = task, index) do
+  def serialize_task(user, %Task{} = task, index) do
     status_id = if task.status == 0 || task.status == nil do
                   1
                 else
@@ -576,16 +576,16 @@ defmodule Backend.Tasks do
     }
   end
 
-  def serialize(%Task{} = task) do
-    serialize_task(task, nil)
+  def serialize(user, %Task{} = task) do
+    serialize_task(user, task, nil)
   end
   @doc """
   Return a list of map objects corresponding to tasks
   """
-  def serialize(tasks) do
+  def serialize(user, tasks) do
     tasks
       |> Enum.with_index
-      |> Enum.map(fn({task, index}) -> serialize_task(task, index) end)
+      |> Enum.map(fn({task, index}) -> serialize_task(user, task, index) end)
 
       # Enum.map(tasks, fn(task) -> serialize_task(task,) end)
   end

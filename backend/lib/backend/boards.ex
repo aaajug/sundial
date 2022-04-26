@@ -193,13 +193,15 @@ defmodule Backend.Boards do
         |> Map.fetch!(:role)
 
     actions_allowed = role == "manager"
+    create_allowed = role in ["manager", "contributor"]
 
     %SerialBoard{
       id: board.id,
       title: board.title,
       owner_id: board.user_id,
       users: users,
-      actions_allowed: actions_allowed
+      actions_allowed: actions_allowed,
+      create_allowed: create_allowed
     }
   end
 

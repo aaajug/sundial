@@ -216,7 +216,7 @@ defmodule Backend.Lists do
     case update_position(list, new_position) do
       {:ok, _} ->
         lists = list_lists(board, user)
-        serialized_lists = serialize(lists)
+        serialized_lists = serialize(user, lists)
 
         {:ok, %{board_id: board.id, board_title: board.title, lists: serialized_lists}}
 
@@ -252,14 +252,23 @@ defmodule Backend.Lists do
     Repo.delete(list)
   end
 
-  def serialize(%List{} = list) do
+  def serialize(user, %List{} = list) do
     list = list
       |> Repo.preload(:tasks)
 
     tasks = Enum.map(list.tasks,
       fn task ->
-        Tasks.serialize(task)
+        Tasks.serialize(user, task)
       end)
+
+    role = Boards.permission(user.id, list.board_id) |> Map.fetch!(:role)
+
+    IO.inspect role, label: "myroleinboard2"
+
+    actions_allowed = role in ["manager", "contributor"]
+    delete_allowed =  role == "manager"
+
+    IO.inspect actions_allowed, label: "myroleinboard2"
 
     %SerialList{
       id: list.id,
@@ -267,15 +276,17 @@ defmodule Backend.Lists do
       position: list.position,
       title: list.title,
       owner_id: list.user_id,
-      tasks: tasks
+      tasks: tasks,
+      actions_allowed: actions_allowed,
+      delete_allowed: delete_allowed
     }
   end
 
-  def serialize(lists) do
+  def serialize(user, lists) do
     lists
       |> Enum.map(
         fn list ->
-          serialize(list)
+          serialize(user, list)
         end
       )
   end
