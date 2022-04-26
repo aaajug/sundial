@@ -23,7 +23,7 @@ defmodule SundialWeb.Live.Task.TaskModalComponent do
         .modal {
           opacity: 1!important;
           position: fixed;
-          z-index: 1;
+          z-index: 3;
           left: 0;
           bottom: 0;
           width: 100%;
