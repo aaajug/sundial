@@ -42,7 +42,7 @@ defmodule Sundial.Tasks do
 
 
   def list_tasks_by_position do
-    from(task in Task, order_by: [task.position, task.updated_at, task.inserted_at])
+    from(task in Task, order_by: [task.position])
       |> Repo.all()
   end
 

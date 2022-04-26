@@ -23,13 +23,14 @@ defmodule Backend.Lists do
       [%List{}, ...]
 
   """
-  def list_lists(user, board_id) do
+  def list_lists(user, board) do
     # TODO: clean pipes
     # TODO: create private function for getting target board
 
-    query = from(task in Task, order_by: [task.position, task.updated_at, task.inserted_at])
-    board = Boards.get_board!(String.to_integer(board_id))
-            |> Repo.preload([lists: [tasks: query]])
+    task_query = from(task in Task, order_by: [task.position])
+    list_query = from(list in List, order_by: [list.position])
+    board = board
+            |> Repo.preload([lists: {list_query, [tasks: task_query]}])
 
     # user_board = user
     #   |> Repo.preload([boards: from(board in Board, where: board.id == ^board_id)])

@@ -48,7 +48,7 @@ defmodule Backend.Tasks do
 
 
   def list_tasks_by_position do
-    from(task in Task, order_by: [task.position, task.updated_at, task.inserted_at])
+    from(task in Task, order_by: [task.position])
       |> Repo.all()
   end
 
@@ -164,7 +164,7 @@ defmodule Backend.Tasks do
 
     tasks =
       Lists.get_list!(list_id)
-      |> Repo.preload([tasks: from(task in Task, order_by: [task.position, task.updated_at, task.inserted_at])])
+      |> Repo.preload([tasks: from(task in Task, order_by: [task.position])])
       |> Map.fetch!(:tasks)
 
     IO.inspect tasks, label: "tasksinupdatepos"
@@ -222,12 +222,18 @@ defmodule Backend.Tasks do
 
     case response do
       {:ok, _} ->
-        query = from(task in Task, order_by: [task.position, task.updated_at, task.inserted_at])
         board = Lists.get_list!(list_id)
-          |> Repo.preload(board: [lists: [tasks: query]])
+          |> Repo.preload(:board)
           |> Map.fetch!(:board)
 
-        serialized_lists = Lists.serialize(board.lists)
+        lists = Lists.list_lists(user, board)
+        # query = from(task in Task, order_by: [task.position])
+        # board = Lists.get_list!(list_id)
+        #   |> Repo.preload(board: [lists: [tasks: query]])
+        #   |> Map.fetch!(:board)
+
+        serialized_lists = Lists.serialize(lists)
+        # serialized_lists = Lists.serialize(board.lists)
 
         {:ok, %{board_id: board.id, board_title: board.title, lists: serialized_lists}}
 
@@ -280,7 +286,7 @@ defmodule Backend.Tasks do
         rollback(initial_positions)
         {:error, "Failed to reorder tasks. Doing a rollback."}
       true ->
-        query = from(task in Task, order_by: [task.position, task.updated_at, task.inserted_at])
+        query = from(task in Task, order_by: [task.position])
 
         board = Lists.get_list!(list_id)
           |> Repo.preload(board: [lists: [tasks: query]])
