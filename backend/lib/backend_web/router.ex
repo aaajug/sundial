@@ -46,19 +46,18 @@ defmodule BackendWeb.Router do
     resources "/tasks", TaskController, except: [:index, :create]
 
     # Boards API
-    get "/boards/:id/tasks", BoardController, :get_tasks
-    get "/boards/shared", BoardController, :shared_boards
+    # get "/boards/:id/tasks", BoardController, :get_tasks
+    get "/shared_boards", BoardController, :shared_boards
     resources "/boards", BoardController
 
     # List API
     post "/boards/:id/lists", ListController, :create
-    post "/lists/reorder", ListController, :update_positions
+    post "/reorder_lists", ListController, :update_positions
     resources "/lists", ListController, except: [:index]
     get "/boards/:id/lists", ListController, :index
 
     # Comment API
     post "/tasks/:id/comments", CommentController, :create
-    patch "/tasks/:task_id/comments/:comment_id", CommentController, :update
     delete "/comments/:id", CommentController, :delete
   end
 

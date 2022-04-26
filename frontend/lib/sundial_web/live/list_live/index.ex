@@ -59,8 +59,8 @@ defmodule SundialWeb.ListLive.Index do
 
     {:noreply,
     socket
+    |> assign(:lists, response["lists"])}
       # |> push_redirect(to: socket.assigns.return_target)}
-      |> assign(:lists, response["lists"])}
     # |> put_flash(:info, "Tasks reordered successfully")}
   end
 
@@ -69,9 +69,11 @@ defmodule SundialWeb.ListLive.Index do
     client = ClientAPI.client(socket.assigns.current_user_access_token)
     lists = ListAPI.reorder_lists(client, list_id, insert_index)
 
+    IO.inspect lists, label: "listsdebugger"
+
     {:noreply,
     socket
-    |> assign(:lists, :lists)}
+    |> assign(:lists, lists)}
   end
 
 

@@ -22,13 +22,15 @@
     }
   </style>
 
-  <a href={"/boards/" <> Integer.to_string(@board["id"])}>
-    <div class="board-card">
-      <div class="content">
-        <%= @board["title"] %>
+  <div class="relative">
+    <a href={"/boards/" <> Integer.to_string(@board["id"])}>
+      <div class="board-card">
+        <div class="content">
+          <%= @board["title"] %>
+        </div>
       </div>
-    </div>
-  </a>
+    </a>
 
-  <.actions assigns={assigns} />
+    <.actions assigns={assigns} />
+  </div>
 </div>

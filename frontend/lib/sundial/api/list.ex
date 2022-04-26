@@ -48,7 +48,7 @@ defmodule Sundial.API.ListAPI do
   end
 
   def reorder_lists(client, list_id, insert_index) do
-    url = "/lists/reorder"
+    url = "/reorder_lists"
     params = %{list_id: list_id, insert_index: insert_index}
 
     case post(client, url, params) do

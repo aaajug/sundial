@@ -25,7 +25,7 @@ defmodule Backend.Boards do
 
     load = (from user in User, where: user.id == ^user_id)
             |> Repo.all
-            |> Repo.preload(:boards)
+            |> Repo.preload([boards: from(board in Board, order_by: [board.id])])
 
           # Repo.all(User) |> Repo.preload(:boards)
 
@@ -67,9 +67,16 @@ defmodule Backend.Boards do
   """
   def get_board!(id), do: Repo.get!(Board, id)
   def get_board(user, id) do
-    user
-    |> Repo.preload([boards: from(board in Board, where: board.id == ^id)])
-    |> Map.fetch!(:boards)
+    query = from(board in Board, where: board.id == ^id)
+
+    user_boards =
+      user
+      |> Repo.preload([boards: query])
+      |> Repo.preload([shared_boards: query])
+
+    boards = user_boards.boards ++ user_boards.shared_boards
+
+    boards
     |> Enum.at(0)
   end
 
@@ -216,15 +223,10 @@ defmodule Backend.Boards do
   end
 
   def permission(user_id, board_id) do
-    # def is_update_permission?(user_id, board_id, role) do
-      IO.inspect user_id, label: "useridperm"
-      IO.inspect board_id, label: "boardidperm"
     from(permission in Permission,
       where: permission.user_id == ^user_id
              and permission.board_id == ^board_id)
       |> Repo.one
-
-    # permission.role != role
   end
 
   def set_board_permissions(board, permissions) do

@@ -27,7 +27,7 @@ defmodule Sundial.API.BoardAPI do
     end
   end
   def get_shared_boards(client) do
-    url = "/boards/shared"
+    url = "/shared_boards"
 
     case get(client, url) do
       {:ok, %{body: body}} -> body

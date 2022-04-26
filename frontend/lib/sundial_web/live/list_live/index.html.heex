@@ -53,8 +53,8 @@
     <%= for {list, list_index} <- Enum.with_index(@lists) do %>
       <% #group = Enum.filter(@tasks, fn task -> task["status_id"] == status_id end) |> Enum.with_index %>
       <div class="list-column-container content column pane is-3 mr-0 pr-0 relative" draggable="true">
-        <div class="is-size-6 has-text-weight-very-light pb-1" style="display: flex; align-items: end;" phx-update="ignore">
-          <span class="pr-3">
+        <div class="is-size-6 has-text-weight-very-light pb-1" style="display: flex; align-items: end;">
+          <span class="pr-3" phx-update="ignore">
             <%= if list_index != 0 do %>
               <ion-icon name="arrow-back-circle-outline" class="icon" phx-click="move_list" phx-value-list_id={list["id"]} phx-value-insert_index={list_index-1}></ion-icon>
             <%= end %>
@@ -62,28 +62,27 @@
               <ion-icon name="arrow-forward-circle-outline" class="icon" phx-click="move_list" phx-value-list_id={list["id"]} phx-value-insert_index={list_index+2}></ion-icon>
             <% end %>
           </span>
-          <span class="pr-3 is-size-5 truncated" style="max-width: 65%;"><%= list["title"] %> (<%= Enum.count(list["tasks"]) %>)</span>
-          <%= live_patch to: Routes.list_index_path(@socket, :edit_list, list["id"], %{return_to: "/boards/" <> @board_id}), id: "edit-task", class: "pr-2" do %>
+          <span class="pr-3 is-size-5 truncated" style="max-width: 65%;">
+            <%= list["title"] %> 
+            (<%= Enum.count(list["tasks"]) %>)
+          </span>
+          <%= live_patch to: Routes.list_index_path(@socket, :edit_list, list["id"], %{return_to: "/boards/" <> @board_id}), id: "edit-task", class: "pr-2", phx_update: "ignore" do %>
             <ion-icon name="pencil-outline" class="is-clickable action-button"></ion-icon>
           <% end %>
-          <a id={"delete-list-" <> Integer.to_string(list["id"])} phx-click="delete" phx-value-id={list["id"]} phx-value-return_to={"/boards/" <> @board_id} data-confirm="This list  will be deleted. Are you sure?">
+          <a id={"delete-list-" <> Integer.to_string(list["id"])} phx-click="delete" phx-value-id={list["id"]} phx-value-return_to={"/boards/" <> @board_id} data-confirm="This list  will be deleted. Are you sure?" phx-update="ignore">
             <ion-icon name="trash-outline" class="is-clickable action-button"></ion-icon>
           </a>
           <br>
         </div>
-        <div phx-update="ignore">
-          
-        </div>
-
         <div class="list-column" id={"list-column-" <> Integer.to_string(list["id"])} data-index={list_index} data-list_id={list["id"]}>
           <a href={"/boards/"<>@board_id<>"/lists/"<>Integer.to_string(list["id"])<>"/tasks/new"} class="navbar-item" id="new-task-link" data-phx-link="patch" data-phx-link-state="push" phx-update="ignore" style="color:#ffe08a;">
-            <ion-icon name="add-outline"></ion-icon> 
+            <ion-icon name="add-outline" phx-update="ignore"></ion-icon> 
             Add task
           </a>
           <div class="task-list">
             <%= if list["tasks"] == [] do %>
               <div class="list-column-component" id={"column-for-list-"<>Integer.to_string(list["id"])} data-column={Integer.to_string(list["id"])} data-drag_hook={@drag_hook}>
-                <div class="dropzone" id={"dropzone-header-empty-" <> Integer.to_string(list["id"])} data-position={0} data-kind="dropzone" data-card_index={-1} data-column={@task["list_id"]}>
+                <div class="dropzone" id={"dropzone-header-empty-" <> Integer.to_string(list["id"])} data-position={0} data-kind="dropzone" data-card_index={-1} data-column={list["id"]}>
                 </div>
               </div>
             <% end %>

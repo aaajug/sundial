@@ -5,13 +5,12 @@ defmodule BackendWeb.BoardController do
   alias Backend.Boards.Board
   alias Backend.Boards.Role
 
-  # plug BackendWeb.Authorize,resource: BackendWeb.Boards.Board, except: [:new, :index]
+  plug BackendWeb.Authorize, resource: Board, except: [:index, :shared_boards, :new, :create, :get_roles]
 
   def index(conn, _params) do
     user = Pow.Plug.current_user(conn)
     user_boards = Enum.at(Boards.list_boards(user.id), 0)
 
-    # IO.inspect user_boards, label: "userboards"
     boards = user_boards.boards
     serialized_boards = Boards.serialize(boards)
 
@@ -25,9 +24,6 @@ defmodule BackendWeb.BoardController do
 
     json conn, serialized_boards
   end
-  # def get_task(conn, %{"id" => id}) do
-  #   tasks =
-  # end
 
   def new(conn, _params) do
     changeset = Boards.change_board(%Board{})
@@ -35,26 +31,18 @@ defmodule BackendWeb.BoardController do
   end
 
   def create(conn, %{"data" => board_params}) do
-    # board_params = Map.put(board_params, "user_id", 1)
-
     board_params = for {key, val} <- board_params, into: %{}, do: {String.to_atom(key), val}
 
-    # fetch current user
-    # create board for user
     user = Pow.Plug.current_user(conn)
-    # board_params = Map.put(board_params, :user, user)
 
-    permissions =  if Map.has_key?(board_params, :permissions) do
-      board_params.permissions
-    else
-      nil
-    end
+    permissions =
+      if Map.has_key?(board_params, :permissions) do
+        board_params.permissions
+      else
+        nil
+      end
 
-    re = Boards.create_board(user, board_params, permissions)
-
-    IO.inspect re, label: "createboardresultins"
-
-    case re do
+    case Boards.create_board(user, board_params, permissions) do
       {:ok, board} ->
         json conn, Boards.serialize(board)
 
@@ -69,7 +57,6 @@ defmodule BackendWeb.BoardController do
     board = Boards.get_board(user, id)
 
     json conn, Boards.serialize(board)
-    # render(conn, "show.html", board: board)
   end
 
   def get_roles(conn, _params) do
@@ -83,7 +70,8 @@ defmodule BackendWeb.BoardController do
   end
 
   def update(conn, params) do
-    IO.inspect ("inupdateofboardcontroller")
+    authorized?(conn)
+    IO.inspect ("inupdateofboardcontroller3")
     id = String.to_integer(params["id"])
     board = Boards.get_board!(id)
 
@@ -112,5 +100,9 @@ defmodule BackendWeb.BoardController do
     # conn
     # |> put_flash(:info, "Board deleted successfully.")
     # |> redirect(to: Routes.board_path(conn, :index))
+  end
+
+  defp authorized?(conn) do
+    IO.inspect conn, label: "authconndebug"
   end
 end

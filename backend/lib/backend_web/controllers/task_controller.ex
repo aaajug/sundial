@@ -6,18 +6,11 @@ defmodule BackendWeb.TaskController do
   alias Backend.Users
   alias Backend.Tasks.Task
 
+  plug BackendWeb.Authorize, resource: Task
+
   def get_role(conn, %{"board_id" => board_id}) do
-    # text conn, "user_role"
     role = Users.get_role(Pow.Plug.current_user(conn), board_id)
     text conn, role
-  end
-
-  def changeset(conn, %{"id" => id}) do
-    task = Tasks.get_task!(id)
-    changeset = Tasks.change_task(task)
-
-    text(conn, "Changeset")
-    # json conn, changeset
   end
 
   def show(conn, %{"id" => id}) do
@@ -28,48 +21,26 @@ defmodule BackendWeb.TaskController do
     json conn, serialized_task
   end
 
-  def new do
-    status = list_status_options
-    changeset = Tasks.change_task(%Task{})
-    serial_task = nil
-  end
-
   def create(conn, %{"board_id" => board_id, "list_id" => list_id, "data" => task_params})do
-  # def create(conn, _params)do
-    # text(conn, "Posted create task")
-    # task_params = for {key, val} <- task_params, into: %{}, do: {String.to_atom(key), val}
     user = Pow.Plug.current_user(conn)
-
     assignee = get_assignee(task_params, user)
-
-    IO.inspect assignee, label: "assigneeprintinc"
 
     case Tasks.create_task(user, assignee, task_params, list_id, board_id) do
             {:ok, task} ->
               data = Tasks.serialize(task)
-              # Jason.encode(data)
               json conn, data
-              # conn
-              #   |> text(Jason.encode(task))
-              # |> put_flash(:info, "Task created successfully.")
-
 
             {:error, %Ecto.Changeset{} = changeset} ->
-              # Jason.encode("error creating task")
               text(conn, "error creating task")
-              # render(conn, "new.html", changeset: changeset)
           end
   end
 
-  # %{"id" => id, "data" => task_params}
   def update(conn, params) do
     id = String.to_integer(params["id"])
     task = Tasks.get_task!(id)
 
     user = Pow.Plug.current_user(conn)
     assignee = get_assignee(params, user)
-
-    IO.inspect assignee, label: "assigneeprintinc"
 
     cond do
       assignee == :error -> json conn, %{error: %{errors: %{assignee: ["doesn't exist"]}}}
@@ -78,7 +49,6 @@ defmodule BackendWeb.TaskController do
 
         case Tasks.update_task(task, assignee, task_params) do
                 {:ok, task} ->
-                  IO.inspect "okupdatedtask"
                   data = Tasks.serialize(task)
                   json conn, data
 
@@ -86,14 +56,7 @@ defmodule BackendWeb.TaskController do
                   text(conn, "error updating task")
         end
     end
-
-    # IO.inspect assignee, label: "taskassigneeinsp"
   end
-
-  # def list_tasks(conn, params) do
-
-  #   list_tasks(conn)
-  # end
 
   def list_tasks(conn, params) do
     tasks = get_tasks(params)
@@ -106,27 +69,6 @@ defmodule BackendWeb.TaskController do
     json conn, serialized_tasks
   end
 
-  def list_tasks_by_default(conn, _params) do
-    tasks = Tasks.list_tasks
-    # IO.inspect "db tasks:"
-    # IO.inspect tasks
-    serialized_tasks = Tasks.serialize(tasks)
-
-    # IO.inspect "serialized tasks"
-    # IO.inspect serialized_tasks
-
-    # data = Enum.map(serialized_tasks, fn task -> task |> Jason.encode end)
-
-    # IO.inspect "data"
-    # IO.inspect data
-
-    # res = %{data: data}
-    # res = Jason.encode(data)
-    # res = Jason.encode!(%{"age" => 44, "name" => "Steve Irwin", "nationality" => "Australian"})
-    # "{\"age\":44,\"name\":\"Steve Irwin\",\"nationality\":\"Australian\"}"
-    json conn, serialized_tasks
-  end
-
   def list_status_options do
     Progress.list_status_options()
   end
@@ -134,17 +76,12 @@ defmodule BackendWeb.TaskController do
   def update_positions(conn, %{"insert_index" => insert_index, "list_id" => list_id, "task_id" => task_id}) do
     user = Pow.Plug.current_user(conn)
 
-    # list = list
-      # |> Enum.map(fn id -> String.to_integer(id) end)
-
     case Tasks.update_positions(user, insert_index, list_id, task_id) do
       {:ok, response} ->
-        # {:reply, socket, push_redirect(socket, to: "/")}
         json conn, response
+
       {:error, message} ->
         text(conn, %{error: message})
-        # put_flash(socket, :error, "Can't reorder tasks as of the moment. Please try again later.")
-        # {:reply, socket, push_redirect(socket, to: "/")}
     end
   end
 
@@ -171,9 +108,6 @@ defmodule BackendWeb.TaskController do
     {:ok, _task} = Tasks.delete_task(task)
 
     text(conn, "Task deleted successfully")
-    # conn
-    #   |> put_flash(:info, "Task deleted successfully.")
-    #   |> redirect(to: Routes.task_path(conn, :index))
   end
 
   defp get_tasks(params) do
@@ -193,7 +127,6 @@ defmodule BackendWeb.TaskController do
   end
 
   defp get_assignee(params, user) do
-    # IO.inspect params, label: "debugparamsingetassignee"
     if Map.has_key?(params, "assignee") do
       if params["assignee"] == "" || params["assignee"] == nil do
         nil
