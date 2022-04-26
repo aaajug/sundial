@@ -25,6 +25,7 @@ defmodule SundialWeb.ListLive.Index do
     response = list_lists(session["current_user_access_token"], board_id)
 
     {:ok, socket
+    |> assign(:header_title, response["board_title"])
     |> assign(:current_user_access_token, session["current_user_access_token"])
     |> assign(:lists, response["lists"])
     |> assign(:board_title, response["board_title"])

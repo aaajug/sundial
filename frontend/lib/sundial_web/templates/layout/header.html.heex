@@ -1,10 +1,23 @@
 <section class="container is-fluid px-6">
         <nav class="relative navbar-menu p-6">
-            <div class="navbar-start absolute left-attached pl-5">
+            <div class="absolute left-attached pl-5">
+              <%= if @conn.assigns[:board_id] do %>
+                <a href="/boards" id="back-to-boards" data-phx-link="patch" data-phx-link-state="push" class="is-underlined left-attached">
+                  back to boards
+                </a>
+              <% end %>
+            <div class="navbar-start">
+              <span class="is-size-1 has-text-weight-semibold has-text-white">
+                <%= @conn.assigns.header_title %>
+              </span>
+              <iframe src="https://free.timeanddate.com/clock/i893be6r/n145/fn11/fs18/fcffe08a/tct/pct/ftb/pa9/tt0/tw0/tm1/th1/tb2" 
+                frameborder="0" width="205" height="39" allowtransparency="true"
+                style="display: flex; place-self: self-end; margin-bottom: 8px; margin-left: 10px;"></iframe>
+            </div>
             </div>
 
             <div class="navbar-end absolute right-attached pr-5">
               <%= render "header_right_menu.html", conn: @conn %>
             </div>
         </nav>
-</section>
+      </section>

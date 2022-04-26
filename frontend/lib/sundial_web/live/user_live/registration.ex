@@ -7,6 +7,7 @@ defmodule SundialWeb.UserLive.Registration do
   def mount(params, session, socket) do
     {:ok,
       socket
+        |> assign(:header_title, "Sundial")
         |> assign(:error, session["error"])
     }
   end

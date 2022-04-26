@@ -12,15 +12,18 @@ defmodule SundialWeb.BoardLive.Index do
 
   @impl true
   def mount(params, session, socket) do
-    {boards, refresh_target} = if params["shared"]do
+    {boards, refresh_target, header_title} = if params["shared"]do
       {list_shared_boards(session["current_user_access_token"]),
-      "/boards?shared=true"}
+      "/boards?shared=true",
+      "Boards Shared with me"}
     else
       {list_boards(session),
-      "/boards"}
+      "/boards",
+      "My Boards"}
     end
 
     {:ok, socket
+      |> assign(:header_title, header_title)
       |> assign(:current_user_access_token, session["current_user_access_token"])
       |> assign(:boards, boards)
       |> assign(:refresh_target, refresh_target)

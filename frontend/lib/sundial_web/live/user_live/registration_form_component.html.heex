@@ -14,7 +14,7 @@
         <%# </div> %>
     <% #end %>
 
-    <div style="margin-top:-10vh;position:fixed;">
+    <%# <div style="margin-top:-10vh;position:fixed;">
       <a href="/boards" id="back-to-boards" data-phx-link="patch" data-phx-link-state="push" class="is-underlined">
       </a>
       <br>
@@ -24,7 +24,7 @@
                       frameborder="0" width="205" height="39" allowtransparency="true"
                       style="margin-bottom: 8px; margin-left: 10px;"></iframe>
       </div>
-    </div>
+    </div> %>
 
     <div class="text-container mr-6">
     <% #IO.inspect assigns[:error], label: "assignserror"  %>
