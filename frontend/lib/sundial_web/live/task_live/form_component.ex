@@ -38,7 +38,7 @@ defmodule SundialWeb.TaskLive.FormComponent do
   # end
   # TODO: Move to backend
   defp save_task(socket, :edit_task, task_params) do
-    # #IO.inspect "savetaskedit"
+    IO.inspect task_params, label: "savetaskedit_3"
     # case TaskAPI.update_task(socket.assigns.task.id, task_params) do
       client = ClientAPI.client(socket.assigns.current_user_access_token)
       TaskAPI.update_task(client, socket.assigns.task.id, task_params)
