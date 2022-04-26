@@ -53,7 +53,7 @@
     <% #group = Enum.filter(@tasks, fn task -> task["status_id"] == status_id end) |> Enum.with_index %>
     <div class="content column pane is-3 mr-3 relative">
       <div class="is-size-6 has-text-weight-very-light pb-1" style="display: flex; align-items: center;" phx-update="ignore">
-        <span class="pr-3 is-size-4"><%= list["title"] %> (<%= Enum.count(list["tasks"]) %>)</span>
+        <span class="pr-3 is-size-4 truncated"><%= list["title"] %> (<%= Enum.count(list["tasks"]) %>)</span>
         <%= live_patch to: Routes.list_index_path(@socket, :edit_list, list["id"], %{return_to: "/boards/" <> @board_id}), id: "edit-task", class: "pr-2" do %>
           <ion-icon name="pencil-outline" class="is-clickable action-button"></ion-icon>
         <% end %>
