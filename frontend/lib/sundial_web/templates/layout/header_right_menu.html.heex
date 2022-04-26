@@ -1,11 +1,11 @@
-<%= if Map.has_key?(@conn.assigns, :show_manage_header) do %>
+<%= if Map.has_key?(@conn.assigns, :show_manage_header) && @conn.assigns.show_manage_header do %>
   <a href={@conn.assigns.return_target  <> "/lists"} class="navbar-item" id="new-list-link" data-phx-link="patch" data-phx-link-state="push" phx-value-path={assigns.conn.path_info}>
     <ion-icon name="add-outline"></ion-icon> 
     Add list
   </a>
 <% end %>
 
-<button class="button is-warning is-rounded ml-5 mt-3">
+<button class="button is-warning is-rounded ml-5 mt-3" style="display:none;">
   <%= if has_current_user(@conn) do %>
     <%= link to: Routes.user_registration_path(@conn, :destroy_session), method: :get, class: "navbar-item" do %>
       <span class="is-text-blue-whale"> Logout </span>

@@ -11,12 +11,20 @@ defmodule SundialWeb.BoardLive.Index do
   # plug SundialWeb.EnsureAuthenticated
 
   @impl true
-  def mount(_params, session, socket) do
-    boards = list_boards(session)
+  def mount(params, session, socket) do
+    {boards, refresh_target} = if params["shared"]do
+      {list_shared_boards(session["current_user_access_token"]),
+      "/boards?shared=true"}
+    else
+      {list_boards(session),
+      "/boards"}
+    end
 
     {:ok, socket
       |> assign(:current_user_access_token, session["current_user_access_token"])
-      |> assign(:boards, boards)}
+      |> assign(:boards, boards)
+      |> assign(:refresh_target, refresh_target)
+      |> assign(:show_manage_header, false)}
   end
 
   @impl true
@@ -61,7 +69,7 @@ defmodule SundialWeb.BoardLive.Index do
 
   @impl true
   def handle_event("refresh", _params, socket) do
-    {:noreply, push_redirect(socket, to: "/boards")}
+    {:noreply, push_redirect(socket, to: socket.assigns.refresh_target)}
   end
 
   @impl true
@@ -85,6 +93,12 @@ defmodule SundialWeb.BoardLive.Index do
     client = ClientAPI.client(session["current_user_access_token"])
     client
       |> BoardAPI.get_boards
+  end
+
+  defp list_shared_boards(access_token) do
+    client = ClientAPI.client(access_token)
+    client
+      |> BoardAPI.get_shared_boards
   end
 
   # defp ensure_authenticated(access_token, socket) do

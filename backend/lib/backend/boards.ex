@@ -44,8 +44,10 @@ defmodule Backend.Boards do
   end
 
   def list_shared_boards(user) do
+    user_id = user.id
+
     user
-      |> Repo.preload(:shared_boards)
+      |> Repo.preload([shared_boards: from(board in Board, where: board.user_id != ^user_id)])
       |> Map.fetch!(:shared_boards)
   end
 

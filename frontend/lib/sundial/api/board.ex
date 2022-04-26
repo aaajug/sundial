@@ -26,6 +26,16 @@ defmodule Sundial.API.BoardAPI do
         {:error, _} -> nil
     end
   end
+  def get_shared_boards(client) do
+    url = "/boards/shared"
+
+    case get(client, url) do
+      {:ok, %{body: body}} -> body
+        {_, %{body: body}} -> ""
+        {:error, _} -> nil
+    end
+  end
+
 
   def create_board(client, params) do
     IO.inspect params, label: "paramsdbcre"

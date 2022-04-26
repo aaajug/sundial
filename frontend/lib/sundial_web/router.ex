@@ -61,6 +61,7 @@ defmodule SundialWeb.Router do
     pipe_through [:browser]
 
     live "/boards", BoardLive.Index, :index
+    live "/boards/shared", BoardLive.Index, :index_shared
   end
 
   # scope "/", SundialWeb do
