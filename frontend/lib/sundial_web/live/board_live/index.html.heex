@@ -3,6 +3,7 @@
     background-color: #122329;
     text-align: right;
     height: 100vh;
+    margin-top: 23px;
   }
 
   li a {
@@ -16,9 +17,19 @@
 
   .columns.with-border {
     margin-left: -5rem;
-    border-top: solid;
+    /*border-top: solid;
     border-top-width: 2px;
-    border-top-color: #374E56;
+    border-top-color: #374E56;*/
+  }
+
+  html {
+    overflow: hidden;
+  }
+
+  .board-grid {
+    height: 75%;
+    overflow-y: scroll;
+    flex-flow: wrap;
   }
 </style>
 
@@ -37,6 +48,18 @@
   </.modal>
 <% end %>
 
+<div style="margin-top:-13vh;position:fixed;">
+  <a href="/boards" id="back-to-boards" data-phx-link="patch" data-phx-link-state="push" class="is-underlined">
+  </a>
+  <br>
+  <div style="display: flex;align-items: end;">
+    <span class="is-size-1 has-text-weight-semibold has-text-white">My Boards</span>
+    <iframe src="https://free.timeanddate.com/clock/i893be6r/n145/fn11/fs18/fcffe08a/tct/pct/ftb/pa9/tt0/tw0/tm1/th1/tb2" 
+                  frameborder="0" width="205" height="39" allowtransparency="true"
+                  style="margin-bottom: 8px; margin-left: 10px;"></iframe>
+  </div>
+</div>
+
 <div class="columns mt-6 with-border">
   <div class="column is-2 sidebar">
     <aside class="menu">
@@ -47,7 +70,7 @@
     </aside>
   </div>
 
-  <div class="column is-four-fifths ml-4 pt-5">
+  <div class="column is-four-fifths ml-4 pt-6">
     <%= live_patch to: Routes.board_index_path(@socket, :new) do %>
       <button class="button is-small active" id="new-board-button">
         <span class="icon is-small">
@@ -61,7 +84,7 @@
       refresh
     </button>
     
-    <div class="columns pt-4">
+    <div class="board-grid columns pt-4">
       <%= if @boards do %>
         <%= for board <- @boards do %>
           <.live_component module={SundialWeb.Live.Board.BoardComponent} id={board["id"]} board={board} current_user_access_token={@current_user_access_token}/>

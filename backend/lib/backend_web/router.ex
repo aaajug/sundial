@@ -47,6 +47,7 @@ defmodule BackendWeb.Router do
 
     # Boards API
     get "/boards/:id/tasks", BoardController, :get_tasks
+    get "/boards/shared", BoardController, :shared_boards
     resources "/boards", BoardController
     get "/boards/:id/lists", ListController, :index
     resources "/lists", ListController, except: [:index]

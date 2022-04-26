@@ -43,6 +43,12 @@ defmodule Backend.Boards do
     # Repo.all(Board)
   end
 
+  def list_shared_boards(user) do
+    user
+      |> Repo.preload(:shared_boards)
+      |> Map.fetch!(:shared_boards)
+  end
+
   @doc """
   Gets a single board.
 

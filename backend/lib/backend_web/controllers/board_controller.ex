@@ -9,8 +9,6 @@ defmodule BackendWeb.BoardController do
 
   def index(conn, _params) do
     user = Pow.Plug.current_user(conn)
-    IO.inspect user.boards, label: "userownedboards3"
-
     user_boards = Enum.at(Boards.list_boards(user.id), 0)
 
     # IO.inspect user_boards, label: "userboards"
@@ -20,6 +18,13 @@ defmodule BackendWeb.BoardController do
     json conn, serialized_boards
   end
 
+  def shared_boards(conn, _params) do
+    user = Pow.Plug.current_user(conn)
+    boards = Boards.list_shared_boards(user)
+    serialized_boards = Boards.serialize(boards)
+
+    json conn, serialized_boards
+  end
   # def get_task(conn, %{"id" => id}) do
   #   tasks =
   # end
