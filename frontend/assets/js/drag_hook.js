@@ -27,6 +27,7 @@ export default {
     function handleClick(e) {
       var content = this.querySelector(".content");
       var flex_container = this.querySelector(".flex");
+      var title = this.querySelector(".task-description-header");
 
       var unexpanded = true;
 
@@ -36,14 +37,15 @@ export default {
     
       $(".task-card").find(".content").addClass("truncated");
       $(".draggable-card").find(".flex").removeClass("highlighted");
+      $(".task-description-header").addClass("truncated");
         
       if(unexpanded) {
         if(content) {
           content.classList.remove("truncated");
         }
         flex_container.classList.add("highlighted");
+        title.classList.remove("truncated");
       }
-      
     }
 
     function handleDragStart(e) {

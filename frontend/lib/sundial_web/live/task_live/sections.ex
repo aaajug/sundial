@@ -28,7 +28,7 @@ defmodule SundialWeb.TaskLive.Sections do
   def header(%{assigns: assigns, status: status}) do
     ~H"""
     <div class="header mt-3 py-1">
-      <p class="is-size-6 has-text-weight-semibold mb-0">
+      <p class="task-description-header truncated is-size-6 has-text-weight-semibold mb-0">
         <%= assigns.task["description"] %>
       </p>
       <p class="is-size-7 is-letter-spaced-0">
