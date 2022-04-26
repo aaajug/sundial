@@ -70,8 +70,6 @@ defmodule BackendWeb.BoardController do
   end
 
   def update(conn, params) do
-    authorized?(conn)
-    IO.inspect ("inupdateofboardcontroller3")
     id = String.to_integer(params["id"])
     board = Boards.get_board!(id)
 
@@ -83,9 +81,6 @@ defmodule BackendWeb.BoardController do
     case Boards.update_board(board, permissions, board_params) do
       {:ok, board} ->
         json conn, Boards.serialize(board)
-        # conn
-        # |> put_flash(:info, "Board updated successfully.")
-        # |> redirect(to: Routes.board_path(conn, :show, board))
 
       {:error, %Ecto.Changeset{} = changeset} ->
         text conn, "Failed to update board."
@@ -97,12 +92,5 @@ defmodule BackendWeb.BoardController do
     {:ok, _board} = Boards.delete_board(board)
 
     text conn, "Board deleted successfully."
-    # conn
-    # |> put_flash(:info, "Board deleted successfully.")
-    # |> redirect(to: Routes.board_path(conn, :index))
-  end
-
-  defp authorized?(conn) do
-    IO.inspect conn, label: "authconndebug"
   end
 end
