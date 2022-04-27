@@ -42,7 +42,6 @@ defmodule Sundial.API.ListAPI do
   end
 
   def update_list(client, id, params) do
-    IO.inspect params, label: "listupdateparams"
     case patch(client, "/lists/" <> Integer.to_string(id), params) do
       {:ok, %{body: body}} -> body
         {_, %{body: body}} -> ""
@@ -60,7 +59,6 @@ defmodule Sundial.API.ListAPI do
   end
 
   def delete_list(client, id) do
-    IO.inspect id, label: "inlist delete API"
     case delete(client, "/lists/" <> id) do
       {:ok, %{body: body}} -> body
         {_, %{body: body}} -> ""
