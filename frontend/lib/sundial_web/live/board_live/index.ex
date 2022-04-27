@@ -6,7 +6,7 @@ defmodule SundialWeb.BoardLive.Index do
   alias Sundial.API.BoardAPI
   alias Sundial.API.ListAPI
   alias Sundial.API.ClientAPI
-  alias SundialWeb.EnsureAuthenticated
+  alias SundialWeb.AuthenticationGuard
 
   @impl true
   def mount(params, session, socket) do

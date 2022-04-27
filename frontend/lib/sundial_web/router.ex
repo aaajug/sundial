@@ -20,7 +20,11 @@ defmodule SundialWeb.Router do
   end
 
   pipeline :protected do
-    plug SundialWeb.EnsureAuthenticated
+    plug SundialWeb.AuthenticationGuard, action: :ensure_authenticated
+  end
+
+  pipeline :maybe_redirect do
+    plug SundialWeb.AuthenticationGuard, action: :redirect_authenticated
   end
 
   pipeline :destroy_session do
@@ -44,7 +48,7 @@ defmodule SundialWeb.Router do
   end
 
   scope "/", SundialWeb do
-    pipe_through [:browser]
+    pipe_through [:browser, :maybe_redirect]
 
     live "/", UserLive.Registration, :new_session
     live "/signup", UserLive.Registration, :index

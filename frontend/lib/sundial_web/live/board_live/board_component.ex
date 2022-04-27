@@ -6,7 +6,7 @@ defmodule SundialWeb.Live.Board.BoardComponent do
   alias Sundial.Boards
   alias Sundial.API.BoardAPI
   alias Sundial.API.ClientAPI
-  alias SundialWeb.EnsureAuthenticated
+  alias SundialWeb.AuthenticationGuard
 
   def mount(socket) do
     {:ok, socket}
