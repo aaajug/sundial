@@ -8,7 +8,6 @@ defmodule BackendWeb.RegistrationController do
 
   @spec create(Conn.t(), map()) :: Conn.t()
   def create(conn, user_params) do
-    IO.inspect user_params, label: "userparamsdb"
     conn
     |> Plug.create_user(user_params)
     |> case do
