@@ -2,6 +2,7 @@ defmodule SundialWeb.ListLive.Index do
   use SundialWeb, :live_view
 
   import SundialWeb.Live.Task.TaskModalComponent
+  import SundialWeb.ListLive.ModalContents
 
   alias Sundial.Lists
   alias Sundial.Progress

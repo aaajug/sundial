@@ -1,24 +1,20 @@
-defmodule Backend.TasksTest do
-  use Backend.DataCase
+defmodule _Backend.TasksTest do
+  use BackendWeb.ConnCase
 
-  alias Backend.Tasks
   alias Backend.Boards
-  alias Backend.Lists
+  alias Backend.Users.User
+  alias Pow.Plug
+  alias Backend.Tasks
 
   describe "tasks" do
     alias Backend.Tasks.Task
 
     import Backend.TasksFixtures
-    import Backend.BoardsFixtures
-    import Backend.ListsFixtures
 
     @invalid_attrs %{completed_on: nil, deadline: nil, description: nil, details: nil, pane_id: nil, position: nil}
 
     test "list_tasks/0 returns all tasks" do
-      board = board_fixture()
-      list = list_fixture(%{board_id: board.id})
-      task = task_fixture(%{board_id: board.id, list_id: list.id})
-
+      task = task_fixture()
       assert Tasks.list_tasks() == [task]
     end
 

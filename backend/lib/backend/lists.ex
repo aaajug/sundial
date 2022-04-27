@@ -224,4 +224,10 @@ defmodule Backend.Lists do
   def change_list(%List{} = list, attrs \\ %{}) do
     List.changeset(list, attrs)
   end
+
+  def create_list(list_params) do
+    %List{}
+    |> List.insert_changeset(list_params)
+    |> Repo.insert
+  end
 end

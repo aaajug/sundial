@@ -11,7 +11,10 @@ defmodule Backend.ListsFixtures do
     {:ok, list} =
       attrs
       |> Enum.into(%{
-
+        board_id: 42,
+        position: 42,
+        title: "some title",
+        user_id: 42
       })
       |> Backend.Lists.create_list()
 

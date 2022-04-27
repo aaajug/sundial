@@ -7,24 +7,34 @@ defmodule Backend.BoardsFixtures do
   @doc """
   Generate a board.
   """
-  def board_fixture(user_attrs \\ %{}, board_attrs \\ %{}) do
-    user_attrs = user_attrs
-      |> Enum.into(%{
-        email: "alice@wonderland.com",
-        password: "helloworld"
-      })
-
-      board_attrs = board_attrs
-      |> Enum.into(%{
-        title: "New board",
-        user_id: 1
-      })
-
+  def board_fixture(attrs \\ %{}) do
     {:ok, board} =
-
-      {:ok, user, _conn} = Pow.Plug.create_user(user_attrs)
-      Backend.Boards.create_board(user, board_attrs, nil)
+      attrs
+      |> Enum.into(%{
+        title: "some title",
+        user_id: 42
+      })
+      |> Backend.Boards.create_board()
 
     board
+  end
+
+  @doc """
+  Generate a permission.
+  """
+  def permission_fixture(attrs \\ %{}) do
+    {:ok, permission} =
+      attrs
+      |> Enum.into(%{
+        board_id: 42,
+        delete: true,
+        manage_users: true,
+        read: true,
+        user_id: 42,
+        write: true
+      })
+      |> Backend.Boards.create_permission()
+
+    permission
   end
 end

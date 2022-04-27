@@ -16,11 +16,12 @@ defmodule Backend.TasksFixtures do
         deadline: ~N[2022-03-16 03:09:00],
         description: "some description",
         details: "some details",
-        pane_id: 42,
-        position: 0,
+        list_id: 42,
+        board_id: 5,
+        position: 5000,
         status: 1
       })
-      |> Backend.Tasks.create_task() # Need: current_user
+      |> Backend.Tasks.create_task() # Need: (user, assignee, attrs, list_id, board_id)
 
     task
   end

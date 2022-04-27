@@ -202,6 +202,12 @@ defmodule Backend.Boards do
     end
   end
 
+  def create_board(board_params) do
+    %Board{}
+    |> Board.insert_changeset(board_params)
+    |> Repo.insert
+  end
+
   defp set_user_board_permission(user, board, email, role, remove) do
     if remove == "true" && user.id != board.user_id do
       user_id = user.id

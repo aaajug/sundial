@@ -653,8 +653,14 @@ defmodule Backend.Tasks do
       serialize(user, task)
   end
 
+  ## For tests
+  def create_task(task_params) do
+    %Task{}
+    |> Task.insert_changeset(task_params)
+    |> Repo.insert
+  end
+
   defp format_comment_datetime(datetime) do
     Calendar.strftime(datetime, "%d %b %Y @ %I:%M%p")
   end
-
 end
