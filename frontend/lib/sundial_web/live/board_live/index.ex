@@ -8,8 +8,6 @@ defmodule SundialWeb.BoardLive.Index do
   alias Sundial.API.ClientAPI
   alias SundialWeb.EnsureAuthenticated
 
-  # plug SundialWeb.EnsureAuthenticated
-
   @impl true
   def mount(params, session, socket) do
     {boards, refresh_target, header_title} = if params["shared"]do
@@ -17,7 +15,7 @@ defmodule SundialWeb.BoardLive.Index do
       "/boards?shared=true",
       "Boards Shared with me"}
     else
-      {list_boards(session),
+      {list_boards(session["current_user_access_token"]),
       "/boards",
       "My Boards"}
     end
@@ -37,26 +35,35 @@ defmodule SundialWeb.BoardLive.Index do
 
   defp apply_action(socket, :edit, %{"id" => id}) do
     client = ClientAPI.client(socket.assigns.current_user_access_token)
-    board = client
-     |>  BoardAPI.get_board(%{id: id})
 
-    board = for {key, val} <- board, into: %{}, do: {String.to_atom(key), val}
+    {{:error, error}, _, {:data, data}}
+    = client |> BoardAPI.get_board(%{id: id})
 
-    if board.actions_allowed do
-      socket
-      |> assign(:page_title, "Edit Board")
-      |> assign(:roles, BoardAPI.get_roles)
-      |> assign(:board, board)
+    if error do
+      handle_error(error, socket)
+      |> push_redirect(to: "/boards")
     else
-      socket
-      |> push_redirect(to: "/boards?shared=true")
+      board = for {key, val} <- data, into: %{}, do: {String.to_atom(key), val}
+      {_, _, {:data, roles}} = BoardAPI.get_roles
+
+      if board.actions_allowed do
+        socket
+        |> assign(:page_title, "Edit Board")
+        |> assign(:roles, roles)
+        |> assign(:board, board)
+      else
+        socket
+        |> push_redirect(to: "/boards?shared=true")
+      end
     end
   end
 
   defp apply_action(socket, :new, _params) do
+    {_, _, {:data, roles}} = BoardAPI.get_roles
+
     socket
     |> assign(:page_title, "New Board")
-    |> assign(:roles, BoardAPI.get_roles)
+    |> assign(:roles, roles)
     |> assign(:board, %Board{})
   end
 
@@ -71,13 +78,13 @@ defmodule SundialWeb.BoardLive.Index do
     {:noreply, push_redirect(socket, to: socket.assigns.refresh_target)}
   end
 
-  @impl true
-  def handle_event("delete", %{"id" => id}, socket) do
-    client = ClientAPI.client(socket.assigns.current_user_access_token)
-    BoardAPI.delete(client, %{id: id})
+  # @impl true
+  # def handle_event("delete", %{"id" => id}, socket) do
+  #   client = ClientAPI.client(socket.assigns.current_user_access_token)
+  #   BoardAPI.delete(client, %{id: id})
 
-    {:noreply, assign(socket, :boards, list_boards(""))}
-  end
+  #   {:noreply, assign(socket, :boards, list_boards(""))}
+  # end
 
   @impl true
   def handle_event("add_shared_user_field", %{"return_to" => return_to}, socket) do
@@ -88,25 +95,24 @@ defmodule SundialWeb.BoardLive.Index do
     |> push_redirect(to: return_to)}
   end
 
-  defp list_boards(session) do
-    client = ClientAPI.client(session["current_user_access_token"])
-    client
-      |> BoardAPI.get_boards
+  defp list_boards(access_token) do
+    client = ClientAPI.client(access_token)
+    {_, _, {:data, data}} = client |> BoardAPI.get_boards
+
+    data
   end
 
   defp list_shared_boards(access_token) do
     client = ClientAPI.client(access_token)
-    client
-      |> BoardAPI.get_shared_boards
+    {_, _, {:data, data}} = client |> BoardAPI.get_shared_boards
+
+    data
   end
 
-  # defp ensure_authenticated(access_token, socket) do
-  #   #IO.inspect !EnsureAuthenticated.is_authenticated?(access_token), label: "ensureauthdbclient"
-  #   if !EnsureAuthenticated.is_authenticated?(access_token) do
-  #     socket
-  #       |> push_redirect(to: "/login")
-  #   else
-  #     socket
-  #   end
-  # end
+  defp handle_error(error, socket) do
+    {_, message} = error |> Enum.at(0)
+
+    socket
+    |> put_flash(:error, message)
+  end
 end

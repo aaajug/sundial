@@ -1,15 +1,9 @@
 defmodule Sundial.API.BoardAPI do
-  use Tesla
-
-  adapter Tesla.Adapter.Httpc
-  plug Tesla.Middleware.BaseUrl, "http://backend:4000/api"
-  plug Tesla.Middleware.JSON
+  alias Sundial.API.BaseAPI
 
   def get_board(client, params) do
-    case get(client, "/boards/" <> params.id) do
-      {:ok, %{body: body}} -> body
-        {_, %{body: body}} -> ""
-    end
+    url = "/boards/" <> params.id
+    BaseAPI.get_action(client, url)
   end
 
   def get_boards(client), do: get_boards(client, nil)
@@ -20,51 +14,32 @@ defmodule Sundial.API.BoardAPI do
       "/boards"
     end
 
-    case get(client, url) do
-      {:ok, %{body: body}} -> body
-        {_, %{body: body}} -> ""
-        {:error, _} -> nil
-    end
+    BaseAPI.get_action(client, url)
   end
+
   def get_shared_boards(client) do
     url = "/shared_boards"
-
-    case get(client, url) do
-      {:ok, %{body: body}} -> body
-        {_, %{body: body}} -> ""
-        {:error, _} -> nil
-    end
+    BaseAPI.get_action(client, url)
   end
 
-
   def create_board(client, params) do
-    IO.inspect params, label: "paramsdbcre"
-    case post(client, "/boards", params) do
-      {:ok, %{body: body}} -> body
-        {_, %{body: body}} -> ""
-    end
+    url = "/boards"
+    BaseAPI.post_action(client, url, params)
   end
 
   def update_board(client, id, params) do
-    case patch(client, "/boards/" <> Integer.to_string(id), params) do
-      {:ok, %{body: body}} -> body
-        {_, %{body: body}} -> ""
-    end
+    url = "/boards/" <> Integer.to_string(id)
+    BaseAPI.patch_action(client, url, params)
   end
 
   def delete_board(client, params) do
-    IO.inspect "inboard delete API"
-    case delete(client, "/boards/" <> params.id) do
-      {:ok, %{body: body}} -> body
-        {_, %{body: body}} -> ""
-    end
+    url = "/boards/" <> params.id
+    BaseAPI.delete_action(client, url)
   end
 
   def get_roles do
-    case get("/boards/roles") do
-      {:ok, %{body: body}} -> body
-        {_, %{body: body}} -> ""
-    end
+    url = "/boards/roles"
+    BaseAPI.get_action(url)
   end
 
   defp format_ids(ids) do

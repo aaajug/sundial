@@ -14,7 +14,7 @@ defmodule BackendWeb.BoardController do
     boards = user_boards.boards
     serialized_boards = Boards.serialize(user, boards)
 
-    json conn, serialized_boards
+    json conn, %{data: serialized_boards}
   end
 
   def shared_boards(conn, _params) do
@@ -22,12 +22,7 @@ defmodule BackendWeb.BoardController do
     boards = Boards.list_shared_boards(user)
     serialized_boards = Boards.serialize(user, boards)
 
-    json conn, serialized_boards
-  end
-
-  def new(conn, _params) do
-    changeset = Boards.change_board(%Board{})
-    render(conn, "new.html", changeset: changeset)
+    json conn, %{data: serialized_boards}
   end
 
   def create(conn, %{"data" => board_params}) do
@@ -44,7 +39,7 @@ defmodule BackendWeb.BoardController do
 
     case Boards.create_board(user, board_params, permissions) do
       {:ok, board} ->
-        json conn, Boards.serialize(user, board)
+        json conn, %{data: Boards.serialize(user, board)}
 
       {:error, %Ecto.Changeset{} = changeset} ->
         text conn, "Error creating board"
@@ -56,17 +51,11 @@ defmodule BackendWeb.BoardController do
 
     board = Boards.get_board(user, id)
 
-    json conn, Boards.serialize(user, board)
+    json conn, %{data: Boards.serialize(user, board)}
   end
 
   def get_roles(conn, _params) do
-    json conn, Role.get_names
-  end
-
-  def edit(conn, %{"id" => id}) do
-    board = Boards.get_board!(id)
-    changeset = Boards.change_board(board)
-    render(conn, "edit.html", board: board, changeset: changeset)
+    json conn, %{data: Role.get_names}
   end
 
   def update(conn, params) do
@@ -82,7 +71,7 @@ defmodule BackendWeb.BoardController do
 
     case Boards.update_board(board, permissions, board_params) do
       {:ok, board} ->
-        json conn, Boards.serialize(user, board)
+        json conn, %{data: Boards.serialize(user, board)}
 
       {:error, %Ecto.Changeset{} = changeset} ->
         text conn, "Failed to update board."
@@ -91,7 +80,7 @@ defmodule BackendWeb.BoardController do
 
   def delete(conn, %{"id" => id}) do
     board = Boards.get_board!(id)
-    {:ok, _board} = Boards.delete_board(board)
+    {:ok, _board} = %{data: Boards.delete_board(board)}
 
     text conn, "Board deleted successfully."
   end
