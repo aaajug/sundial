@@ -59,17 +59,12 @@ defmodule SundialWeb.TaskLive.Sections do
     <div class={"card-content p-0 pt-2" <> container_class}>
       <div class={class}>
         <%= raw assigns.task["details"] %>
-        <%= #Jason.encode!(@content_item.quill) %>
       </div>
     </div>
     """
   end
 
-  # TODO: links for API editing
   def actions(%{assigns: assigns}) do
-
-    IO.inspect assigns.board, label: "theboardshere"
-    # #IO.inspect assigns
     ~H"""
     <div class="" phx-update="ignore">
       <%= live_patch to: Routes.list_index_path(@socket, :show_task, assigns.task["board_id"], assigns.task["id"], %{return_to: "/boards/" <> Integer.to_string(assigns.task["board_id"]) <> "/tasks/" <> Integer.to_string(assigns.task["id"])}), id: "show-task" do %>
@@ -90,14 +85,12 @@ defmodule SundialWeb.TaskLive.Sections do
   end
 
   def actions_inline(%{assigns: assigns}) do
-    # #IO.inspect assigns
     ~H"""
     <div class="">
       <%= live_patch to: Routes.list_index_path(@socket, :edit_task, %SerialTask{id: assigns.task["id"]}, %{return_to: @return_to}), id: "edit-task", style: "cursor:pointer;text-decoration:underline;" do %>
         edit
       <% end %>
       <a id={"delete-task-" <> Integer.to_string(assigns.task["id"])} phx-click="delete" phx-value-id={assigns.task["id"]} phx-value-return_to={@return_to} data-confirm="This task will be deleted. Are you sure?" phx-target={assigns.myself} style="cursor:pointer;text-decoration:underline;">
-        <!--ion-icon name="trash-outline" class="is-clickable action-button"></ion-icon-->
         delete
       </a>
     </div>
