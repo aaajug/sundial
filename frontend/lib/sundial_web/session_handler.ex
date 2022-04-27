@@ -34,6 +34,7 @@ defmodule SundialWeb.SessionHandler do
 
   def destroy_current_user(conn) do
     conn
+      |> assign(:current_user_access_token, "")
       |> delete_session("current_user_access_token")
       |> delete_session("current_user_email")
       |> delete_session("success_info")
