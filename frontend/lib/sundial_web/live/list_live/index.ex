@@ -51,21 +51,25 @@ defmodule SundialWeb.ListLive.Index do
   # def handle_event("dropped", %{"list" => list, "list_id" => list_id}, socket) do
 
     client = ClientAPI.client(socket.assigns.current_user_access_token)
-    response = TaskAPI.update_positions(client, list_id, task_id, insert_index)
+    {{:error, error}, _, {:data, data}}
+      = TaskAPI.update_positions(client, list_id, task_id, insert_index)
 
-    tasks = Enum.map(response["lists"], fn list ->
-      Enum.map(list["tasks"], fn task ->
-        task["id"]
+    if error do
+      {:noreply,
+      handle_error(error, socket)}
+    else
+      tasks = Enum.map(data["lists"], fn list ->
+        Enum.map(list["tasks"], fn task ->
+          task["id"]
+        end)
       end)
-    end)
 
-    IO.inspect tasks, label: "new ordering"
+      IO.inspect tasks, label: "new ordering"
 
-    {:noreply,
-    socket
-    |> assign(:lists, response["lists"])}
-      # |> push_redirect(to: socket.assigns.return_target)}
-    # |> put_flash(:info, "Tasks reordered successfully")}
+      {:noreply,
+      socket
+      |> assign(:lists, data["lists"])}
+    end
   end
 
   @impl true

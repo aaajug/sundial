@@ -34,8 +34,6 @@ defmodule BackendWeb.Authorize do
       true ->
         role = get_board_role(current_user, conn.path_info, action, conn)
 
-        IO.inspect {action, role, resource, check(action, role, resource)}, label: "authorizedebug3"
-
         check(action, role, resource)
         |> maybe_continue(conn)
     end
@@ -99,8 +97,7 @@ defmodule BackendWeb.Authorize do
 
     board =
       cond do
-        action == :update_positions ->
-          IO.inspect "authorizedebug5:resourceupdate"
+        action == :update_positions && conn.body_params["list_id"] ->
           list_id = conn.body_params["list_id"]
             |> Lists.get_list!
             |> Repo.preload(:board)
