@@ -28,13 +28,6 @@ defmodule Backend.Tasks do
 
   """
   def list_tasks do
-    # Repo.all(from task in Task,
-    #          order_by: [desc: task.completed_on,
-    #                     asc: task.status,
-    #                     asc: task.deadline,
-    #                     desc: task.updated_at])
-
-    # IO.inspect "in backend.tasks"
     Repo.all(from task in Task,
              order_by: [asc: task.deadline,
                         asc: task.status,
@@ -161,14 +154,10 @@ defmodule Backend.Tasks do
     insert_index = String.to_integer(insert_index)
     list_id = String.to_integer(list_id)
 
-    IO.inspect insert_index, label: "debuggerlog4_insert_index"
-
     tasks =
       Lists.get_list!(list_id)
       |> Repo.preload([tasks: from(task in Task, order_by: [task.position])])
       |> Map.fetch!(:tasks)
-
-    IO.inspect tasks, label: "tasksinupdatepos"
 
     task_count =
       tasks
@@ -176,21 +165,17 @@ defmodule Backend.Tasks do
 
     new_position = cond do
       insert_index == 0 && tasks != []->
-        IO.inspect "index is 0 ", label: "debuggerlog_"
         first_position = get_position_at(tasks, 0)
-        IO.inspect first_position, label: "debuggerlog_3 first position"
         first_position - 1000
 
       insert_index == 0 ->
         5000
 
       insert_index == task_count ->
-        IO.inspect "index is last", label: "debuggerlog_"
         last_position = get_position_at(tasks, -1)
         last_position + 1000;
 
       true ->
-        IO.inspect "index is in between", label: "debuggerlog_"
         before_position = get_position_at(tasks, insert_index - 1)
         after_position = get_position_at(tasks, insert_index)
 
@@ -210,9 +195,6 @@ defmodule Backend.Tasks do
         div(after_position + before_position, 2)
     end
 
-
-    IO.inspect new_position, label: "debuggerlog4_newpositionprint"
-
     task = Tasks.get_task!(task_id)
 
     response = if list_id == task.list_id do
@@ -228,13 +210,8 @@ defmodule Backend.Tasks do
           |> Map.fetch!(:board)
 
         lists = Lists.list_lists(board, user)
-        # query = from(task in Task, order_by: [task.position])
-        # board = Lists.get_list!(list_id)
-        #   |> Repo.preload(board: [lists: [tasks: query]])
-        #   |> Map.fetch!(:board)
 
         serialized_lists = Lists.serialize(user, lists)
-        # serialized_lists = Lists.serialize(board.lists)
 
         {:ok, %{board_id: board.id, board_title: board.title, lists: serialized_lists}}
 
@@ -296,7 +273,6 @@ defmodule Backend.Tasks do
         serialized_lists = Lists.serialize(user, board.lists)
 
         {:ok, %{board_id: board.id, board_title: board.title, lists: serialized_lists}}
-        # {:ok, updated_tasks, "Tasks reordered"}
     end
   end
 
@@ -311,7 +287,7 @@ defmodule Backend.Tasks do
       )
   end
 
-  def is_all_position_nil? do # need to check if all tasks have no position, if so, initialize positions
+  def is_all_position_nil? do
     distinct_positions = Task
                           |> select([task], task.position)
                           |> distinct(true)
@@ -353,15 +329,6 @@ defmodule Backend.Tasks do
   """
   # def create_task(attrs \\ %{}) do
   def create_task(user, assignee, attrs, list_id, board_id) do
-    # Repo.insert!(task)
-    # %Task{}
-    # |> Task.changeset(attrs)
-    # |> Repo.insert()
-
-    # task = Ecto.build_assoc(user, :authored_tasks, task_params)
-
-    # TODO: add assignee
-
     board = Boards.get_board!(board_id)
 
     list =
@@ -375,7 +342,6 @@ defmodule Backend.Tasks do
       |> Repo.preload(:tasks)
       |> Map.fetch!(:tasks)
       |> Enum.at(-1)
-      # |> Map.fetch!(:position)
 
     next_position = if last_task do
         last_task.position + 1000
@@ -391,19 +357,6 @@ defmodule Backend.Tasks do
     |> Ecto.Changeset.put_assoc(:author, user)
     |> Ecto.Changeset.put_assoc(:assignee, assignee)
     |> Repo.insert
-    # |> Task.Changeset.put_assoc(:assignee, assignee)
-
-    # user_board.boards
-    # |> Enum.at(0)
-    # |> Repo.preload()
-
-    # changeset = user
-    #   |> Ecto.build_assoc(:authored_tasks)
-    #   |> Task.changeset(attrs)
-
-    #   IO.inspect changeset, label: "taskchangesetdb"
-
-      # Repo.insert(changeset)
   end
 
   @doc """
@@ -421,42 +374,24 @@ defmodule Backend.Tasks do
   def update_task(%Task{} = task, assignee, attrs) do
     attrs = cond do
               Map.has_key?(attrs, "status") && (attrs["status"] != "4" && attrs["status"] != 4 ) ->
-                IO.inspect "first cond"
                 Map.put(attrs, "completed_on", nil)
 
               Map.has_key?(attrs, :status) && (attrs.status != "4" && attrs.status != 4) ->
-                IO.inspect "second cond"
                 Map.put(attrs, :completed_on, nil)
 
               !Map.has_key?(attrs, "status") && !Map.has_key?(attrs, :status) && task.status != 4 && Map.has_key?(attrs, "completed_on") ->
-                IO.inspect "third cond"
                 Map.put(attrs, "completed_on", nil)
 
               !Map.has_key?(attrs, "status") && !Map.has_key?(attrs, :status) && task.status != 4 && Map.has_key?(attrs, :completed_on) ->
-                IO.inspect "fourth cond"
                 Map.put(attrs, :completed_on, nil)
 
               true -> attrs
             end
-
-    # assignee
-    # |> Repo.preload(:assigned_tasks)
-    # |> Map.fetch(:assignee)
-    # |> Enum.at(0)
-    # |> Task.changeset(attrs)
-    # |> Ecto.Changeset.put_assoc(:assignee, assignee)
-    # |> Repo.update
-
     task
     |> Repo.preload(:assignee)
     |> Task.changeset(attrs)
     |> Ecto.Changeset.put_assoc(:assignee, assignee)
     |> Repo.update
-
-    # task
-    # |> Task.changeset(attrs)
-    # |> Ecto.Changeset.put_assoc(:assignee, assignee)
-    # |> Repo.update
   end
 
   @doc """
@@ -509,7 +444,6 @@ defmodule Backend.Tasks do
                   task.status
                 end
 
-    # [{status_name, status_description}] = Repo.all(from s in "status", where: s.id == ^status_id, select: {s.name, s.description})
     task_status = Progress.list_status() |> Enum.filter(fn status -> status.id == status_id end) |> Enum.at(0)
 
     is_overdue = if task.deadline && (task.completed_on == nil || (task.completed_on != nil && task.status != 4)) && task.status != 3 do
@@ -577,6 +511,7 @@ defmodule Backend.Tasks do
   def serialize(user, %Task{} = task) do
     serialize_task(user, task, nil)
   end
+
   @doc """
   Return a list of map objects corresponding to tasks
   """
@@ -584,11 +519,7 @@ defmodule Backend.Tasks do
     tasks
       |> Enum.with_index
       |> Enum.map(fn({task, index}) -> serialize_task(user, task, index) end)
-
-      # Enum.map(tasks, fn(task) -> serialize_task(task,) end)
   end
-
-  # private
 
   defp format_datetime(nil), do: nil
   defp format_datetime(datetime) do

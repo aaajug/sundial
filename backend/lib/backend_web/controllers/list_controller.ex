@@ -27,7 +27,6 @@ defmodule BackendWeb.ListController do
 
     case Lists.create_list(user, board_id, list_params) do
       {:ok, list} ->
-        IO.inspect "List Created"
         json conn, Lists.serialize(user, list)
 
       {:error, %Ecto.Changeset{} = changeset} ->

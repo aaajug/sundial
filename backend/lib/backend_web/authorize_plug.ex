@@ -17,8 +17,6 @@ defmodule BackendWeb.Authorize do
   def init(opts), do: opts
 
   def call(conn, opts) do
-    IO.inspect conn, label: "connprint2"
-
     current_user = Pow.Plug.current_user(conn)
     resource = Keyword.get(opts, :resource)
     action = action_name(conn)
@@ -93,8 +91,6 @@ defmodule BackendWeb.Authorize do
   defp get_board_role(user, path_info, action, conn) do
     last_index = Enum.count(path_info) - 1
 
-    IO.inspect {action, conn.body_params}, label: "authorizedebug5:bodyparams"
-
     board =
       cond do
         action == :update_positions && conn.body_params["list_id"] ->
@@ -116,7 +112,6 @@ defmodule BackendWeb.Authorize do
             |> Map.fetch!(:board)
 
         (tasks_index = Enum.find_index(path_info, fn param -> param == "tasks" end)) && last_index != tasks_index->
-          IO.inspect "intaskscheck"
           path_info
             |> Enum.at(tasks_index + 1)
             |> Tasks.get_task!

@@ -26,11 +26,5 @@ defmodule Backend.Users do
         |> Enum.at(0)
         |> Map.fetch(:role)
     end
-
-    # IO.inspect role, label: "userroletry4"
-    # user
-    # |> Repo.preload([shared_boards: from(board in Board, where: board.id == ^board_id)])
-    # |> Map.fetch!(:boards)
-    # |> Enum.at(0)
   end
 end

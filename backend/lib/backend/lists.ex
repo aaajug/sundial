@@ -24,38 +24,12 @@ defmodule Backend.Lists do
 
   """
   def list_lists(board, user) do
-    # TODO: clean pipes
-    # TODO: create private function for getting target board
-
     task_query = from(task in Task, order_by: [task.position])
     list_query = from(list in List, order_by: [list.position])
     board = board
             |> Repo.preload([lists: {list_query, [tasks: task_query]}])
 
-    # user_board = user
-    #   |> Repo.preload([boards: from(board in Board, where: board.id == ^board_id)])
-
-    # target_board = user_board.boards |> Enum.at(0)
-
-    # IO.inspect target_board |> Repo.preload(:lists) , label: "targetboardlists2"
-    # board_lists = target_board
-
-
-    # t = board_lists.lists |> Enum.at(0)
-
     board.lists
-    # target_board
-    # |> Ecto.build_assoc(:lists)
-    # |> List.changeset(attrs)
-    # |> Ecto.Changeset.put_assoc(:user, user)
-    # |> Repo.insert
-
-    # (from user in User, where: user.id == ^user_id)
-    #         |> Repo.all
-    #         |> Repo.preload(:boards)
-
-
-    # Repo.all(List)
   end
 
   @doc """
@@ -87,49 +61,7 @@ defmodule Backend.Lists do
 
   """
   def create_list(user, board_id, attrs \\ %{}) do
-    # IO.inspect %List{} |> List.changeset(attrs), label: "changesetdb"
-
-    # board = (from board in Board, where: board.is == ^board.id)
-    #   |> Repo.all
-
-    # get owned boards of user
-    # get shared boards of user with manage or write permissions
-    # get specific board using board_id
-    # build list assoc of specific board
-    # create list changeset
-
-    # user_id = user.id
-
-    # user_boards = (from user in User,
-    #   where: user.id == ^user_id,
-    #   preload: [:boards])
-    #     |> Repo.all
-
-    # IO.inspect user_boards, label: "debuguserboards2"
-
-    # user_query = (from user in User,
-    #   where: user.id == ^user_id)
-
-    # IO.inspect user_query, label: "userquery"
-    # IO.inspect user, label: "userobject"
-    # IO.inspect Repo.preload(user, :boards), label: "preloadingcast"
-
     target_board = Boards.get_board!(board_id)
-
-
-    # user_board = user
-    #   |> Repo.preload([boards: from(board in Board, where: board.id == ^board_id)])
-
-    # target_board = user_board.boards |> Enum.at(0)
-    # IO.inspect target_board, label: "targetboarddebug2"
-
-
-    # user_boards = user_boards
-    #   |> Ecto.build_assoc(:shared_boards)
-
-    # IO.inspect user_boards, label: "debuguserboardswithsharedboards"
-
-    #  Ecto.build_assoc(user, :lists, attrs)
 
     attrs = if attrs do
       attrs
@@ -137,37 +69,30 @@ defmodule Backend.Lists do
       %{title: "Unnamed list"}
     end
 
-    IO.inspect attrs, label: "attrsdebugger2"
     target_board
     |> Ecto.build_assoc(:lists)
     |> List.changeset(attrs)
     |> Ecto.Changeset.put_assoc(:user, user)
     |> Repo.insert
-
-    # Ecto.build_assoc(user, :lists, )
-
-    # %List{}
-    # |> List.changeset(attrs)
-    # |> Repo.insert()
   end
 
-    @doc """
-      Updates a list.
+  @doc """
+    Updates a list.
 
-      ## Examples
+    ## Examples
 
-      iex> update_list(list, %{field: new_value})
-      {:ok, %List{}}
+    iex> update_list(list, %{field: new_value})
+    {:ok, %List{}}
 
-      iex> update_list(list, %{field: bad_value})
-      {:error, %Ecto.Changeset{}}
+    iex> update_list(list, %{field: bad_value})
+    {:error, %Ecto.Changeset{}}
 
-    """
-    def update_list(%List{} = list, attrs) do
-      list
-      |> List.changeset(attrs)
-      |> Repo.update()
-    end
+  """
+  def update_list(%List{} = list, attrs) do
+    list
+    |> List.changeset(attrs)
+    |> Repo.update()
+  end
 
   def update_positions(user, insert_index, list_id) do
     insert_index = String.to_integer(insert_index)
@@ -263,12 +188,8 @@ defmodule Backend.Lists do
 
     role = Boards.permission(user.id, list.board_id) |> Map.fetch!(:role)
 
-    IO.inspect role, label: "myroleinboard2"
-
     actions_allowed = role in ["manager", "contributor"]
     delete_allowed =  role == "manager"
-
-    IO.inspect actions_allowed, label: "myroleinboard2"
 
     %SerialList{
       id: list.id,

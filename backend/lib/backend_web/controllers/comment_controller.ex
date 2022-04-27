@@ -37,7 +37,6 @@ defmodule BackendWeb.CommentController do
 
         case Tasks.update_comment(task, user, comment, comment_params) do
                 {:ok, comment} ->
-                  # IO.inspect "okupdatedtask"
                   data = Tasks.serialize_comment(comment)
                   json conn, data
 

@@ -26,6 +26,12 @@ defmodule Backend.Tasks.Task do
   def changeset(task, attrs) do
     task
     |> cast(attrs, [:description, :details, :details_plaintext, :deadline, :status, :completed_on, :list_id, :board_id, :position])
-    |> validate_required([:description])
+    |> validate_required([:description, :position])
+  end
+
+  def insert_changeset(task, attrs) do
+    task
+    |> cast(attrs, [:description, :details, :details_plaintext, :deadline, :status, :completed_on, :list_id, :board_id, :position])
+    |> validate_required([:description, :position, :board_id, :list_id])
   end
 end

@@ -11,8 +11,13 @@ defmodule BackendWeb.BoardController do
     user = Pow.Plug.current_user(conn)
     user_boards = Enum.at(Boards.list_boards(user.id), 0)
 
-    boards = user_boards.boards
-    serialized_boards = Boards.serialize(user, boards)
+    serialized_boards =
+      if user_boards do
+        boards = user_boards.boards
+        Boards.serialize(user, boards)
+      else
+        []
+      end
 
     json conn, %{data: serialized_boards}
   end

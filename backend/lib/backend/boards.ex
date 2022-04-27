@@ -22,25 +22,9 @@ defmodule Backend.Boards do
 
   """
   def list_boards(user_id) do
-
     load = (from user in User, where: user.id == ^user_id)
             |> Repo.all
             |> Repo.preload([boards: from(board in Board, order_by: [board.id])])
-
-          # Repo.all(User) |> Repo.preload(:boards)
-
-    # IO.inspect load, label: "loadprint"
-
-    # IO.inspect(IEx.Info.info load)
-    # IO.inspect Enum.at(load, 0), label: "first element"
-    # i load
-
-    # IO.inspect user_id, label: "useriddebug"
-    # t = from(board in Board, where: board.user_id == ^user_id)
-    #   |> Repo.all(User)
-    #   |> Repo.preload(:boards)
-
-    # Repo.all(Board)
   end
 
   def list_shared_boards(user) do
@@ -92,46 +76,16 @@ defmodule Backend.Boards do
       {:error, %Ecto.Changeset{}}
 
   """
-  # def create_board(attrs \\ %{}) do
   def create_board(user, board_params, permissions) do
-    # attrs = if attrs do
-    #   Map.put(attrs, "user_id", attrs["user_id"])
-    # end
-
-    # IO.inspect(attrs, label: "attrsdb5")
-
-    # IO.inspect %Board{} |> Board.changeset(attrs), label: "changsetboard8"
-
-    # %Board{}
-    # |> Board.changeset(attrs)
-    # |> Repo.insert()
-
-    # %Board
-
-    IO.inspect board_params, label: "boardparamsbeforeinsert"
-
     board = user
     |> Ecto.build_assoc(:boards)
     |> Board.changeset(board_params)
     |> Repo.insert!
 
-    # board = Repo.insert!(board)
-
-    # board_owner_role = %{"board_owner_role" => %{"email" => user.email, "role" => "manager"}}
-    # permissions = if permissions == nil || permissions == [] do
-    #   [board_owner_role]
-    # else
-    #   [board_owner_role | permissions]
-    # end
-
     set_board_permissions(board, permissions)
     set_board_permissions(board, [{"board_owner_role", %{"email" => user.email, "remove" => "", "role" => "manager"}}])
 
     {:ok, get_board!(board.id)}
-
-    # %Board{}
-    # |> attrs
-    # |> Repo.insert()
   end
 
   @doc """
@@ -147,7 +101,6 @@ defmodule Backend.Boards do
 
   """
   def update_board(%Board{} = board, permissions, attrs) do
-    # IO.inspect attrs
     set_board_permissions(board, permissions)
 
     board
@@ -184,7 +137,6 @@ defmodule Backend.Boards do
     Board.changeset(board, attrs)
   end
 
-  # def serialize(%Board{} = board), do: serialize(board)
   def serialize(user, %Board{} = board) do
     users = serialize_permissions(board)
 
@@ -222,12 +174,9 @@ defmodule Backend.Boards do
       |> Map.fetch!(:permissions)
       |> Enum.map(fn permission ->
             user = Users.get_user!(permission.user_id)
-            # users = Map.put(users, user.email, permission.role)
             %{email: user.email,
               role: permission.role}
           end)
-
-    # users
   end
 
   def permission(user_id, board_id) do
@@ -238,15 +187,10 @@ defmodule Backend.Boards do
   end
 
   def set_board_permissions(board, permissions) do
-    IO.inspect board, label: "boardrepoinsertboard"
-    IO.inspect permissions, label: "permissionsinsetboard5"
-
     if permissions do
-      IO.inspect "insideherepermissions"
       board_id = board.id
       permissions
         |> Enum.each(fn permission ->
-          IO.inspect permission, label: "permissionloop3"
             {_, %{"email" => email, "remove" => remove,"role" => role}} = permission
             user = Users.get_user_by_email(String.trim(email))
             if user do
