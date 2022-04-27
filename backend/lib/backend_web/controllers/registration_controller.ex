@@ -1,4 +1,4 @@
-defmodule BackendWeb.API.RegistrationController do
+defmodule BackendWeb.RegistrationController do
   use BackendWeb, :controller
 
   alias Ecto.Changeset

@@ -1,4 +1,4 @@
-defmodule BackendWeb.API.SessionController do
+defmodule BackendWeb.SessionController do
   use BackendWeb, :controller
 
   alias BackendWeb.APIAuthPlug

@@ -22,16 +22,15 @@ defmodule BackendWeb.Router do
   scope "/api", BackendWeb do
     pipe_through :api
 
-    resources "/registration", API.RegistrationController, singleton: true, only: [:create]
-    resources "/session", API.SessionController, singleton: true, only: [:create, :delete]
-    get "/session", API.SessionController, :get
-    get "/session/authenticated", API.SessionController, :is_authenticated
-    post "/session/renew", API.SessionController, :renew
+    resources "/registration", RegistrationController, singleton: true, only: [:create]
+    resources "/session", SessionController, singleton: true, only: [:create, :delete]
+
+    get "/session", SessionController, :get
+    get "/session/authenticated", SessionController, :is_authenticated
+    post "/session/renew", SessionController, :renew
 
     get "/user_role", TaskController, :get_role
     get "/boards/roles", BoardController, :get_roles
-
-    get("/ping", PingController, :show)
   end
 
   scope "/api", BackendWeb do
@@ -45,7 +44,6 @@ defmodule BackendWeb.Router do
     resources "/tasks", TaskController, except: [:index, :create]
 
     # Boards API
-    # get "/boards/:id/tasks", BoardController, :get_tasks
     get "/shared_boards", BoardController, :shared_boards
     resources "/boards", BoardController
 
