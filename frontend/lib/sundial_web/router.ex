@@ -29,47 +29,7 @@ defmodule SundialWeb.Router do
 
   pipeline :api do
     plug :accepts, ["json"]
-    # plug SundialWeb.APIAuthPlug, otp_app: :sundial
   end
-
-  # pipeline :api_protected do
-  #   plug Pow.Plug.RequireAuthenticated, error_handler: SundialWeb.APIAuthErrorHandler
-  # end
-
-  # scope "/api", SundialWeb.API, as: :api do
-  #   pipe_through :api
-
-  #   resources "/registration", RegistrationController, singleton: true, only: [:create]
-  #   resources "/session", SessionController, singleton: true, only: [:create, :delete]
-  #   post "/session/renew", SessionController, :renew
-  # end
-
-  scope "/", SundialWeb do
-    pipe_through [:browser, :destroy_session]
-
-    live "/logout", UserLive.Registration, :destroy_session
-  end
-
-  scope "/" do
-    pipe_through :browser
-
-    pow_routes()
-  end
-
-  scope "/", SundialWeb do
-    # pipe_through [:browser, :protected]
-    pipe_through [:browser]
-
-    live "/boards", BoardLive.Index, :index
-    live "/boards/shared", BoardLive.Index, :index_shared
-  end
-
-  # scope "/", SundialWeb do
-  #   pipe_through [:browser_no_csrf]
-
-  #   post "/boards", BoardController, :create
-  #   post "/boards/:board_id/lists/:list_id/tasks", TaskController, :create
-  # end
 
   scope "/", SundialWeb do
     pipe_through :browser_no_csrf
@@ -77,64 +37,39 @@ defmodule SundialWeb.Router do
     post "/login", SessionHandler, :set_current_user
   end
 
+  scope "/", SundialWeb do
+    pipe_through [:browser, :destroy_session]
+
+    live "/logout", UserLive.Registration, :destroy_session
+  end
 
   scope "/", SundialWeb do
-    pipe_through :browser
+    pipe_through [:browser]
 
-    get("/ping", PingController, :show)
-
-    # get "/set_session", SessionHandler, :set_current_user
-    # post "/set_session", SessionHandler, :set_current_user
-
-    # get "/", TaskController, :index
-    # live "/", TaskViewLive
-    # live "/", TaskLive.Index, :index
     live "/", UserLive.Registration, :new_session
-    # live "/tasks/new", TaskLive.Index, :new
+    live "/signup", UserLive.Registration, :index
+    live "/login", UserLive.Registration, :new_session
+  end
+
+  scope "/", SundialWeb do
+    pipe_through [:browser, :protected]
+
+    live "/boards", BoardLive.Index, :index
+    live "/boards/shared", BoardLive.Index, :index_shared
+
     live "/boards/:board_id/lists/:list_id/tasks/new", ListLive.Index, :new_task
     live "/tasks/:id/edit", ListLive.Index, :edit_task
     live "/lists/:id/edit", ListLive.Index, :edit_list
-    # live "/tasks/:task_id/show", ListLive.Index, :show_task
-
     live "/boards/:board_id/tasks/:task_id/show", ListLive.Index, :show_task
 
-    # resources "/users", UsersController, only: [:create, :update, :delete]
-    # scope path: "/account" do
-    #   get "/login", UsersController, :index
-    #   get "/register", UsersController, :new
-    #   get "/edit", UsersController, :edit
-    #   get "/logout", UsersController, :logout
-    # end
-
-    # resources "/tasks", TaskController, only: [:show, :create, :update, :delete]
-    # live "/tasks", TaskController
-
-    # live "/tasks/:id/update", TaskController, as: :update
-
-    # resources "/tasks", TaskController
-
-    resources "/labels", LabelController
-
-    resources "/status", StatusController
-
-    # resources "/panes", PanesController
-
-    # resources "/boards", BoardsController
-
-    # get "/attachments", AttachmentsController, :index
-
-
-    # live "/boards", BoardLive.Index, :index
     live "/boards/new", BoardLive.Index, :new
     live "/boards/:id/edit", BoardLive.Index, :edit
 
-    # live "/boards/:id", BoardLive.Show, :show
     live "/boards/:id", ListLive.Index, :index
     live "/boards/:id/show/edit", BoardLive.Show, :edit
 
     live "/lists", ListLive.Index, :index
     live "/boards/:id/lists/new", ListLive.Index, :new
-    # live "/lists/:id/edit", ListLive.Index, :edit
 
     live "/lists/:id", ListLive.Show, :show
     live "/lists/:id/show/edit", ListLive.Show, :edit
@@ -154,10 +89,8 @@ defmodule SundialWeb.Router do
     live "/permissions/:id", PermissionLive.Show, :show
     live "/permissions/:id/show/edit", PermissionLive.Show, :edit
 
-    live "/signup", UserLive.Registration, :index
-    live "/login", UserLive.Registration, :new_session
-
-    # live "/logout", UserLive.Registration, :destroy_session
+    # resources "/labels", LabelController
+    # resources "/status", StatusController
   end
 
   # Other scopes may use custom stacks.
