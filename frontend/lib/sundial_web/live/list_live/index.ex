@@ -42,14 +42,11 @@ defmodule SundialWeb.ListLive.Index do
 
   @impl true
   def handle_event("refresh", %{"return_to" => return_to}, socket) do
-    # #IO.inspect params, label: "refreeshtasksa"
     {:noreply, push_redirect(socket, to: return_to)}
   end
 
   @impl true
   def handle_event("dropped", %{"insert_index" => insert_index, "list_id" => list_id, "task_id" => task_id}, socket) do
-  # def handle_event("dropped", %{"list" => list, "list_id" => list_id}, socket) do
-
     client = ClientAPI.client(socket.assigns.current_user_access_token)
     {{:error, error}, _, {:data, data}}
       = TaskAPI.update_positions(client, list_id, task_id, insert_index)
@@ -112,9 +109,6 @@ defmodule SundialWeb.ListLive.Index do
   end
 
   defp apply_action(socket, :new_list, %{"id" => id}) do
-    # TODO: use dynamic return_to
-
-    # TODO: add user id
     params = %{list: %{list_id: id}}
 
     client = ClientAPI.client(socket.assigns.current_user_access_token)
@@ -123,16 +117,9 @@ defmodule SundialWeb.ListLive.Index do
     socket
       |> put_flash(:info, "List created successfully")
       |> push_redirect(to: socket.assigns.return_target)
-  # }
-
-    # socket
-    # |> assign(:page_title, "New List")
-    # |> assign(:list, %List{})
   end
 
   defp apply_action(socket, :new_task, %{"board_id" => board_id, "list_id" => list_id}) do
-    #IO.inspect "new task in live"
-
     socket
     |> assign(:page_title, "Add a new task")
     |> assign(:status, Progress.list_status_options())
@@ -195,13 +182,10 @@ defmodule SundialWeb.ListLive.Index do
   def handle_event("delete", %{"id" => id}, socket) do
     client = ClientAPI.client(socket.assigns.current_user_access_token)
     ListAPI.delete_list(client, id)
-    # list = Lists.get_list!(id)
-    # {:ok, _} = Lists.delete_list(list)
 
     {:noreply,
       socket
       |> push_redirect(to: "/boards/" <> socket.assigns.board_id)}
-    # {:noreply, assign(socket, :lists, list_lists(socket.assigns.current_user_access_token, socket.assigns.board_id))}
   end
 
   defp list_lists(current_user_access_token, board_id) do
