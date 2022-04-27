@@ -19,7 +19,6 @@ defmodule SundialWeb.UserLive.Registration do
 
   @impl true
   def handle_params(params, _url, socket) do
-    #IO.inspect socket, label: "socket handle_params"
     {:noreply, apply_action(socket, socket.assigns.live_action, params)}
   end
 
@@ -49,7 +48,6 @@ defmodule SundialWeb.UserLive.Registration do
   end
 
   defp apply_action(socket, :new, _params) do
-    #IO.inspect socket, label: "socket in new action 2"
     {:noreply, socket}
   end
 

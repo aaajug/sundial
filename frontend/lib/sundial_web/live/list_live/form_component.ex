@@ -7,9 +7,6 @@ defmodule SundialWeb.ListLive.FormComponent do
 
   @impl true
   def update(%{list: list} = assigns, socket) do
-    # changeset = Lists.change_list(list)
-    #IO.inspect "inupdateoflistformcomp"
-
     {:ok,
      socket
      |> assign(assigns)}
@@ -31,24 +28,12 @@ defmodule SundialWeb.ListLive.FormComponent do
 
   defp save_list(socket, :edit_list, list_params) do
     client = ClientAPI.client(socket.assigns.current_user_access_token)
-    #IO.inspect list_params, label: "list_paramsdebug"
-     k= ListAPI.update_list(client, socket.assigns.list.id, %{list: list_params})
+    ListAPI.update_list(client, socket.assigns.list.id, %{list: list_params})
 
     {:noreply,
       socket
       |> put_flash(:info, "List updated successfully")
       |> push_redirect(to: socket.assigns.return_to)}
-
-    # case Lists.update_list(socket.assigns.list, list_params) do
-    #   {:ok, _list} ->
-    #     {:noreply,
-    #      socket
-    #      |> put_flash(:info, "List updated successfully")
-    #      |> push_redirect(to: socket.assigns.return_to)}
-
-    #   {:error, %Ecto.Changeset{} = changeset} ->
-    #     {:noreply, assign(socket, :changeset, changeset)}
-    # end
   end
 
   defp save_list(socket, :new, list_params) do

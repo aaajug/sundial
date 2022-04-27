@@ -1,4 +1,4 @@
-defmodule Backend.AccountsFixtures do
+defmodule Backend.UsersFixtures do
   @moduledoc """
   This module defines test helpers for creating
   entities via the `Backend.Accounts` context.
@@ -13,7 +13,7 @@ defmodule Backend.AccountsFixtures do
       |> Enum.into(%{
 
       })
-      |> Backend.Accounts.create_user()
+      |> Backend.Users.create_user()
 
     user
   end

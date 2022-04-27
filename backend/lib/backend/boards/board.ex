@@ -22,6 +22,12 @@ defmodule Backend.Boards.Board do
   def changeset(board, attrs) do
     board
     |> cast(attrs, [:title, :user_id])
+    |> validate_required([:title])
+  end
+
+  def insert_changeset(board, attrs) do
+    board
+    |> cast(attrs, [:title, :user_id])
     |> validate_required([:title, :user_id])
   end
 end

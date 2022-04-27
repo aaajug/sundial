@@ -11,8 +11,6 @@ defmodule SundialWeb.BoardController do
 
     response = BoardAPI.create_board(client, %{"data" => board_params})
 
-    IO.inspect response, label: "createboardcontr"
-
     conn
       |> put_flash(:info, "Board created successfully.")
       |> redirect(to: "/boards")

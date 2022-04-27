@@ -14,7 +14,7 @@ defmodule SundialWeb.BoardLiveTest do
   end
 
   describe "Index" do
-    setup [:create_board]
+    # setup [:create_board]
 
     test "lists all boards", %{conn: conn, board: board} do
       {:ok, _index_live, html} = live(conn, Routes.board_index_path(conn, :index))

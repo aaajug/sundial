@@ -61,8 +61,6 @@ defmodule SundialWeb.ListLive.Index do
         end)
       end)
 
-      IO.inspect tasks, label: "new ordering"
-
       {:noreply,
       socket
       |> assign(:lists, data["lists"])}
@@ -74,13 +72,10 @@ defmodule SundialWeb.ListLive.Index do
     client = ClientAPI.client(socket.assigns.current_user_access_token)
     lists = ListAPI.reorder_lists(client, list_id, insert_index)
 
-    IO.inspect lists, label: "listsdebugger"
-
     {:noreply,
     socket
     |> assign(:lists, lists)}
   end
-
 
   @impl true
   def handle_params(params, _url, socket) do
@@ -156,7 +151,6 @@ defmodule SundialWeb.ListLive.Index do
   end
 
   defp apply_action(socket, :show_task, %{"board_id" => board_id, "task_id" => id}) do
-    IO.inspect "debuglistliveindex: in apply action of :show_task"
     client = ClientAPI.client(socket.assigns.current_user_access_token)
     { {:error, error},
     {:success_info, success_info},

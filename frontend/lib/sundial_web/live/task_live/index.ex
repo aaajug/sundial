@@ -10,7 +10,6 @@ defmodule SundialWeb.TaskLive.Index do
 
   @impl true
   def mount(params, session, socket) do
-    # TODO: Add list path /boards/:id/list/:id
     base_path = "/boards/" <> (params["id"] || "")
 
     sort = if Map.has_key?(params, "sort"), do: params["sort"], else: nil
@@ -51,8 +50,6 @@ defmodule SundialWeb.TaskLive.Index do
     {:reply, socket, push_redirect(socket, to: "/tasks/new")}
   end
 
-
-  # TODO: Move to backend
   @impl true
   def handle_event("dropped", %{"list" => list}, socket) do
     TaskAPI.update_positions(%{list: list})
@@ -61,14 +58,6 @@ defmodule SundialWeb.TaskLive.Index do
     socket
     |> put_flash(:info, "Tasks reordered successfully")
     |> push_redirect(to: "/")}
-
-    # case Tasks.update_positions(list) do
-    #   {:ok, _, _} ->
-    #     {:reply, socket, push_redirect(socket, to: "/")}
-    #   {:error, _} ->
-    #     put_flash(socket, :error, "Can't reorder tasks as of the moment. Please try again later.")
-    #     {:reply, socket, push_redirect(socket, to: "/")}
-    # end
   end
 
   @impl true
@@ -82,11 +71,7 @@ defmodule SundialWeb.TaskLive.Index do
     {:noreply, apply_action(socket, socket.assigns.live_action, params)}
   end
 
-
-   # TODO: Move to backend
   defp apply_action(socket, :new, _params) do
-    #IO.inspect "new task in live"
-
     socket
     |> assign(:page_title, "Add a new task")
     |> assign(:status, Progress.list_status_options())
@@ -94,9 +79,7 @@ defmodule SundialWeb.TaskLive.Index do
     |> assign(:serial_task, nil)
   end
 
-   # TODO: Move to backend
   defp apply_action(socket, :edit, %{"id" => id, "return_to" => return_to}) do
-    # task = Tasks.get_task!(id)
     client = ClientAPI.client(socket.assigns.current_user_access_token)
     { {:error, error},
     {:success_info, success_info},
@@ -109,7 +92,6 @@ defmodule SundialWeb.TaskLive.Index do
     else
       task = for {key, val} <- data, into: %{}, do: {String.to_atom(key), val}
 
-      # #IO.inspect task, label: "taskobjectprint2"
       socket
       |> assign(:page_title, "Edit Task")
       |> assign(:list_id, "")
@@ -127,18 +109,14 @@ defmodule SundialWeb.TaskLive.Index do
     |> assign(:task, nil)
   end
 
-  # TODO: Move to backend
   defp list_tasks(session, params) do
-    # Tasks.list_tasks_by_position
     client = ClientAPI.client(session["current_user_access_token"])
 
     client
       |> TaskAPI.get_tasks(params)
   end
 
-  # TODO: Move to backend
   defp list_tasks_by_default(session, params) do
-    # Tasks.list_tasks
     client = ClientAPI.client(session["current_user_access_token"])
 
     client |>

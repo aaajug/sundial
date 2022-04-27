@@ -11,13 +11,7 @@ defmodule SundialWeb.SessionHandler do
   end
 
   def set_current_user(conn, %{"user" => user_params}) do
-    # %{"email" => email, "access_token" => access_token}
-    # Conn.put_session(conn, :current_user, user["access_token"])
-    # IO.inspect conn, label: "sessionhandlerconn"
-
     conn = destroy_current_user(conn)
-
-    # IO.inspect "debugging session handler"
 
     {
       {:error, error},
@@ -25,15 +19,7 @@ defmodule SundialWeb.SessionHandler do
       {:data, data}
     } = UserAPI.create_session(user_params)
 
-    # session = %{"error" => error, "success_info" => success_info, "data" => data}
-
-    # conn = Conn.put_session(conn, :user, [name: "arianne", email: "arianne@yahoo.com"])
-    # user = Conn.get_session(conn, :user)
-
     if success_info do
-      # Conn.put_session(conn, :current_user_acces_token, user_params["access_token"])
-      # Conn.put_session(conn, :current_user_email, user_params["email"])
-
       conn
       |> put_session("success_info", success_info)
       |> put_session("current_user_access_token", data["access_token"])
@@ -43,7 +29,6 @@ defmodule SundialWeb.SessionHandler do
       conn
       |> put_session("error", error)
       |> redirect(to: "/login")
-      # |> live_render(SundialWeb.UserLive.Registration, session: session)
     end
   end
 
@@ -53,6 +38,5 @@ defmodule SundialWeb.SessionHandler do
       |> delete_session("current_user_email")
       |> delete_session("success_info")
       |> delete_session("error")
-    # Conn.delete_session(conn, :current_user)
   end
 end

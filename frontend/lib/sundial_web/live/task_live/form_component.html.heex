@@ -13,28 +13,9 @@
   is_completed_on_disabled = if task_object.completed_on, do: false, else: true
 %>
 
-<%# <.form 
-  let={f} 
-  for={@socket} 
-  phx-target={@myself}
-  phx-submit="save"
-  class="task-form-container"> %>
-
 <form phx-target={@myself}
   phx-submit="save"
   class="task-form-container">
-
-<%# <form action={@form_target} 
-  method="post"
-  class="task-form-container"> %>
-
-  <% ##IO.inspect("form debug: ", f)  %>
-
-  <%= #if @changeset.action do %>
-    <%# <div class="alert alert-danger">
-      <p>Oops, something went wrong! Please check the errors below.</p>
-    </div> %>
-  <% #end %>
 
   <input name="task[deadline][year]" id="task_deadline_year" value={task_object["deadline"]["year"]} hidden>
   <input name="task[deadline][month]" id="task_deadline_month" value={task_object["deadline"]["month"]} hidden>
@@ -58,7 +39,6 @@
           </div>
           <div class="field" id="deadline-time-selector" phx-hook="DeadlineTimeSelect" data-checked={!is_deadline_disabled}>
             <input type="time" id="task_deadline_time" value={task_object.deadline_parsed["time"]} disabled={is_deadline_disabled}>
-            <%= #error_tag f, :deadline %>
           </div>
         </div>
       </div>
@@ -78,7 +58,6 @@
           </div>
           <div class="field" id="completed_on_time_select" phx-hook="CompletedOnTimeSelect" data-checked={!is_completed_on_disabled}>
             <input type="time" id="task_completed_on_time" value={task_object.completed_on_parsed["time"]} disabled={is_completed_on_disabled}>
-            <%= #error_tag f, :completed_on %>
           </div>
         </div>
       </div>
@@ -94,7 +73,6 @@
     <label>What's the task?</label>
       <div class="field is-horizontal">
         <input id="task_description" name="task[description]" placeholder="Something cool" value={task_object.description} required>
-        <%= #error_tag f, :description %>
       </div>
     </div>
     <div class="column is-one-fifth">
@@ -122,16 +100,11 @@
     </textarea>
   </div>
 
-    <%# <label>Want to add more details?</label> %>
-    <%# <div id="editor" phx-hook="QuillEditor"> %>
-      <%= #raw task_object.details %>
-    <%# </div> %>
-
-   <div>
-      <div id="editor" phx-hook="QuillEditor" data-quill-input-id="read-only-quill" class="content is-small">
-        <%= raw task_object.details %>
-      </div>
+  <div>
+    <div id="editor" phx-hook="QuillEditor" data-quill-input-id="read-only-quill" class="content is-small">
+      <%= raw task_object.details %>
     </div>
+  </div>
 
   <div class="field pt-5"> 
     <span>Assign task to: </span> 

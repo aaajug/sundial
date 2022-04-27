@@ -1,7 +1,12 @@
 defmodule Backend.BoardsTest do
-  use Backend.DataCase
+  use BackendWeb.ConnCase
 
   alias Backend.Boards
+  alias Backend.Users.User
+  alias Pow.Plug
+
+  @email "alice@wonderland.com"
+  @password "humptydumpty"
 
   describe "boards" do
     alias Backend.Boards.Board
@@ -10,48 +15,53 @@ defmodule Backend.BoardsTest do
 
     @invalid_attrs %{}
 
-    test "list_boards/0 returns all boards" do
-      board = board_fixture()
-      assert Boards.list_boards() == [board]
+    test "unauthorized access of /api/boards should be blocked (401)", %{conn: conn} do
+      conn = get(conn, "/api/boards")
+      assert json_response(conn, 401) == %{"error" => %{"code" => 401, "message" => "Not authenticated"}}
     end
 
-    test "get_board!/1 returns the board with given id" do
-      board = board_fixture()
-      assert Boards.get_board!(board.id) == board
+    test "unauthorized access of /api/shared_boards should be blocked (401)", %{conn: conn} do
+      conn = get(conn, "/api/shared_boards")
+      assert json_response(conn, 401) == %{"error" => %{"code" => 401, "message" => "Not authenticated"}}
     end
 
-    test "create_board/1 with valid data creates a board" do
-      valid_attrs = %{}
+    test "unauthorized user can't create a board", %{conn: conn} do
+      conn = post(conn, "/api/boards", %{data: %{title: "New board"}})
 
-      assert {:ok, %Board{} = board} = Boards.create_board(valid_attrs)
+      assert json_response(conn, 401) == %{"error" => %{"code" => 401, "message" => "Not authenticated"}}
     end
 
-    test "create_board/1 with invalid data returns error changeset" do
-      assert {:error, %Ecto.Changeset{}} = Boards.create_board(@invalid_attrs)
+    test "authorized user with no boards should return []", %{conn: conn} do
+      user = %User{email: @email, id: 1}
+      conn = Pow.Plug.assign_current_user(conn, user, [])
+
+      conn = get(conn, "/api/boards")
+      assert json_response(conn, 200) == %{"data" => []}
     end
 
-    test "update_board/2 with valid data updates the board" do
-      board = board_fixture()
-      update_attrs = %{}
+    test "authorized user with boards should return list of boards", %{conn: conn} do
+      user = %User{email: @email, id: 1}
+      conn = Pow.Plug.assign_current_user(conn, user, [])
 
-      assert {:ok, %Board{} = board} = Boards.update_board(board, update_attrs)
+      conn = get(conn, "/api/boards")
+      response = json_response(conn, 200)
+
+      assert Map.has_key?(response, "data") == true
     end
 
-    test "update_board/2 with invalid data returns error changeset" do
-      board = board_fixture()
-      assert {:error, %Ecto.Changeset{}} = Boards.update_board(board, @invalid_attrs)
-      assert board == Boards.get_board!(board.id)
+    test "authorized user with shared boards should return list of shared boards", %{conn: conn} do
+      user = %User{email: @email, id: 1}
+      conn = Pow.Plug.assign_current_user(conn, user, [])
+
+      conn = get(conn, "/api/shared_boards")
+      response = json_response(conn, 200)
+
+      assert Map.has_key?(response, "data") == true
     end
 
-    test "delete_board/1 deletes the board" do
-      board = board_fixture()
-      assert {:ok, %Board{}} = Boards.delete_board(board)
-      assert_raise Ecto.NoResultsError, fn -> Boards.get_board!(board.id) end
-    end
-
-    test "change_board/1 returns a board changeset" do
-      board = board_fixture()
-      assert %Ecto.Changeset{} = Boards.change_board(board)
+    test "gets list of user roles in a board", %{conn: conn} do
+      conn = get(conn, "/api/boards/roles")
+      assert json_response(conn, 200) == %{"data" => ["manager", "contributor", "member"]}
     end
   end
 end
