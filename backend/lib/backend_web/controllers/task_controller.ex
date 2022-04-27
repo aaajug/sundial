@@ -17,7 +17,7 @@ defmodule BackendWeb.TaskController do
     user = Pow.Plug.current_user(conn)
     serialized_task = Tasks.serialize(user, Tasks.get_task!(id))
 
-    json conn, serialized_task
+    json conn, %{data: serialized_task}
   end
 
   def create(conn, %{"board_id" => board_id, "list_id" => list_id, "data" => task_params})do

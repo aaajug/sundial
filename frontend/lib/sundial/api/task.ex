@@ -1,6 +1,8 @@
 defmodule Sundial.API.TaskAPI do
   use Tesla
 
+  alias Sundial.API.ResponseHelper
+
   adapter Tesla.Adapter.Httpc
   plug Tesla.Middleware.BaseUrl, "http://backend:4000/api"
   plug Tesla.Middleware.JSON
@@ -8,7 +10,7 @@ defmodule Sundial.API.TaskAPI do
   # TODO: Refactor to reuse repeating code blocks (inside do block)
   def get_task(client, params) do
     case get(client, "/tasks/" <> params.id) do
-      {:ok, %{body: body}} -> body
+      {:ok, %{body: body}} -> ResponseHelper.parse(body)
         {_, %{body: body}} -> ""
     end
   end

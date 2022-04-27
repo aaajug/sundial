@@ -1,6 +1,8 @@
 defmodule Sundial.API.ListAPI do
   use Tesla
 
+  alias Sundial.API.ResponseHelper
+
   adapter Tesla.Adapter.Httpc
   plug Tesla.Middleware.BaseUrl, "http://backend:4000/api"
   plug Tesla.Middleware.JSON
@@ -9,7 +11,7 @@ defmodule Sundial.API.ListAPI do
 
   def get_list(client, id) do
     case get(client, "/lists/" <> id) do
-      {:ok, %{body: body}} -> body
+      {:ok, %{body: body}} -> ResponseHelper.parse(body)
         {_, %{body: body}} -> ""
     end
   end

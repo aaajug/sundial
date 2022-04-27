@@ -17,11 +17,11 @@ defmodule BackendWeb.Authorize do
   def init(opts), do: opts
 
   def call(conn, opts) do
+    IO.inspect conn, label: "connprint2"
+
     current_user = Pow.Plug.current_user(conn)
     resource = Keyword.get(opts, :resource)
     action = action_name(conn)
-
-    IO.inspect {resource, action}, label: "maybecontinuefunc7"
 
     # bypass
     cond do
@@ -32,8 +32,9 @@ defmodule BackendWeb.Authorize do
         conn
 
       true ->
-        path_info = conn.path_info
-        role = get_board_role(current_user, path_info)
+        role = get_board_role(current_user, conn.path_info, action, conn)
+
+        IO.inspect {action, role, resource, check(action, role, resource)}, label: "authorizedebug3"
 
         check(action, role, resource)
         |> maybe_continue(conn)
@@ -43,9 +44,17 @@ defmodule BackendWeb.Authorize do
   defp maybe_continue(true, conn), do: conn
 
   defp maybe_continue(false, conn) do
+    response = %{error:
+      %{
+        "errors" => %{"unnauthorized access." => ["you are not authorized for this action"]},
+        "message" => "Unauthorized access.",
+        "status" => 500
+      }
+    }
+
     conn
       |> halt
-      |> json(%{unauthorized: "You are not authorized for this action."})
+      |> json(response)
   end
 
   defp check(:index, role, resource) do
@@ -80,25 +89,23 @@ defmodule BackendWeb.Authorize do
     can(role) |> read?(resource)
   end
 
+  defp ccheck(_action, nil, _resource), do: false
   defp check(_action, _role, _resource), do: false
 
-  defp get_role(user, board_id) do
-    user_id = user.id
-
-    # user
-    # |> Repo.preload([permissions: from(permission in Permission, where: permission.user_id == ^user_id)])
-    # |> Map.fetch!(:permissions)
-    # user
-    # |> Repo.preload([shared_boards: from(board in Board, where: board.id == ^board_id)])
-    # |> Map.fetch!(:boards)
-    # |> Enum.at(0)
-  end
-
-  defp get_board_role(user, path_info) do
+  defp get_board_role(user, path_info, action, conn) do
     last_index = Enum.count(path_info) - 1
+
+    IO.inspect {action, conn.body_params}, label: "authorizedebug5:bodyparams"
 
     board =
       cond do
+        action == :update_positions ->
+          IO.inspect "authorizedebug5:resourceupdate"
+          list_id = conn.body_params["list_id"]
+            |> Lists.get_list!
+            |> Repo.preload(:board)
+            |> Map.fetch!(:board)
+
         (boards_index = Enum.find_index(path_info, fn param -> param == "boards" end)) && last_index != boards_index ->
           path_info
             |> Enum.at(boards_index + 1)
@@ -112,6 +119,7 @@ defmodule BackendWeb.Authorize do
             |> Map.fetch!(:board)
 
         (tasks_index = Enum.find_index(path_info, fn param -> param == "tasks" end)) && last_index != tasks_index->
+          IO.inspect "intaskscheck"
           path_info
             |> Enum.at(tasks_index + 1)
             |> Tasks.get_task!
@@ -126,9 +134,13 @@ defmodule BackendWeb.Authorize do
     case board do
       nil -> ""
       _ ->
-        user_board_role =
+        user_board_permission =
           Boards.permission(user.id, board.id)
-          |> Map.fetch!(:role)
+
+          case user_board_permission do
+            nil -> nil
+            _ -> user_board_permission.role
+          end
     end
   end
 end

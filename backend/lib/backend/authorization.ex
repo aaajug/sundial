@@ -34,6 +34,7 @@ defmodule Backend.Authorization do
     grant(role)
     |> read(Board)
     |> read(List)
+    |> read(Task)
     |> read(Comment)
     |> create(Comment)
   end

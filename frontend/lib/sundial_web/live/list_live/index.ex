@@ -17,7 +17,10 @@ defmodule SundialWeb.ListLive.Index do
 
     task = if params["task_id"] do
               client = ClientAPI.client(session["current_user_access_token"])
-              TaskAPI.get_task(client, %{id: params["task_id"]})
+              {_, _, {:data, data}}
+                = TaskAPI.get_task(client, %{id: params["task_id"]})
+
+              data
           else
             nil
           end
@@ -85,13 +88,23 @@ defmodule SundialWeb.ListLive.Index do
 
   defp apply_action(socket, :edit_list, %{"id" => id}) do
     client = ClientAPI.client(socket.assigns.current_user_access_token)
-    list = ListAPI.get_list(client, id)
-    list = for {key, val} <- list, into: %{}, do: {String.to_atom(key), val}
 
-    socket
-    |> assign(:page_title, "Edit List")
-    |> assign(:list, list)
-    |> assign(:return_target, "/boards/" <> Integer.to_string(list.board_id))
+    { {:error, error},
+    {:success_info, success_info},
+    {:data, data}
+    } = ListAPI.get_list(client, id)
+
+    if error do
+      handle_error(error, socket)
+      |> push_redirect(to: "/boards")
+    else
+      list = for {key, val} <- data, into: %{}, do: {String.to_atom(key), val}
+
+      socket
+      |> assign(:page_title, "Edit List")
+      |> assign(:list, list)
+      |> assign(:return_target, "/boards/" <> Integer.to_string(list.board_id))
+    end
   end
 
   defp apply_action(socket, :new_list, %{"id" => id}) do
@@ -127,31 +140,45 @@ defmodule SundialWeb.ListLive.Index do
   end
 
   defp apply_action(socket, :edit_task, %{"id" => id, "return_to" => return_to}) do
-    # task = Tasks.get_task!(id)
     client = ClientAPI.client(socket.assigns.current_user_access_token)
-    task = TaskAPI.get_task(client, %{id: id})
-    task = for {key, val} <- task, into: %{}, do: {String.to_atom(key), val}
+    { {:error, error},
+    {:success_info, success_info},
+    {:data, data}
+    } = TaskAPI.get_task(client, %{id: id})
 
-    # #IO.inspect task, label: "taskobjectprint2"
-    socket
-    |> assign(:page_title, "Edit Task")
-    |> assign(:list_id, "")
-    |> assign(:board_id, "")
-    |> assign(:form_target, "/tasks/" <> Integer.to_string(task.id))
-    |> assign(:status, Progress.list_status_options())
-    |> assign(:task, task)
-    |> assign(:serial_task, task)
-    |> assign(:return_to, return_to)
+    if error do
+      handle_error(error, socket)
+      |> push_redirect(to: "/boards")
+    else
+      task = for {key, val} <- data, into: %{}, do: {String.to_atom(key), val}
+
+      socket
+      |> assign(:page_title, "Edit Task")
+      |> assign(:list_id, "")
+      |> assign(:board_id, "")
+      |> assign(:form_target, "/tasks/" <> Integer.to_string(task.id))
+      |> assign(:status, Progress.list_status_options())
+      |> assign(:task, task)
+      |> assign(:serial_task, task)
+      |> assign(:return_to, return_to)
+    end
   end
 
   defp apply_action(socket, :show_task, %{"board_id" => board_id, "task_id" => id}) do
     IO.inspect "debuglistliveindex: in apply action of :show_task"
     client = ClientAPI.client(socket.assigns.current_user_access_token)
-    task = TaskAPI.get_task(client, %{id: id})
+    { {:error, error},
+    {:success_info, success_info},
+    {:data, task}
+    } = TaskAPI.get_task(client, %{id: id})
 
-    socket
-    |> assign(:task, task)
-    # |> assign(:return_to, "/boards/" <> socket.assigns.board_id)
+    if error do
+      handle_error(error, socket)
+      |> push_redirect(to: "/boards")
+    else
+      socket
+      |> assign(:task, task)
+    end
   end
 
   defp apply_action(socket, :index, _params) do
@@ -178,5 +205,12 @@ defmodule SundialWeb.ListLive.Index do
 
     client |>
       ListAPI.get_lists(board_id)
+  end
+
+  defp handle_error(error, socket) do
+    {_, message} = error |> Enum.at(0)
+
+    socket
+    |> put_flash(:error, message)
   end
 end

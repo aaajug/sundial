@@ -46,7 +46,7 @@
   <.live_component module={SundialWeb.Live.Task.TaskModalComponent} return_to={@return_target} id={"modal"} task={@task} current_user_access_token={@current_user_access_token} />
 <% end %>
 
-<%= if @lists do %>
+<%= if @lists != [] do %>
   <div class="columns px-3 pb-6 pt-5" id="task-grid" phx-hook={@drag_hook}>
     <%# <div class="dropzone-column column is-1" data-index="0" data-kind="dropzone"></div> %>
     <% list_count = Enum.count(@lists) %>
@@ -73,7 +73,7 @@
               <ion-icon name="pencil-outline" class="is-clickable action-button"></ion-icon>
             <% end %>
           <% end %>
-          <%= if @board["delete_allowed"] do %>
+          <%= if @board["actions_allowed"] do %>
             <a id={"delete-list-" <> Integer.to_string(list["id"])} phx-click="delete" phx-value-id={list["id"]} phx-value-return_to={"/boards/" <> @board_id} data-confirm="This list  will be deleted. Are you sure?" phx-update="ignore">
               <ion-icon name="trash-outline" class="is-clickable action-button"></ion-icon>
             </a>
@@ -106,5 +106,9 @@
 
       <%# <div class="dropzone-column column left is-1" data-index={list_index} data-kind="dropzone"></div> %>
     <% end %>
+  </div>
+<% else %>
+  <div class="mt-6 is-size-5">
+    There's nothing here.
   </div>
 <% end %>

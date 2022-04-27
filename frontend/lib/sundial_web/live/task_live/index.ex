@@ -98,19 +98,28 @@ defmodule SundialWeb.TaskLive.Index do
   defp apply_action(socket, :edit, %{"id" => id, "return_to" => return_to}) do
     # task = Tasks.get_task!(id)
     client = ClientAPI.client(socket.assigns.current_user_access_token)
-    task = TaskAPI.get_task(client, %{id: id})
-    task = for {key, val} <- task, into: %{}, do: {String.to_atom(key), val}
+    { {:error, error},
+    {:success_info, success_info},
+    {:data, data}
+    } = TaskAPI.get_task(client, %{id: id})
 
-    # #IO.inspect task, label: "taskobjectprint2"
-    socket
-    |> assign(:page_title, "Edit Task")
-    |> assign(:list_id, "")
-    |> assign(:board_id, "")
-    |> assign(:form_target, "/tasks/" <> Integer.to_string(task.id))
-    |> assign(:status, Progress.list_status_options())
-    |> assign(:task, task)
-    |> assign(:serial_task, task)
-    |> assign(:return_to, return_to)
+    if error do
+      handle_error(error, socket)
+      |> push_redirect(to: "/boards")
+    else
+      task = for {key, val} <- data, into: %{}, do: {String.to_atom(key), val}
+
+      # #IO.inspect task, label: "taskobjectprint2"
+      socket
+      |> assign(:page_title, "Edit Task")
+      |> assign(:list_id, "")
+      |> assign(:board_id, "")
+      |> assign(:form_target, "/tasks/" <> Integer.to_string(task.id))
+      |> assign(:status, Progress.list_status_options())
+      |> assign(:task, task)
+      |> assign(:serial_task, task)
+      |> assign(:return_to, return_to)
+    end
   end
 
   defp apply_action(socket, :index, _params) do
@@ -134,5 +143,12 @@ defmodule SundialWeb.TaskLive.Index do
 
     client |>
       TaskAPI.get_tasks_default_sorting
+  end
+
+  defp handle_error(error, socket) do
+    {_, message} = error |> Enum.at(0)
+
+    socket
+    |> put_flash(:error, message)
   end
 end

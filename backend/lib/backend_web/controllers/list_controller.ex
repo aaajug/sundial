@@ -39,7 +39,7 @@ defmodule BackendWeb.ListController do
     user = Pow.Plug.current_user(conn)
     list = Lists.get_list!(id)
 
-    json conn, Lists.serialize(user, list)
+    json conn, %{data: Lists.serialize(user, list)}
   end
 
   def update(conn, %{"id" => id, "list" => list_params}) do

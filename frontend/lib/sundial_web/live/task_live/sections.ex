@@ -67,6 +67,8 @@ defmodule SundialWeb.TaskLive.Sections do
 
   # TODO: links for API editing
   def actions(%{assigns: assigns}) do
+
+    IO.inspect assigns.board, label: "theboardshere"
     # #IO.inspect assigns
     ~H"""
     <div class="" phx-update="ignore">
@@ -78,7 +80,7 @@ defmodule SundialWeb.TaskLive.Sections do
           <ion-icon name="pencil-outline" class="is-clickable action-button"></ion-icon>
         <% end %>
       <% end %>
-      <%= if assigns.board["delete_allowed"] do %>
+      <%= if assigns.board["actions_allowed"] do %>
         <a id={"delete-task-" <> Integer.to_string(assigns.task["id"])} phx-click="delete" phx-value-id={assigns.task["id"]} phx-value-return_to={@return_to} data-confirm="This task will be deleted. Are you sure?" phx-target={assigns.myself}>
           <ion-icon name="trash-outline" class="is-clickable action-button"></ion-icon>
         </a>
